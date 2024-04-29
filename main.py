@@ -1,5 +1,54 @@
 
+
 from Functions import *
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox
+
+enable_attack = False
+class ClashOfClansBotGUI(QWidget):
+    global enable_attack
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        x_pos = 30
+        self.setFixedSize(500, 500)  # Set the fixed size of the window (width, height)
+
+        # Create a group box for gem settings
+        gem_group_box = QGroupBox("Gem Settings", self)
+        gem_group_box.setGeometry(20, 50, 200, 100)  # Set position and size of the group box
+
+        self.gemCooldownCheckbox = QCheckBox("Gem Challenge Cooldown", self)
+        self.gemCooldownCheckbox.move(x_pos, 70)
+
+        self.clanGamesCheckbox = QCheckBox("Clan Games Mode", self)
+        self.clanGamesCheckbox.move(x_pos, 100)
+
+        self.attackOnlyCheckbox = QCheckBox("Attack Only, No Clan Games", self)
+        self.attackOnlyCheckbox.move(x_pos, 130)
+
+        self.startButton = QPushButton("Start Bot", self)
+        self.startButton.move(x_pos, 420)
+        self.startButton.resize(120, 40) # Increase the size of the button (width, height)
+
+        self.setWindowTitle('Clash of Clans Bot Configuration')
+
+    def startBot(self):
+        #* Get the state of the checkboxes and store them in variables
+        gem_cooldown = self.gemCooldownCheckbox.isChecked()
+        participate_in_clan_games = self.clanGamesCheckbox.isChecked()
+        attack_only = self.attackOnlyCheckbox.isChecked()
+        enable_attack = self.EnableAttackCheckbox.isChecked()
+
+        print(f"Starting bot with configurations: Gem Cooldown: {gem_cooldown}, Clan Games: {participate_in_clan_games}, Attack Only: {attack_only}")
+        # Here you would add the logic to start the bot with these configurations
+        #* pass the variables to the functions that need them
+        # Example: You might want to call bb_attack_loop() here or modify it to accept parameters based on the GUI settings
+        gem_cooldown=gem_cooldown #* Pass the gem_cooldown state to the purge_challenge function
+        enable_attack=enable_attack
+
+        main()
+
 
 #* ----- CLICK FUNCTIONS -----
 # def click(x, y):
@@ -432,15 +481,14 @@ def cg_loop():
 
     time.sleep(2)
 
-    test()
+    bb_attack_loop()
 
 
 # user intruction: manually start a challenge then go to builder base then run the script
 #TODO make it pick a challenge then make it go to bb, so me/user can run the script
-#TODO find image gem cooldown instead of relying on click()
 
     # click_drag(738, 369, 672, 439)
-def bb_attack_loop():
+def bb_attack_loop(enable_attack=False):
     close_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\close_btn.png'
     bb_atk_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
     challenge_completed_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\challenge_completed.png'
@@ -449,85 +497,73 @@ def bb_attack_loop():
     cart_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart.png'
     cart2_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart2.png'
 
-    while 1:
-        #* Check if the builder base attack button is visible, if so then it means we are back at builder base
-        # timeout = 10
-        # start_time = time.time()
-        # while not find_image_within_window(bb_atk_btn_img):
-        #     time.sleep(0.1)
-        #     if time.time() - start_time > timeout:
-        #         click_random_within_image(check_image_presence(close_btn_img))
-        #         setlog("Closed the window", "success")
-        #         break
-        # #* Check cart for elixir then collect it
-        # scroll_to_zoom((716, 117), 10)
-        # click_drag(854, 271, 700, 429)
-        # time.sleep(3)
-        # if click_random_within_image(check_image_presence(cart_w_elixir, confidence=0.9)) or click_random_within_image(check_image_presence(cart2_img)):
-        #     while not find_image_within_window(collect_elixir_cart, confidence=0.9):
-        #         time.sleep(0.2)
-        #     if click_random_within_image(check_image_presence(collect_elixir_cart, confidence=0.9)):
-        #         setlog("Collected elixir cart", "success")
-        #         click(867, 262) # click away
-        #         click(867, 262)
-        #     else:
-        #         setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-        # else:
-        #     setlog("Cart does not have elixir yet", "info")
-        #* Check if cg chellenge has been completed
-        while not find_image_within_window(challenge_completed_img, confidence=0.8):
-            time.sleep(1)
-            setlog("Challenge not completed yet", "info")
-            setlog("Continuing to attack", "info")
-            #* if not completed then attack
-            attack_BB()
-            time.sleep(1)
-            #* This loop is for when the battle is finish, we look for atk button to know if we are back on builder base
-            setlog("Waiting for builder base attack button to appear", "info")
-            for i in range(20):
-                time.sleep(0.5)
-                if find_image_within_window(bb_atk_btn_img):
-                    setlog("We are back at builder base!", "success")
-                    break
-            #* Check cart for elixir then collect it
-            scroll_to_zoom((716, 117), 10)
-            click_drag(854, 271, 700, 429)
-            setlog("Checking cart for elixir...", "info")
-            time.sleep(3)
-            if click_random_within_image(check_image_presence(cart_w_elixir, confidence=0.9)) or click_random_within_image(check_image_presence(cart2_img)):
-                while not find_image_within_window(collect_elixir_cart, confidence=0.9):
-                    time.sleep(0.2)
-                if click_random_within_image(check_image_presence(collect_elixir_cart, confidence=0.9)):
-                    setlog("Collected elixir cart", "success")
-                    click(867, 262) # click away
-                    click(867, 262)
-                else:
-                    setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-            else:
-                setlog("Cart does not have elixir yet", "info")
-
-        else:
-            #* if challenge completed then click the "challenge completed" button
-            setlog("Challenge completed", "success")
-            click_random_within_image(check_image_presence(challenge_completed_img, confidence=0.8))
-            # time.sleep(5)
-            # purge_challenge()
-            time.sleep(4)
-            #* Try to pick a new challenge
-            if pick_challenge():
-                click(891, 241) # click away
-                click(891, 241) # click away
-                continue #* if pick_challenge is successful then continue to the next iteration
-            else:
-                purge_challenge()
+    if not enable_attack:
+        setlog("Attack disabled", "info")
+        return True
+    else:
+        setlog("Attack enabled", "info")
+        while 1:
+            #* Check if cg chellenge has been completed
+            while not find_image_within_window(challenge_completed_img, confidence=0.8):
+                time.sleep(1)
+                setlog("Challenge not completed yet", "info")
+                setlog("Continuing to attack", "info")
+                #* if not completed then attack
+                attack_BB()
+                time.sleep(1)
+                #* This loop is for when the battle is finish, we look for atk button to know if we are back on builder base
+                setlog("Waiting for builder base attack button to appear", "info")
+                for i in range(20):
+                    time.sleep(0.5)
+                    if find_image_within_window(bb_atk_btn_img):
+                        setlog("We are back at builder base!", "success")
+                        break
+                #* Check cart for elixir then collect it
+                scroll_to_zoom((716, 117), 10)
+                click_drag(854, 271, 700, 429)
+                setlog("Checking cart for elixir...", "info")
                 time.sleep(3)
-                pick_challenge()
-                click(891, 241) # click away
-                click(891, 241) # click away
-                continue
+                if click_random_within_image(check_image_presence(cart_w_elixir, confidence=0.9)) or click_random_within_image(check_image_presence(cart2_img)):
+                    while not find_image_within_window(collect_elixir_cart, confidence=0.9):
+                        time.sleep(0.2)
+                    if click_random_within_image(check_image_presence(collect_elixir_cart, confidence=0.9)):
+                        setlog("Collected elixir cart", "success")
+                        click(867, 262) # click away
+                        click(867, 262)
+                    else:
+                        setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
+                else:
+                    setlog("Cart does not have elixir yet", "info")
 
+            else:
+                #* if challenge completed then click the "challenge completed" button
+                setlog("Challenge completed", "success")
+                click_random_within_image(check_image_presence(challenge_completed_img, confidence=0.8))
+                # time.sleep(5)
+                # purge_challenge()
+                time.sleep(4)
+                #* Try to pick a new challenge
+                if pick_challenge():
+                    click(891, 241) # click away
+                    click(891, 241) # click away
+                    continue #* if pick_challenge is successful then continue to the next iteration
+                else:
+                    purge_challenge()
+                    time.sleep(3)
+                    pick_challenge()
+                    click(891, 241) # click away
+                    click(891, 241) # click away
+                    continue
+
+def main():
+    global enable_attack
+    bb_attack_loop(enable_attack=enable_attack)
 
 if __name__ == "__main__":
 
-    bb_attack_loop()
+    # bb_attack_loop()
+    app = QApplication([])
+    ex = ClashOfClansBotGUI()
+    ex.show() # show the GUI
+    app.exec() # start the application
 

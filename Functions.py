@@ -479,7 +479,7 @@ def get_pixel_color(x, y):
 
 #* ---- CLAN GAMES FUNCTION ----
 
-def purge_challenge(debug=False):
+def purge_challenge(gem_cooldown=False, debug=False):
 
     ok_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\okay_btn.png'
     gem_cd_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gem_cd.png'
@@ -508,9 +508,10 @@ def purge_challenge(debug=False):
             time.sleep(3)
             click(537, 344) # click okay button
 
-            while not find_image_within_window(gem_cd_img):
-                time.sleep(0.2)
-            click_random_within_image(check_image_presence(gem_cd_img))
+            if gem_cooldown:
+                while not find_image_within_window(gem_cd_img):
+                    time.sleep(0.2)
+                click_random_within_image(check_image_presence(gem_cd_img))
 
             time.sleep(2.5)
             click(547, 351) # click okay button
