@@ -3,6 +3,8 @@
 from Functions import *
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget
+import json
+import os
 
 enable_attack = False
 gem_cooldown = False
@@ -11,6 +13,37 @@ class ClashOfClansBotGUI(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.settings = {"gemCooldown": False, "clanGames": False, "attackOnly": False} # Default settings
+        self.loadSettings()
+
+    def loadSettings(self):
+        print("Loading settings...")
+        try:
+            with open("settings.json", "r") as file:
+                self.settings = json.load(file)
+                print("Settings loaded successfully:", self.settings)
+                # Set checkbox states based on loaded settings
+                self.gemCooldownCheckbox.setChecked(self.settings.get("gemCooldown", False))
+                self.clanGamesCheckbox.setChecked(self.settings.get("clanGames", False))
+                self.attackOnlyCheckbox.setChecked(self.settings.get("attackOnly", False))
+
+        except FileNotFoundError:
+            print("Settings file not found. Using default settings.")
+        except json.JSONDecodeError:
+            print("Error loading settings file. Using default settings.")
+
+    def saveSettings(self):
+        try:
+            self.settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
+            self.settings["clanGames"] = self.clanGamesCheckbox.isChecked()
+            self.settings["attackOnly"] = self.attackOnlyCheckbox.isChecked()
+
+            with open("settings.json", "w") as file:
+                json.dump(self.settings, file)
+
+            print("Settings saved successfully.")
+        except Exception as e:
+            print(f"Error saving settings: {e}")
 
     def initUI(self):
         self.setFixedSize(500, 500)  # Set the fixed size of the window (width, height)
@@ -32,6 +65,12 @@ class ClashOfClansBotGUI(QWidget):
         self.startButton = QPushButton("Start Bot", self)
         self.startButton.move(30, 420)
         self.startButton.resize(120, 40)
+        
+        # Add "Save Settings" button
+        self.saveSettingsButton = QPushButton("Save Settings", self)
+        self.saveSettingsButton.move(170, 420)
+        self.saveSettingsButton.resize(120, 40)
+        self.saveSettingsButton.clicked.connect(self.saveSettings)
 
         self.setWindowTitle('Clash of Clans Bot Configuration')
 
@@ -91,12 +130,12 @@ class ClashOfClansBotGUI(QWidget):
         # self.tab_widget.addTab(main_village_tab, "Main Village")
 
     def startBot(self):
-        gem_cooldown = self.gemCooldownCheckbox.isChecked()
-        participate_in_clan_games = self.clanGamesCheckbox.isChecked()
-        attack_only = self.attackOnlyCheckbox.isChecked()
-        enable_attack = self.EnableAttackCheckbox.isChecked()
+        self.settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
+        self.settings["clanGames"] = self.clanGamesCheckbox.isChecked()
+        self.settings["attackOnly"] = self.attackOnlyCheckbox.isChecked()
+        self.saveSettings()  # Save settings when starting the bot
 
-        print(f"Starting bot with configurations: Gem Cooldown: {gem_cooldown}, Clan Games: {participate_in_clan_games}, Attack Only: {attack_only}")
+        print(f"Starting bot with configurations: Gem Cooldown: {self.settings['gemCooldown']}, Clan Games: {self.settings['clanGames']}, Attack Only: {self.settings['attackOnly']}")
 
         # Here you would add the logic to start the bot with these configurations
         #* pass the variables to the functions that need them
@@ -105,8 +144,6 @@ class ClashOfClansBotGUI(QWidget):
         enable_attack = enable_attack
         #TODO - do the parameters for the functions that need them
         main()
-
-
 
 
 #* ----- CLICK FUNCTIONS -----
