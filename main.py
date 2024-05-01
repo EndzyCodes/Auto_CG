@@ -1,13 +1,9 @@
 
-
-from Functions import *
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget
 import json
-import os
+from Functions import *
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget
 
-enable_attack = False
-gem_cooldown = False
+
 
 class ClashOfClansBotGUI(QWidget):
     def __init__(self):
@@ -15,35 +11,6 @@ class ClashOfClansBotGUI(QWidget):
         self.initUI()
         self.settings = {"gemCooldown": False, "clanGames": False, "attackOnly": False} # Default settings
         self.loadSettings()
-
-    def loadSettings(self):
-        print("Loading settings...")
-        try:
-            with open("settings.json", "r") as file:
-                self.settings = json.load(file)
-                print("Settings loaded successfully:", self.settings)
-                # Set checkbox states based on loaded settings
-                self.gemCooldownCheckbox.setChecked(self.settings.get("gemCooldown", False))
-                self.clanGamesCheckbox.setChecked(self.settings.get("clanGames", False))
-                self.attackOnlyCheckbox.setChecked(self.settings.get("attackOnly", False))
-
-        except FileNotFoundError:
-            print("Settings file not found. Using default settings.")
-        except json.JSONDecodeError:
-            print("Error loading settings file. Using default settings.")
-
-    def saveSettings(self):
-        try:
-            self.settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
-            self.settings["clanGames"] = self.clanGamesCheckbox.isChecked()
-            self.settings["attackOnly"] = self.attackOnlyCheckbox.isChecked()
-
-            with open("settings.json", "w") as file:
-                json.dump(self.settings, file)
-
-            print("Settings saved successfully.")
-        except Exception as e:
-            print(f"Error saving settings: {e}")
 
     def initUI(self):
         self.setFixedSize(500, 500)  # Set the fixed size of the window (width, height)
@@ -62,15 +29,16 @@ class ClashOfClansBotGUI(QWidget):
         self.tab_widget.addTab(self.bb_attack_tab, "BB Attack")
         self.tab_widget.addTab(self.main_village_tab, "Main Village")
 
-        self.startButton = QPushButton("Start Bot", self)
-        self.startButton.move(30, 420)
-        self.startButton.resize(120, 40)
-        
         # Add "Save Settings" button
         self.saveSettingsButton = QPushButton("Save Settings", self)
         self.saveSettingsButton.move(170, 420)
         self.saveSettingsButton.resize(120, 40)
         self.saveSettingsButton.clicked.connect(self.saveSettings)
+
+        self.startButton = QPushButton("Start Bot", self)
+        self.startButton.move(30, 420)
+        self.startButton.resize(120, 40)
+        self.startButton.clicked.connect(self.startBot)  # Connect the button to startBot method
 
         self.setWindowTitle('Clash of Clans Bot Configuration')
 
@@ -129,10 +97,39 @@ class ClashOfClansBotGUI(QWidget):
 
         # self.tab_widget.addTab(main_village_tab, "Main Village")
 
+    def loadSettings(self):
+        print("Loading settings...")
+        try:
+            with open("settings.json", "r") as file:
+                self.settings = json.load(file)
+                print("Settings loaded successfully:", self.settings)
+                # Set checkbox states based on loaded settings
+                self.gemCooldownCheckbox.setChecked(self.settings.get("gemCooldown", False))
+                self.clanGamesCheckbox.setChecked(self.settings.get("clanGames", False))
+                self.attackOnlyCheckbox.setChecked(self.settings.get("attackOnly", False))
+
+        except FileNotFoundError:
+            print("Settings file not found. Using default settings.")
+        except json.JSONDecodeError:
+            print("Error loading settings file. Using default settings.")
+
+    def saveSettings(self):
+        try:
+            self.settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
+            self.settings["clanGames"] = self.clanGamesCheckbox.isChecked()
+            self.settings["attackOnly"] = self.attackOnlyCheckbox.isChecked()
+
+            with open("settings.json", "w") as file:
+                json.dump(self.settings, file)
+
+            print("Settings saved successfully.")
+        except Exception as e:
+            print(f"Error saving settings: {e}")
+
     def startBot(self):
-        self.settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
-        self.settings["clanGames"] = self.clanGamesCheckbox.isChecked()
-        self.settings["attackOnly"] = self.attackOnlyCheckbox.isChecked()
+        gem_cooldown = self.settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
+        clan_games_mode = self.settings["clanGames"] = self.clanGamesCheckbox.isChecked()
+        attack_only_no_cg = self.settings["attackOnly"] = self.attackOnlyCheckbox.isChecked()
         self.saveSettings()  # Save settings when starting the bot
 
         print(f"Starting bot with configurations: Gem Cooldown: {self.settings['gemCooldown']}, Clan Games: {self.settings['clanGames']}, Attack Only: {self.settings['attackOnly']}")
@@ -141,8 +138,9 @@ class ClashOfClansBotGUI(QWidget):
         #* pass the variables to the functions that need them
         # Example: You might want to call bb_attack_loop() here or modify it to accept parameters based on the GUI settings
         gem_cooldown = gem_cooldown
-        enable_attack = enable_attack
-        #TODO - do the parameters for the functions that need them
+        attack_only_no_cg = attack_only_no_cg
+        clan_games_mode = clan_games_mode
+
         main()
 
 
@@ -584,7 +582,7 @@ def cg_loop():
 #TODO make it pick a challenge then make it go to bb, so me/user can run the script
 
     # click_drag(738, 369, 672, 439)
-def bb_attack_loop(enable_attack=False):
+def bb_attack_loop(attack_only_no_cg=False, clan_games_mode=False):
     close_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\close_btn.png'
     bb_atk_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
     challenge_completed_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\challenge_completed.png'
@@ -593,11 +591,33 @@ def bb_attack_loop(enable_attack=False):
     cart_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart.png'
     cart2_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart2.png'
 
-    if not enable_attack:
-        setlog("Attack disabled", "info")
-        return True
-    else:
-        setlog("Attack enabled", "info")
+    if attack_only_no_cg:
+        setlog("Attack Only no clan games event", "info")
+        while 1:
+            attack_BB()
+            time.sleep(1)
+            for i in range(20):
+                time.sleep(0.5)
+                if find_image_within_window(bb_atk_btn_img):
+                    setlog("We are back at builder base!", "success")
+                    break
+            #* Check cart for elixir then collect it
+            scroll_to_zoom((716, 117), 10)
+            click_drag(854, 271, 700, 429)
+            setlog("Checking cart for elixir...", "info")
+            time.sleep(3)
+            if click_random_within_image(check_image_presence(cart_w_elixir, confidence=0.9)) or click_random_within_image(check_image_presence(cart2_img)):
+                while not find_image_within_window(collect_elixir_cart, confidence=0.9):
+                    time.sleep(0.2)
+                if click_random_within_image(check_image_presence(collect_elixir_cart, confidence=0.9)):
+                    setlog("Collected elixir cart", "success")
+                    click(867, 262) # click away
+                    click(867, 262)
+                else:
+                    setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
+            else:
+                setlog("Cart does not have elixir yet", "info")
+    elif clan_games_mode:  # if there is clan games
         while 1:
             #* Check if cg chellenge has been completed
             while not find_image_within_window(challenge_completed_img, confidence=0.8):
@@ -651,9 +671,12 @@ def bb_attack_loop(enable_attack=False):
                     click(891, 241) # click away
                     continue
 
+attack_only_no_cg = False
+# gem_cooldown = False
+
 def main():
     global enable_attack
-    bb_attack_loop(enable_attack=enable_attack)
+    bb_attack_loop(attack_only_no_cg=attack_only_no_cg)
 
 if __name__ == "__main__":
 

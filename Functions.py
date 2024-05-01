@@ -512,12 +512,11 @@ def purge_challenge(gem_cooldown=False, debug=False):
                 while not find_image_within_window(gem_cd_img):
                     time.sleep(0.2)
                 click_random_within_image(check_image_presence(gem_cd_img))
-
-            time.sleep(2.5)
-            click(547, 351) # click okay button
-            
-            # click(867, 262) # click away to close clan games window
-            # click(867, 262) # click away just to be sure
+                time.sleep(2.5)
+                click(547, 351) # click okay button
+            else:
+                click(867, 262) # click away to close clan games window
+                click(867, 262) # click away just to be sure
             setlog("Challenge purged", 'success')
             purged = True
         else:
