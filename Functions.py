@@ -230,9 +230,9 @@ def move_to(x,y):
     pyautogui.moveTo(absolute_x, absolute_y)
 
 #* ---- MAIN VILLAGE FUNCTIONS ----
-def is_army_btn_visible():
+def is_army_btn_visible(click=False):
 
-    img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\army_btn.png'
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
 
     count = 0
     while 1: 
@@ -242,11 +242,18 @@ def is_army_btn_visible():
             if count == 1: setlog("Waiting for army tab to appear", "info")
         else:
             setlog("Army tab found", "success")
+            if click:
+                if click_random_within_image(check_image_presence(img, confidence=0.8)):
+                    time.sleep(1)
+                    setlog("Clicked on army tab", "success")
+                    return True
+                else:
+                    setlog("No army tab", "info")
+                    return False
             return True
-            # break
 
 def check_daily_reward():
-    img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\claim_btn.png'
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\claim_btn.png'
     claim_btn_location = check_image_presence(img, confidence=0.9)
     if find_image(img, confidence=0.9):
         if click_random_within_image(claim_btn_location):
@@ -262,9 +269,9 @@ def check_daily_reward():
         return False
 
 def collect_resources():
-    gold_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gold.png'
-    elixir_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\elixir.png'
-    dark_elixir_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\dark_elixir.png'
+    gold_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\gold.png'
+    elixir_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\elixir.png'
+    dark_elixir_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\dark_elixir.png'
     
     # Create a list of resource images
     resource_images = [gold_img, elixir_img, dark_elixir_img]
@@ -316,7 +323,7 @@ def main2(skip_acc_num=0): # for purging loop
         # check_daily_reward() # this for accounts that have been opened just now, "Chief you're back!"
 
         # click all possible claims button
-        if find_image_within_window(r'C:\Users\Mark\Desktop\AutoAttackBB\assets\daily_reward.png'):
+        if find_image_within_window(r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\daily_reward.png'):
             setlog("Daily reward window found", "success")
             click(197, 250)
             click(341, 252)
@@ -586,8 +593,9 @@ def find_image(image_path, confidence=0.8, timeout=10, debug=False):
             print(f"Image not found")
 
 def check_image_presence(image_path, confidence=0.8, region=None):
+    window_rect = get_window_rect(window_title)
     try:
-        image_location = pyautogui.locateOnScreen(image_path, confidence=confidence, region=region)
+        image_location = pyautogui.locateOnScreen(image_path, confidence=confidence, region=window_rect)
         return image_location
     except pyautogui.ImageNotFoundException:
         return False
@@ -605,18 +613,46 @@ def get_pixel_color(x, y):
 def extract_digit_from_image(image_path):
     try:
         image = Image.open(image_path)  # Open the image file
-        # custom_config = r'-c tessedit_char_whitelist=x0123456789'
-        digit = pytesseract.image_to_string(image)  # Extract the digit from the image using OCR
-        print(digit.strip())  # Print the extracted digit
-        return digit.strip()  # Return the extracted digit
+        custom_config = r'-c tessedit_char_whitelist=0123456789'
+        digit = pytesseract.image_to_string(image, config=custom_config)  # Extract the digit from the image using OCR
+        # digit = pytesseract.image_to_string(image)  # Extract the digit from the image using OCR
+        print(digit)
+        digit = digit.replace('s', '5').replace('S', '5').replace('i', '1').replace('I', '1').replace('x','')
+
+        digit1 = str(digit)
+        # print(digit)
+        # return digit  # Return the extracted digit
+
+        if len(digit1) > 7:
+            digit1 = digit1[:7]  # Keep only the first 7 digits if more are extracted
+
+        digit2 = ''.join(filter(str.isdigit, digit1))  # Extract only digits from OCR result
+        digit3 = digit2.strip()
+        print(digit3)
+        if digit3.isdigit():  # Check if extracted string is a valid digit
+            return int(digit3)
+        else:
+            return None
     except Exception as e:
         print(f"Error extracting digits from image: {e}")  # Print error message if extraction fails
         return None  # Return None if extraction fails
 
+# def extract_digit_from_image(image_path):
+#     try:
+#         image = Image.open(image_path)  # Open the image file
+#         digit = pytesseract.image_to_string(image, config='--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789')  # Extract the digit from the image using OCR
+#         digit = digit.strip()  # Remove leading and trailing whitespaces
+#         digit = digit.replace('s', '5').replace('S', '5')  # Replace 's' and 'S' with '5'
+#         return str(digit)
+#         # return digit  # Return the extracted digit
+#     except Exception as e:
+#         print(f"Error extracting digits from image: {e}")  # Print error message if extraction fails
+#         return None  # Return None if extraction fails
+
 def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False):
     # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
     # get_region_within_window(img)
-    # window_rect = get_window_rect(window_title)
+    window_rect = get_window_rect(window_title)
 
     try:
         start_time = time.time()
@@ -662,6 +698,30 @@ def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False
 # pyautogui.moveTo(final_rx, final_ry)
 # print(f"Clicking at x: {final_rx}, y: {final_ry}")
 
+def ocr_an_image():
+    # Get window rectangle
+    window_rect = get_window_rect(window_title)
+    if not window_rect:
+        print("Failed to get window rectangle.")
+        return
+
+    region1 = (150, 148, 28, 20)
+
+    region_x, region_y, region_width, region_height = region1
+    screenshot_region = (
+        window_rect[0] + region_x,
+        window_rect[1] + region_y,
+        region_width,
+        region_height
+    )
+    
+    troop_count_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\troop_count.png' 
+    ss = pyautogui.screenshot(region=screenshot_region)
+    ss.save(troop_count_img)
+
+    troop_count_img = extract_digit_from_image(troop_count_img)
+    print(troop_count_img)
+
 #* ------------------------------
 
 
@@ -669,16 +729,16 @@ def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False
 
 def purge_challenge(gem_cooldown=False, debug=False):
 
-    ok_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\okay_btn.png'
-    gem_cd_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gem_cd.png'
+    ok_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\okay_btn.png'
+    gem_cd_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\gem_cd.png'
 
     purged = False
-    start_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\start_btn.png'
-    trash_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\trash_btn.png'
-    home_vill_challenge_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\home_vill_challenge.png'
-    running_challenge_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\running_challenge.png'
-    challenge_cooldown_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\challenge_cooldown.png'
-    # bb_vill_challenge_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_vill_challenge.png'
+    start_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\start_btn.png'
+    trash_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\trash_btn.png'
+    home_vill_challenge_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\home_vill_challenge.png'
+    running_challenge_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\running_challenge.png'
+    challenge_cooldown_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\challenge_cooldown.png'
+    # bb_vill_challenge_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_vill_challenge.png'
 
     while 1:
         if find_image_within_window(home_vill_challenge_img):
@@ -724,16 +784,16 @@ def purge_challenge(gem_cooldown=False, debug=False):
         return False
 
 def pick_challenge(debug=False):
-    start_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\start_btn.png'
-    trash_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\trash_btn.png'
-    ok_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\okay_btn.png'
-    gem_cd_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gem_cd.png'
+    start_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\start_btn.png'
+    trash_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\trash_btn.png'
+    ok_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\okay_btn.png'
+    gem_cd_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\gem_cd.png'
 
-    bb_challenge = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_challenge.png'
+    bb_challenge = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_challenge.png'
     challenge_images = [
-        r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_bb\boxer_giant_punch_up.png',
-        r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_bb\riding_n_gliding.png',
-        r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_bb\bomber_blow_em_up.png'
+        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\boxer_giant_punch_up.png',
+        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\riding_n_gliding.png',
+        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\bomber_blow_em_up.png'
     ]
 
     def remove_challenge(challenge_img):
@@ -788,7 +848,7 @@ def pick_challenge(debug=False):
 
 def open_cg_window():
 
-    img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_cart2.png'
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_cart2.png'
     if find_image(img):
         setlog("found clan games cart", "success")
         setlog("Opening clan games window", "info")
@@ -806,333 +866,16 @@ def open_cg_window():
         if find_image(img):
             setlog("found on 2nd try", "success")
             time.sleep(1)
-            img2 = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_cart2.png'
+            img2 = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_cart2.png'
             clan_games_location2 = check_image_presence(img2, confidence=0.8)
             click_random_within_image(clan_games_location2) # open clan games window
             return True
     return False
 
+#* ------------------------------
+
 
 #* ---- BUILDER BASE FUNCTIONS ----
-def deploy_troops(sec_vill_battle=False):
-
-    if sec_vill_battle:
-        setlog("Deploying troops on the 2nd village battle ground", "info")
-        setlog("Dropping loons", "info")
-        click(165, 509) # click hero
-        click(583, 316) # drop hero
-        time.sleep(10)
-
-        click(589, 485) # click loon icon just to be sure
-        # drop loons
-        click(515, 349)
-        # click(591, 314)
-        click(630, 279)
-        # click(678, 243)
-        click(740, 200)
-        click(591, 314)
-        click(678, 243)
-
-        time.sleep(3) # wait a bit before dropping minions
-        setlog("Dropping minions", "info")
-        # click all possible  minions icon
-        click(417, 507)
-        click(480, 506)
-        click(532, 513)
-        # minions drop points
-        for i in range(3):
-            click(515, 349)
-            click(591, 314)
-            click(630, 279)
-            click(678, 243)
-            click(740, 200)
-
-        time.sleep(12)
-        setlog("Activating hero ability", "info")
-        click(165, 509) # activate hero ability
-    else:
-        setlog("Deploying troops on the 1st village battle ground", "info")
-        setlog("Deploying", "info")
-        click(165, 509) # click hero
-        click(583, 316) # drop hero
-
-        time.sleep(10) # wait a bit before dropping balloons
-        setlog("Dropping loons", "info")
-        click(231, 505) # click balloon icon
-
-        # ballons drop points
-        click(521, 375) 
-        # click(579, 333)
-        click(630, 279)
-        # click(619, 303)
-        click(740, 200)
-
-        time.sleep(3) # wait a bit before dropping minions
-        setlog("Dropping minions", "info")
-        click(417, 507) # click minions icon
-
-        # minions drop points
-        for i in range(3):
-            click(515, 349)
-            click(591, 314)
-            click(630, 279)
-            click(678, 243)
-            click(740, 200)
-
-        time.sleep(10)
-        setlog("Activating hero ability", "info")
-        click(165, 509) # activate hero ability
-
-def boost_troop_heroes():
-    click(39, 432) # click army tab
-    
-    click(473, 302) # click hero boost button
-    click(473, 352) # click to confirm boost
-    
-    time.sleep(1)
-    
-    click(596, 308) # click troop boost button
-    click(596, 358) # click to confirm boost
-    
-    click(902, 284) # click away
-
-def return_home():
-    return_home_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\return_home_btn.png'
-    hero_ability_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\hero_ability.png'
-
-    count = 0
-    timeout = 90  # timeout in seconds
-    start_time = time.time()
-    while not find_image_within_window(return_home_btn_img):
-        count += 1
-        if count == 1: setlog("Waiting for return home button to appear", "info")
-        if time.time() - start_time > timeout:
-            setlog("Something went wrong on detecting return home button", "error")
-            break
-        time.sleep(1)
-        if find_image_within_window(hero_ability_img, confidence=0.9):
-            if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
-                setlog("Hero ability is ready again, clicking it now", "info")
-
-    count = 0
-
-    # if find_image_within_window(return_home_btn_img):
-    if click_random_within_image(check_image_presence(return_home_btn_img, confidence=0.8)):
-        setlog("Clicked return home button", "success")
-        return True
-    else:
-        setlog("Failed to click return home button", "error")
-        return False
-    # else:
-    #     setlog("Return home button did not appear", "warning")
-
-found_opponent = False
-def attack_BB():
-    global found_opponent
-    get_coc_window("Clash of Clans")
-    bb_atk_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
-    if find_image_within_window(bb_atk_btn_img):
-        if click_random_within_image(check_image_presence(bb_atk_btn_img, confidence=0.8)):
-            setlog("Clicked attack button", "success")
-            time.sleep(1.5)
-        else:
-            setlog("Failed to attack button", "error")
-    else:
-        setlog("Builder base attack button not found", "error")
-
-    find_now_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\find_now_btn.png'
-    if click_random_within_image(check_image_presence(find_now_btn_img, confidence=0.8)):
-        setlog("Clicked find now button", "success")
-        time.sleep(1.5)
-    else:
-        setlog("Failed to click find now button", "error")
-
-    cancel_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cancel_btn.png'
-    if find_image_within_window(cancel_btn_img):
-        time.sleep(0.5)
-        setlog("Finding an opponent...", "info")
-        while find_image_within_window(cancel_btn_img):
-            time.sleep(0.5)
-        else:
-            setlog("Found an opponent", "success")
-            found_opponent = True
-
-    time.sleep(3) # wait a bit to load battle ground
-    scroll_to_zoom((300, 353), 10)
-    time.sleep(1)
-    click_drag(743, 429, 414, 200)
-    time.sleep(1)
-    deploy_troops()
-
-    return_home_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\return_home_btn.png'
-    sec_vill_loon = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\sec_vill_loon.png'
-    hero_ability_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\hero_ability.png'
-
-    timeout = 120  # timeout in seconds
-    start_time = time.time()
-    setlog("Waiting for battle to finish", "info")
-    while not find_image_within_window(return_home_btn_img):
-        if time.time() - start_time > timeout:
-            break
-        time.sleep(1)
-        if find_image_within_window(hero_ability_img, confidence=0.9):
-            if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
-                setlog("Hero ability is ready again, clicking it now", "info")
-        if find_image_within_window(sec_vill_loon):
-            # setlog("We are at the 2nd village battle ground", "info")
-            break
-        if find_image_within_window(hero_ability_img, confidence=0.9):
-            if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
-                setlog("Hero ability is ready again, clicking it now", "info")
-
-    if find_image_within_window(return_home_btn_img):
-        if click_random_within_image(check_image_presence(return_home_btn_img, confidence=0.8)):
-            setlog("Clicked return home button", "success")
-        else:
-            setlog("Failed to click return home button", "error")
-    else:
-        # setlog("Return home button did not appear", "warning")
-        # setlog("Maybe we are on the next village")
-        time.sleep(1)
-        # balloon_troop = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\balloon_troop.png'
-        if find_image_within_window(sec_vill_loon):
-            setlog("We are at the 2nd village battle ground", "info")
-            # if click_random_within_image(check_image_presence(sec_vill_loon, confidence=0.9)):
-            #     setlog("Clicked balloon troop", "success")
-            # else:
-            #     setlog("Failed to click balloon troop", "error")
-
-            # setlog("Maybe we are on the next village", "info")
-            time.sleep(3) # wait a bit to load battle ground
-            scroll_to_zoom((300, 353), 10)
-            time.sleep(1)
-            click_drag(743, 429, 414, 200)
-            time.sleep(1)
-            deploy_troops(sec_vill_battle=True) # deploy troops on the 2nd village battle ground
-            found_opponent = False
-            return_home()
-
-def go_to_bb(go_back_main=False):
-
-    boat_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\boat.png'
-
-    if go_back_main:
-        scroll_to_zoom((716, 117), 10)
-        click_drag(854, 271, 700, 429)
-        time.sleep(2)
-        setlog("Going back to main village", "info")
-        if find_image_within_window(boat_img, confidence=0.7):
-            setlog("Found builder base boat", "success")
-            if click_random_within_image(check_image_presence(boat_img, confidence=0.7)):
-                setlog("Clicked builder base boat", "success")
-                scroll_to_zoom((716, 117), 10)
-                return True
-            else:
-                setlog("Failed to click builder base", "error")
-                return False
-    
-    else:
-        click_drag(470, 316, 725, 82)
-        time.sleep(1)
-
-        if find_image_within_window(boat_img):
-            setlog("Found builder base boat", "success")
-            if click_random_within_image(check_image_presence(boat_img, confidence=0.9)):
-                setlog("Clicked builder base boat", "success")
-                return True
-            else:
-                setlog("Failed to click builder base", "error")
-                return False
-
-def bb_attack_loop(attack_only_no_cg=False, clan_games_mode=False, gem_cooldown=False):
-
-    close_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\close_btn.png'
-    bb_atk_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
-    challenge_completed_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\challenge_completed.png'
-    cart_w_elixir = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart_with_elixir.png'
-    collect_elixir_cart = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\collect_elixir_cart.png'
-    cart_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart.png'
-    cart2_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart2.png'
-
-    if attack_only_no_cg:
-        setlog("Attack Only no clan games event", "info")
-        while 1:
-            attack_BB()
-            time.sleep(1)
-            for i in range(20):
-                time.sleep(0.5)
-                if find_image_within_window(bb_atk_btn_img):
-                    setlog("We are back at builder base!", "success")
-                    break
-            #* Check cart for elixir then collect it
-            scroll_to_zoom((716, 117), 10)
-            click_drag(854, 271, 700, 429)
-            setlog("Checking cart for elixir...", "info")
-            time.sleep(3)
-            if click_random_within_image(check_image_presence(cart_w_elixir, confidence=0.9)) or click_random_within_image(check_image_presence(cart2_img)):
-                while not find_image_within_window(collect_elixir_cart, confidence=0.9):
-                    time.sleep(0.2)
-                if click_random_within_image(check_image_presence(collect_elixir_cart, confidence=0.9)):
-                    setlog("Collected elixir cart", "success")
-                    click(867, 262) # click away
-                    click(867, 262)
-                else:
-                    setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-            else:
-                setlog("Cart does not have elixir yet", "info")
-    elif clan_games_mode:  # if there is clan games
-        while 1:
-            #* Check if cg chellenge has been completed
-            while not find_image_within_window(challenge_completed_img, confidence=0.8):
-                time.sleep(1)
-                setlog("Challenge not completed yet", "info")
-                setlog("Continuing to attack", "info")
-                #* if not completed then attack
-                attack_BB()
-                time.sleep(1)
-                #* This loop is for when the battle is finish, we look for atk button to know if we are back on builder base
-                setlog("Waiting for builder base attack button to appear", "info")
-                for i in range(20):
-                    time.sleep(0.5)
-                    if find_image_within_window(bb_atk_btn_img):
-                        setlog("We are back at builder base!", "success")
-                        break
-                #* Check cart for elixir then collect it
-                scroll_to_zoom((716, 117), 10)
-                click_drag(854, 271, 700, 429)
-                setlog("Checking cart for elixir...", "info")
-                time.sleep(3)
-                if click_random_within_image(check_image_presence(cart_w_elixir, confidence=0.9)) or click_random_within_image(check_image_presence(cart2_img)):
-                    while not find_image_within_window(collect_elixir_cart, confidence=0.9):
-                        time.sleep(0.2)
-                    if click_random_within_image(check_image_presence(collect_elixir_cart, confidence=0.9)):
-                        setlog("Collected elixir cart", "success")
-                        click(867, 262) # click away
-                        click(867, 262)
-                    else:
-                        setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-                else:
-                    setlog("Cart does not have elixir yet", "info")
-
-            else:
-                #* if challenge completed then click the "challenge completed" button
-                setlog("Challenge completed", "success")
-                click_random_within_image(check_image_presence(challenge_completed_img, confidence=0.8))
-                # time.sleep(5)
-                # purge_challenge()
-                time.sleep(4)
-                #* Try to pick a new challenge
-                if pick_challenge():
-                    click(891, 241) # click away
-                    click(891, 241) # click away
-                    continue #* if pick_challenge is successful then continue to the next iteration
-                else:
-                    purge_challenge(gem_cooldown=gem_cooldown)
-                    time.sleep(3)
-                    pick_challenge()
-                    click(891, 241) # click away
-                    click(891, 241) # click away
-                    continue
 
 #* ------------------------------
 
@@ -1243,12 +986,13 @@ def func_to_run():
     # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
     # get_region_within_window(img)
 
-    region_troop_cap = (1054, 344, 27, 30)
-    troop_cap_img_path = r'images\troop_cap_imgs\troop_cap.png'
-    ss_troop_cap = pyautogui.screenshot(region=region_troop_cap)
-    ss_troop_cap.save(troop_cap_img_path)
+    region1 = (1049, 129, 90, 21)
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\gold_loot.png'
+    ss_troop_cap = pyautogui.screenshot(region=region1)
+    ss_troop_cap.save(img)
 
-    troop_cap_info = extract_digit_from_image(troop_cap_img_path)
+    troop_cap_info = extract_digit_from_image(img)
+    print
     if troop_cap_info != "45":
         print("True")
         # print(troop_cap_info)
@@ -1260,4 +1004,27 @@ def func_to_run():
     # if find_image(troop_cap_img_path, confidence=0.8):
     #     print("true")
 
+# window_size = (661, 32, 1932, 777)
+
+def set_window_size(window_size):
+    # call the function: set_window_size(window_size)
+    left, top, right, bottom = window_size
+    width = right - left
+    height = bottom - top
+    gw.getWindowsWithTitle(window_title)[0].resizeTo(width, height)
+
 setup_logging()
+from bb_funcs import bb_attack_loop
+
+# def main(gem_cooldown,
+#         clan_games_mode,
+#         attack_only_no_cg):
+
+#     get_coc_window(window_title)
+
+#     print("Starting automated gameplay...")
+#     # Example: Implement automation logic
+#     while True:
+#         bb_attack_loop(attack_only_no_cg=attack_only_no_cg,
+#                         clan_games_mode=clan_games_mode,
+#                         gem_cooldown=gem_cooldown)

@@ -1,26 +1,15 @@
 import json
-from Functions import setlog, get_coc_window, window_title
-from bb_funcs import bb_attack_loop
+# from Functions import *
+from Functions import bb_attack_loop  # Import your specific functions
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget
-from PyQt6.QtCore import QThread, pyqtSignal
 
-# def main(attack_only_no_cg=False,
-#         enable_gem_cooldown=False,
-#         clan_games_mode=False):
+attack_only_no_cg = False
+enable_gem_cooldown = False
+clan_games_mode = False
 
-#     bb_attack_loop(attack_only_no_cg=attack_only_no_cg, clan_games_mode=clan_games_mode, gem_cooldown=enable_gem_cooldown)
-def main(gem_cooldown,
-        clan_games_mode,
-        attack_only_no_cg):
+def main(attack_only_no_cg=False, enable_gem_cooldown=False, clan_games_mode=False):
 
-    get_coc_window(window_title)
-
-    print("Starting automated gameplay...")
-    # Example: Implement automation logic
-    while True:
-        bb_attack_loop(attack_only_no_cg=attack_only_no_cg,
-                        clan_games_mode=clan_games_mode,
-                        gem_cooldown=gem_cooldown)
+    bb_attack_loop(attack_only_no_cg=attack_only_no_cg, clan_games_mode=clan_games_mode, gem_cooldown=enable_gem_cooldown)
 
 class ClashOfClansBotGUI(QWidget):
     def __init__(self):
@@ -28,10 +17,8 @@ class ClashOfClansBotGUI(QWidget):
         self.initUI()
         self.settings = {"gemCooldown": False, "clanGames": False, "attackOnly": False} # Default settings
         self.loadSettings()
-        self.bot_thread = None
 
     def initUI(self):
-        self.setWindowTitle('Clash of Clans Bot Configuration')
         self.setFixedSize(500, 500)  # Set the fixed size of the window (width, height)
         # this is the main window
         self.tab_widget = QTabWidget(self)
@@ -50,7 +37,7 @@ class ClashOfClansBotGUI(QWidget):
 
         # Add "Save Settings" button
         self.saveSettingsButton = QPushButton("Save Settings", self)
-        self.saveSettingsButton.move(310, 420)
+        self.saveSettingsButton.move(170, 420)
         self.saveSettingsButton.resize(120, 40)
         self.saveSettingsButton.clicked.connect(self.saveSettings)
 
@@ -59,11 +46,7 @@ class ClashOfClansBotGUI(QWidget):
         self.startButton.resize(120, 40)
         self.startButton.clicked.connect(self.startBot)  # Connect the button to startBot method
 
-        self.stopButton = QPushButton("Stop Bot", self)
-        self.stopButton.move(170, 420)
-        self.stopButton.resize(120, 40)
-        self.stopButton.clicked.connect(self.stopBot)  # Connect the button to stopBot method
-
+        self.setWindowTitle('Clash of Clans Bot Configuration')
 
     def tabChanged(self, index):
         if index == 0:  # Clan Games Tab
@@ -156,11 +139,6 @@ class ClashOfClansBotGUI(QWidget):
 
         print(f"Starting bot with configurations: Gem Cooldown: {self.settings['gemCooldown']}, Clan Games: {self.settings['clanGames']}, Attack Only: {self.settings['attackOnly']}")
 
-        # If there's an existing thread, wait for it to finish before creating a new one
-        if self.bot_thread and self.bot_thread.isRunning():
-            print("Waiting for the previous bot thread to finish...")
-            self.bot_thread.wait()
-
         # Here you would add the logic to start the bot with these configurations
         #* pass the variables to the functions that need them
         # Example: You might want to call bb_attack_loop() here or modify it to accept parameters based on the GUI settings
@@ -168,29 +146,5 @@ class ClashOfClansBotGUI(QWidget):
         attack_only_no_cg = attack_only_no_cg
         clan_games_mode = clan_games_mode
 
-        # main(enable_gem_cooldown, clan_games_mode, attack_only_no_cg)
+        main(enable_gem_cooldown, clan_games_mode, attack_only_no_cg)
 
-        # Create a new thread to run the bot
-        self.bot_thread = BotThread(enable_gem_cooldown, clan_games_mode, attack_only_no_cg)
-        self.bot_thread.finished.connect(self.onBotThreadFinished)
-        self.bot_thread.start()
-
-    def stopBot(self):
-        if self.bot_thread and self.bot_thread.isRunning():
-            setlog("Stopping bot...", "warning")
-            self.bot_thread.terminate()  # Terminate the bot thread if it's running
-
-    def onBotThreadFinished(self):
-        setlog("Bot thread finished.", "success")
-        self.bot_thread = None  # Reset the thread reference
-
-class BotThread(QThread):
-    def __init__(self, gem_cooldown, clan_games_mode, attack_only_no_cg):
-        super().__init__()
-        self.gem_cooldown = gem_cooldown
-        self.clan_games_mode = clan_games_mode
-        self.attack_only_no_cg = attack_only_no_cg
-
-    def run(self):
-        # Call your main bot function from here
-        main(attack_only_no_cg=self.attack_only_no_cg, clan_games_mode=self.clan_games_mode, gem_cooldown=self.gem_cooldown)

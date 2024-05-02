@@ -2,6 +2,7 @@ import pygetwindow as gw
 import pyautogui
 import time
 import win32gui
+import pyperclip
 
 # This script gets the rectangle coordinates of a specified window
 # It then searches for an image within that window rectangle
@@ -29,11 +30,13 @@ def get_window_rect(window_title, debug=False):
     else:
         if debug: print("Window rect not changed")
 
+    # print(window_rect)
     return window_rect
     # example usage to know info rect
     # info, rect = get_window_rect(window_title)
     # print(info)
     # print(f"Window Rect: {rect}")
+
 
 def get_window_handle(window_title):
 
@@ -48,38 +51,38 @@ def get_window_handle(window_title):
         return None
 
 def get_region_within_window(image_path, confidence=0.8, timeout=10):
-    # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
-    # get_region_within_window(img)
-    get_window_rect(window_title)
+    window_rect = get_window_rect(window_title)
+    if not window_rect:
+        return False
 
     try:
         start_time = time.time()
-        while time.time() - start_time < timeout: # timeout=10 is 10 seconds, run this while loop for 10 seconds only
-            # Perform the image search within the window
+        while time.time() - start_time < timeout:
+            # Perform the image search within the window region
             result = pyautogui.locateOnScreen(image_path, confidence=confidence, region=window_rect)
-
             if result is not None:
-                # Click on the center of the found image
-
-                final_x = result.left 
-                final_y = result.top 
+                # Calculate the coordinates relative to the window
+                final_x = result.left - window_rect[0]
+                final_y = result.top - window_rect[1]
                 final_width = result.width
                 final_height = result.height
-
-                # print(final_x, final_y, final_width, final_height)
-                print(f'{final_x}, {final_y}, {final_width}, {final_height}')
+                # Copy the region coordinates to clipboard
+                region_coordinates = f'{final_x}, {final_y}, {final_width}, {final_height}'
+                pyperclip.copy(region_coordinates)
+                print(f"Found image at: {region_coordinates}")
                 return True
             else:
-                time.sleep(0.100)
+                time.sleep(0.1)
 
         return False
 
     except KeyboardInterrupt:
         print("\nScript stopped.")
     except Exception as e:
-        print(f"Image not found")
+        print(f"Error: {e}")
+        return False
 
 if __name__ == "__main__":
 
-    img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\troop_count.png'
     get_region_within_window(img)

@@ -5,8 +5,8 @@ import pyperclip
 import pyperclip
 import win32gui
 
-# window_title = "Clash of Clans"  # window title
-window_title = "Clash of Clans Bot Configuration"
+window_title = "Clash of Clans"  # window title
+# window_title = "Clash of Clans Bot Configuration"
 window_rect=()
 def get_window_coordinates(window_title):
     try:
