@@ -1014,17 +1014,4 @@ def set_window_size(window_size):
     gw.getWindowsWithTitle(window_title)[0].resizeTo(width, height)
 
 setup_logging()
-from bb_funcs import bb_attack_loop
 
-# def main(gem_cooldown,
-#         clan_games_mode,
-#         attack_only_no_cg):
-
-#     get_coc_window(window_title)
-
-#     print("Starting automated gameplay...")
-#     # Example: Implement automation logic
-#     while True:
-#         bb_attack_loop(attack_only_no_cg=attack_only_no_cg,
-#                         clan_games_mode=clan_games_mode,
-#                         gem_cooldown=gem_cooldown)
