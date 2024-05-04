@@ -70,6 +70,8 @@ def get_region_within_window(image_path, confidence=0.8, timeout=10):
                 region_coordinates = f'{final_x}, {final_y}, {final_width}, {final_height}'
                 pyperclip.copy(region_coordinates)
                 print(f"Found image at: {region_coordinates}")
+                # Move the mouse to the center of the found image
+                pyautogui.moveTo(result.left + result.width / 2, result.top + result.height / 2)
                 return True
             else:
                 time.sleep(0.1)
@@ -84,5 +86,5 @@ def get_region_within_window(image_path, confidence=0.8, timeout=10):
 
 if __name__ == "__main__":
 
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\troop_count.png'
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\img.png'
     get_region_within_window(img)

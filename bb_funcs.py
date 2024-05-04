@@ -10,9 +10,6 @@ from Functions import (
     click_drag,
     scroll_to_zoom,
 
-    pick_challenge,
-    purge_challenge,
-
     setlog
 )
 
@@ -258,99 +255,51 @@ def go_to_bb(go_back_main=False):
                 setlog("Failed to click builder base", "error")
                 return False
 
-def bb_attack_loop(attack_only_no_cg=False, clan_games_mode=False, gem_cooldown=False):
+def bb_attack_loop(isSwitchAcc=False):
 
     close_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\close_btn.png'
     bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
-    challenge_completed_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'
+    # challenge_completed_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'
 
     cart_w_elixir = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\cart_with_elixir.png'
     btn_collect_elixir_cart = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\collect_elixir_cart.png'
     cart_full_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\elixir_cart_full.png'
     cart2_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\elixir_cart2.png'
 
-    if attack_only_no_cg:
-        setlog("Attack Only no clan games event", "info")
-        while 1:
-            attack_BB()
-            time.sleep(1)
-            for i in range(20):
-                time.sleep(0.5)
-                if find_image_within_window(bb_atk_btn_img):
-                    setlog("We are back at builder base!", "success")
-                    time.sleep(2)
-                    click(867, 262) # click away just in case there is star bonus window
-                    click(867, 262)
-                    break
-            #* Check cart for elixir then collect it
-            scroll_to_zoom((716, 117), 10)
-            click_drag(854, 271, 700, 429)
-            setlog("Checking cart for elixir...", "info")
-            time.sleep(3)
-            if click_random_within_image(check_image_presence(cart_full_img, confidence=0.7)) or click_random_within_image(check_image_presence(cart2_img, confidence=0.7)):
-                while not find_image_within_window(btn_collect_elixir_cart, confidence=0.7):
-                    time.sleep(0.2)
-                if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
-                    setlog("Collected elixir cart", "success")
-                    time.sleep(1)
-                    click(867, 262) # click away
-                    click(867, 262)
-                else:
-                    setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-            else:
-                setlog("Cart does not have elixir yet", "info")
-    elif clan_games_mode:  # if there is clan games
-        while 1:
-            #* Check if cg chellenge has been completed
-            while not find_image_within_window(challenge_completed_img, confidence=0.8):
-                time.sleep(1)
-                setlog("Challenge not completed yet", "info")
-                setlog("Continuing to attack", "info")
-                #* if not completed then attack
-                attack_BB()
-                time.sleep(1)
-                #* This loop is for when the battle is finish, we look for atk button to know if we are back on builder base
-                setlog("Waiting for builder base attack button to appear", "info")
-                for i in range(20):
-                    time.sleep(0.5)
-                    if find_image_within_window(bb_atk_btn_img):
-                        setlog("We are back at builder base!", "success")
-                        break
-                #* Check cart for elixir then collect it
-                scroll_to_zoom((716, 117), 10)
-                click_drag(854, 271, 700, 429)
-                setlog("Checking cart for elixir...", "info")
-                time.sleep(3)
-                if click_random_within_image(check_image_presence(cart_full_img, confidence=0.7)) or click_random_within_image(check_image_presence(cart2_img, confidence=0.7)):
-                    while not find_image_within_window(btn_collect_elixir_cart, confidence=0.7):
-                        time.sleep(0.2)
-                    if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
-                        setlog("Collected elixir cart", "success")
-                        time.sleep(1)
-                        click(867, 262) # click away
-                        click(867, 262)
-                    else:
-                        setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-                else:
-                    setlog("Cart does not have elixir yet", "info")
+    # if attack_only_no_cg:
+    #TODO - detect if storage is full, put time limit per acc
+    # if time limit reach it can close the game for 20 minute or it can switch account
+    #TODO - implement:
+    # if isSwitchAcc and isStoragesFull or time_limit_reached:
+    #     setlog("Switching account...", "info")
+    #     switch_account(count)
+    #     continue
 
+    while 1:
+        attack_BB()
+        time.sleep(1)
+        for i in range(20):
+            time.sleep(0.5)
+            if find_image_within_window(bb_atk_btn_img):
+                setlog("We are back at builder base!", "success")
+                time.sleep(2)
+                click(867, 262) # click away just in case there is star bonus window
+                click(867, 262)
+                break
+        #* Check cart for elixir then collect it
+        scroll_to_zoom((716, 117), 10)
+        click_drag(854, 271, 700, 429)
+        setlog("Checking cart for elixir...", "info")
+        time.sleep(3)
+        if click_random_within_image(check_image_presence(cart_full_img, confidence=0.7)) or click_random_within_image(check_image_presence(cart2_img, confidence=0.7)):
+            while not find_image_within_window(btn_collect_elixir_cart, confidence=0.7):
+                time.sleep(0.2)
+            if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
+                setlog("Collected elixir cart", "success")
+                time.sleep(1)
+                click(867, 262) # click away
+                click(867, 262)
             else:
-                #* if challenge completed then click the "challenge completed" button
-                setlog("Challenge completed", "success")
-                click_random_within_image(check_image_presence(challenge_completed_img, confidence=0.8))
-                # time.sleep(5)
-                # purge_challenge()
-                time.sleep(4)
-                #* Try to pick a new challenge
-                if pick_challenge():
-                    click(891, 241) # click away
-                    click(891, 241) # click away
-                    continue #* if pick_challenge is successful then continue to the next iteration
-                else:
-                    purge_challenge(gem_cooldown=gem_cooldown)
-                    time.sleep(3)
-                    pick_challenge()
-                    click(891, 241) # click away
-                    click(891, 241) # click away
-                    continue
-
+                setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
+        else:
+            setlog("Cart does not have elixir yet", "info")

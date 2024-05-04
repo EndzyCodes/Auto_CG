@@ -15,13 +15,13 @@ from Functions import (
     click_drag,
     scroll_to_zoom,
 
-    is_army_btn_visible,
-    purge_challenge,
-    pick_challenge,
-
     setlog
 )
-from bb_funcs import bb_attack_loop
+from cg_funcs import purge_challenge, pick_challenge
+
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+# from bb_funcs import bb_attack_loop
 
 import time
 import random
@@ -227,7 +227,7 @@ def click_drag_troops(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
     time.sleep(0.2)
     pyautogui.mouseUp()
 
-def mv_drop_troops():
+def superBarbs_strat_deploy():
     scroll_to_zoom((300, 353), 10)
     click(164, 502) # click troop - super barb
 
@@ -331,7 +331,7 @@ def mv_return_home():
 
     return True
 
-def main_village_search():
+def main_village_attack_loop(isSwitchAcc=False):
 
     next_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\next_btn.png'
     atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\atk_btn.png'
@@ -344,15 +344,25 @@ def main_village_search():
         # 'dark_elixir': 2000
     }
 
-    count = 0
+    atk_count = 0
+    count = 1
 
     while 1:
-        count += 1
-        setlog(f"Attack round {count}", "info")
-        if count > 2:
+
+        atk_count += 1
+        setlog(f"Attack round {atk_count}", "info")
+        if isSwitchAcc and atk_count > 2:
+            count += 1
             setlog("Attack round limit reached", "info")
             setlog("Switching account...", "info")
-            break
+            switch_acc(count)
+            atk_count = 0 # reset attack count
+            if is_army_btn_visible():
+                continue
+        else:
+            setlog("Account switching not enabled", "info")
+            setlog("Staying on current account", "info")
+            atk_count = 0 # reset attack count
 
         while not check_image_presence(atk_btn_img, confidence=0.8):
             time.sleep(0.2)
@@ -373,7 +383,7 @@ def main_village_search():
             if get_resources_value(resource_target='gold', target_val=300000) and get_resources_value(resource_target='elixir', target_val=300000): # or get_resources_value(resource_target='dark_elixir', target_val=2000):
                 setlog("Found a base!", "success")
                 play_sound()
-                mv_drop_troops()
+                superBarbs_strat_deploy()
                 mv_return_home()
                 break
             else:

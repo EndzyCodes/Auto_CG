@@ -1,6 +1,8 @@
 import json
 from Functions import setlog, get_coc_window, window_title
 from bb_funcs import bb_attack_loop
+from mv_funcs import main_village_attack_loop
+from cg_funcs import cg_mode_loop
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget, QRadioButton, QToolTip
 from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer
 
@@ -10,9 +12,13 @@ from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer
 
 #     bb_attack_loop(attack_only_no_cg=attack_only_no_cg, clan_games_mode=clan_games_mode, gem_cooldown=enable_gem_cooldown)
 
-def main(gem_cooldown,
-        clan_games_mode,
-        attack_only_no_cg,
+def main(clan_games_mode,
+        BB_atk_only_mode,
+        MV_atk_only_mode, 
+        switch_accounts,
+        solo_account,
+        BBcollect_resources,
+        gem_cooldown
         ):
 
     get_coc_window(window_title)
@@ -20,9 +26,19 @@ def main(gem_cooldown,
     print("Starting automated gameplay...")
     # Example: Implement automation logic
     while True:
-        bb_attack_loop(attack_only_no_cg=attack_only_no_cg,
-                        clan_games_mode=clan_games_mode,
-                        gem_cooldown=gem_cooldown)
+        if clan_games_mode:
+            setlog("---- Clan Games Mode ----", "info")
+            cg_mode_loop(gem_cooldown=gem_cooldown)
+            pass
+        elif BB_atk_only_mode:
+            setlog("---- BB Attack Only Mode", "info")
+            bb_attack_loop(isSwitchAcc=switch_accounts)
+        elif MV_atk_only_mode:
+            setlog("---- Main Village Attack Only Mode", "info")
+            main_village_attack_loop(isSwitchAcc=switch_accounts)
+            pass
+        else:
+            setlog("No mode selected", "warning")
 
 class TabBase(QWidget): # template for when we need to create a new tab just copy paste this then change the class name
     def __init__(self, parent=None):
@@ -45,7 +61,7 @@ class MiscTab(TabBase):
     def initUI(self):
         # Implement setup for the Miscellaneous tab
         modes_group_box = QGroupBox("Modes", self)
-        modes_group_box.setGeometry(15, 10, 200, 100)
+        modes_group_box.setGeometry(10, 10, 200, 110)
 
         self.CGmode_rd = QRadioButton("Clan Games Mode", modes_group_box)
         self.CGmode_rd.move(10, 20)
@@ -53,10 +69,19 @@ class MiscTab(TabBase):
 
         self.BBAtkOnlymode_rd = QRadioButton("BB Attack Only", modes_group_box)
         self.BBAtkOnlymode_rd.move(10, 40)
-        self.BBAtkOnlymode_rd.setToolTip('BB attack only, no main village attacks or clan games.')
+        self.BBAtkOnlymode_rd.setToolTip('BB attack only, no main village attacks or Clan Games.')
+
+        self.MVatkOnlymode_rd = QRadioButton("MV Attack Only", modes_group_box)
+        self.MVatkOnlymode_rd.move(10, 60)
+        self.MVatkOnlymode_rd.setToolTip('Main Village attack only, no BB attacks or Clan Games.')
+
+        self.DonateOnlymode_rd = QRadioButton("Donate Only mode", modes_group_box)
+        self.DonateOnlymode_rd.move(10, 80)
+        self.DonateOnlymode_rd.setToolTip('Donate troops on current acc, switches acc if no more req then goes back to the selected acc for donation')
+
 
         SA_modes_group_box = QGroupBox("Switch Account Settings", self)
-        SA_modes_group_box.setGeometry(240, 10, 200, 100)
+        SA_modes_group_box.setGeometry(225, 10, 200, 100)
 
         self.SwitchAccts_rd = QRadioButton("Switch accounts", SA_modes_group_box)
         self.SwitchAccts_rd.move(10, 20)
@@ -69,12 +94,16 @@ class MiscTab(TabBase):
     def loadSettings(self, settings):
         self.CGmode_rd.setChecked(settings.get("clanGamesMode", False))
         self.BBAtkOnlymode_rd.setChecked(settings.get("BBattackOnlyMode", False))
+        self.MVatkOnlymode_rd.setChecked(settings.get("MVattackOnlyMode", False))
+        self.DonateOnlymode_rd.setChecked(settings.get("donateOnlyMode", False))
         self.SwitchAccts_rd.setChecked(settings.get("switchAccounts", False))
         self.SoloAcc_rd.setChecked(settings.get("soloAccount", False))
 
     def saveSettings(self, settings):
-        settings["BBattackOnlyMode"] = self.BBAtkOnlymode_rd.isChecked()
         settings["clanGamesMode"] = self.CGmode_rd.isChecked()
+        settings["BBattackOnlyMode"] = self.BBAtkOnlymode_rd.isChecked()
+        settings["MVattackOnlyMode"] = self.MVatkOnlymode_rd.isChecked()
+        settings["donateOnlyMode"] = self.DonateOnlymode_rd.isChecked()
         settings["switchAccounts"] = self.SwitchAccts_rd.isChecked()
         settings["soloAccount"] = self.SoloAcc_rd.isChecked()
 
@@ -148,10 +177,10 @@ class ClashOfClansBotGUI(QWidget):
 
     def initUI(self):
         self.setWindowTitle('Clash of Clans Bot Configuration')
-        self.setFixedSize(480, 550) # Set the fixed size of the window (width, height)
+        self.setFixedSize(452, 550) # Set the fixed size of the window (width, height)
         # this is the main window
         self.tab_widget = QTabWidget(self)
-        self.tab_widget.setGeometry(10, 10, 465, 470) # x, y, width, height of the tabs
+        self.tab_widget.setGeometry(7, 10, 440, 470) # x, y, width, height of the tabs
         # self.tab_widget.currentChanged.connect(self.tabChanged)  # Connect tab change event
 
         # Create and add tabs
@@ -208,6 +237,7 @@ class ClashOfClansBotGUI(QWidget):
             self.settings = {
                 "clanGamesMode": False,
                 "BBattackOnlyMode": False,
+                "MVattackMode": False,
                 "BBCollectResources": False,
                 "BBActivateCTBoost": False,
                 "gemCooldown": False
@@ -218,6 +248,7 @@ class ClashOfClansBotGUI(QWidget):
             self.settings = {
                 "clanGamesMode": False,
                 "BBattackOnlyMode": False,
+                "MVattackMode": False,
                 "BBCollectResources": False,
                 "BBActivateCTBoost": False,
                 "gemCooldown": False
@@ -240,13 +271,24 @@ class ClashOfClansBotGUI(QWidget):
     def startBot(self):
         #* Set variables boolean value based on checkboxes state, it a checkbox is checked, it will be True, otherwise False
         self.saveSettings()  # Save settings when starting the bot
+        # Misc tab
         clan_games_mode = self.settings["clanGamesMode"]
-        attack_only_no_cg = self.settings["BBattackOnlyMode"]
+        bb_atk_only_mode = self.settings["BBattackOnlyMode"]
+        mv_atk_only_mode = self.settings["MVattackMode"]
+        switch_accounts = self.settings["switchAccounts"]
+        solo_account = self.settings["soloAccount"]
+        # BB tab
+        BBcollect_resources = self.settings["BBCollectResources"]
+        # CG tab
         enable_gem_cooldown = self.settings["gemCooldown"]
 
         print(f"Starting bot with configurations: "
                 f"Clan Games Mode: {clan_games_mode}, "
-                f"BB Attack Only Mode: {attack_only_no_cg}, "
+                f"BB Attack Only Mode: {bb_atk_only_mode}, "
+                f"MV Attack Only Mode: {mv_atk_only_mode}, "
+                f"Switch Accounts: {switch_accounts}, "
+                f"Solo Account: {solo_account}, "
+                f"BB Collect Resources: {BBcollect_resources}, "
                 f"Gem Cooldown: {enable_gem_cooldown}")
 
         # If there's an existing thread, wait for it to finish before creating a new one
@@ -255,9 +297,15 @@ class ClashOfClansBotGUI(QWidget):
             self.bot_thread.wait()
 
         #* pass the variables to the functions that need them
-
         # Create a new thread to run the bot
-        self.bot_thread = BotThread(enable_gem_cooldown, clan_games_mode, attack_only_no_cg)
+        self.bot_thread = BotThread(clan_games_mode, 
+                                    bb_atk_only_mode, 
+                                    mv_atk_only_mode,
+                                    switch_accounts, 
+                                    solo_account, 
+                                    BBcollect_resources, 
+                                    enable_gem_cooldown)
+
         self.bot_thread.finished.connect(self.onBotThreadFinished)
         self.bot_thread.start()
 
@@ -271,12 +319,35 @@ class ClashOfClansBotGUI(QWidget):
         self.bot_thread = None  # Reset the thread reference
 
 class BotThread(QThread):
-    def __init__(self, gem_cooldown, clan_games_mode, attack_only_no_cg):
+    def __init__(self, clan_games_mode,  
+                bb_atk_only_mode, 
+                mv_atk_only_mode,
+                switch_accounts,
+                solo_account,
+                BBcollect_resources,
+                gem_cooldown):
+
         super().__init__()
-        self.gem_cooldown = gem_cooldown
+        # Misc tab variables
         self.clan_games_mode = clan_games_mode
-        self.attack_only_no_cg = attack_only_no_cg
+        self.bb_atk_only_mode = bb_atk_only_mode
+        self.mv_atk_only_mode = mv_atk_only_mode
+        self.switch_accounts = switch_accounts
+        self.solo_account = solo_account
+        # BB tab variables
+        self.BBcollect_resources = BBcollect_resources
+        # CG tab variables
+        self.gem_cooldown = gem_cooldown
 
     def run(self):
         # Call your main bot function from here
-        main(attack_only_no_cg=self.attack_only_no_cg, clan_games_mode=self.clan_games_mode, gem_cooldown=self.gem_cooldown)
+        main(clan_games_mode = self.clan_games_mode, 
+            bb_atk_only_mode = self.bb_atk_only_mode, 
+            mv_atk_only_mode = self.mv_atk_only_mode,
+            switch_accounts = self.switch_accounts,
+            solo_account = self.solo_account,
+
+            BBcollect_resources = self.BBcollect_resources,
+
+            gem_cooldown = self.gem_cooldown)
+
