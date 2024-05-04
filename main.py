@@ -10,9 +10,12 @@ from PyQt6.QtWidgets import QApplication
 #TODO make it switch account if builder base storages are full
 
 def test():
-    donate_btn_region = (165, 286, 119, 97) # x, y, width, height
+    donate_btn_region = (189, 421, 89, 67) # x, y, width, height
 
     donate_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\donate_btn.png'
+    
+    # ss = pyautogui.screenshot(region=donate_btn_region)
+    # ss.save(donate_btn_img)
     try:
         while 1:
             if click_random_within_image(check_image_presence(donate_btn_img, region=donate_btn_region)):
