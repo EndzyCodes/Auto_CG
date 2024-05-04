@@ -13,13 +13,12 @@ def test():
     donate_btn_region = (189, 421, 89, 67) # x, y, width, height
 
     donate_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\donate_btn.png'
-    
-    # ss = pyautogui.screenshot(region=donate_btn_region)
-    # ss.save(donate_btn_img)
+
     try:
         while 1:
             if click_random_within_image(check_image_presence(donate_btn_img, region=donate_btn_region)):
-                print("I see it")
+                setlog("Found a donate button, donating now!", "info")
+                
             else:
                 print("I don't see it")
             time.sleep(1)
@@ -36,4 +35,12 @@ if __name__ == "__main__":
 
     # bb_attack_time_limit()
 
-    test()
+    # test()
+    
+    donate_loon_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\donate_loon.png'
+    donate_loon_grey = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\donate_loon_grey.png'
+
+    if check_image_presence(donate_loon_img, confidence=0.9) and not check_image_presence(donate_loon_grey, confidence=0.9):
+        setlog("I see it", 'warning')
+    else:
+        setlog("I don't see it", 'info')

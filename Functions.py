@@ -478,8 +478,15 @@ def find_image(image_path, confidence=0.8, timeout=10, debug=False):
 
 def check_image_presence(image_path, confidence=0.8, region=None):
     window_rect = get_window_rect(window_title)
-    if region is None: # if region not specified, use window_rect as region otherwise use the specified region
+    if region is None: 
         region = window_rect
+    else: # make user specifed region relative to window_rect if not None
+        region = (
+            window_rect[0] + region[0],
+            window_rect[1] + region[1],
+            region[2],
+            region[3]
+        )
     try:
         image_location = pyautogui.locateOnScreen(image_path, confidence=confidence, region=region)
         return image_location
