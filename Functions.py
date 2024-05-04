@@ -478,15 +478,17 @@ def find_image(image_path, confidence=0.8, timeout=10, debug=False):
 
 def check_image_presence(image_path, confidence=0.8, region=None):
     window_rect = get_window_rect(window_title)
+    if region is None: # if region not specified, use window_rect as region otherwise use the specified region
+        region = window_rect
     try:
-        image_location = pyautogui.locateOnScreen(image_path, confidence=confidence, region=window_rect)
+        image_location = pyautogui.locateOnScreen(image_path, confidence=confidence, region=region)
         return image_location
     except pyautogui.ImageNotFoundException:
         return False
 
 def get_pixel_color(x, y):
     window_rect = get_window_rect(window_title)
-    
+
     absolute_x = window_rect[0] + x
     absolute_y = window_rect[1] + y
     # Get the pixel color at the specified coordinates
