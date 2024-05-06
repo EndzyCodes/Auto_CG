@@ -1,8 +1,8 @@
 import json
 from Functions import setlog, get_coc_window, window_title
+from cg_funcs import cg_mode_loop
 from bb_funcs import bb_attack_loop
 from mv_funcs import main_village_attack_loop
-from cg_funcs import cg_mode_loop
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget, QRadioButton, QToolTip
 from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer
 

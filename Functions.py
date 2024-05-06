@@ -105,7 +105,7 @@ def click_close():
     else: 
         print("Close button not found.")
 
-def click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = False, debug=False):
+def click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = False, debug=False, click_hold=False):
 
     window_rect = get_window_rect(window_title)
     # print(window_rect)
@@ -125,7 +125,14 @@ def click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, del
     absolute_y = window_rect[1] + relative_y
     # print(relative_x, relative_y)
 
-    pyautogui.click(absolute_x, absolute_y, duration=move_duration)
+    if click_hold:
+        pyautogui.moveTo(absolute_x, absolute_y, duration=move_duration)
+        pyautogui.mouseDown()
+        time.sleep(1.5)
+        pyautogui.mouseUp()
+    else:
+        pyautogui.click(absolute_x, absolute_y, duration=move_duration)
+
     return True
     # try:
     #     if not random_click:

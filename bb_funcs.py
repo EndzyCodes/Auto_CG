@@ -10,9 +10,10 @@ from Functions import (
     click_drag,
     scroll_to_zoom,
 
-    setlog
+    setlog,
+    switch_acc
 )
-
+# from mv_funcs import is_army_btn_visible
 import time
 # import random
 # import pyautogui
@@ -128,13 +129,28 @@ def bb_return_home():
     #     setlog("Return home button did not appear", "warning")
 
 def bb_attack_time_limit():
+    import keyboard
+    count = 1
     start_time = time.time()
     while True:
         # main(attack_only_no_cg=True, enable_gem_cooldown=False, clan_games_mode=False)
-        bb_attack_loop(attack_only_no_cg=True, clan_games_mode=False, gem_cooldown=False)
+        bb_attack_loop()
         # if time.time() - start_time >= 90 * 60:  # 90 minutes in seconds
         if time.time() - start_time >= 60 * 60:  # 2 hours in seconds
+            keyboard.press_and_release('esc')
+            time.sleep(1)
+            click(534, 349)
             break
+            # count += 1
+            # if count > 21:
+            #     count = 1
+            #     switch_acc(count)
+            #     is_army_btn_visible()
+            # else:
+            #     setlog("time limit reached, switching account...", "info")
+            #     switch_acc(count)
+            #     is_army_btn_visible()
+    return True
 
 found_opponent = False
 def attack_BB():
@@ -274,8 +290,10 @@ def bb_attack_loop(isSwitchAcc=False):
     #     setlog("Switching account...", "info")
     #     switch_account(count)
     #     continue
-
+    start_time = time.time()
     while 1:
+        time_left = int((60 * 60 - (time.time() - start_time)) / 60)
+        setlog(f"Time left: {time_left} minutes", 'info')
         attack_BB()
         time.sleep(1)
         for i in range(20):
