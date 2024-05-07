@@ -42,6 +42,9 @@ def is_army_btn_visible(click=False):
             if count == 1: setlog("Waiting for army tab to appear", "info")
         else:
             setlog("Army tab found", "success")
+            click(867, 262)
+            click(867, 262)
+            click(867, 262)
             if click:
                 if click_random_within_image(check_image_presence(img, confidence=0.8)):
                     time.sleep(1)
@@ -211,11 +214,21 @@ def click_drag_troops(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
     # use case: click_drag(716, 117, 419, 376)
     window_rect = get_window_rect(window_title)
 
-    absolute_x = window_rect[0] + x
-    absolute_y = window_rect[1] + y
+    offset_x = window_rect[0] + random.randint(-3,5)
+    offset_y = window_rect[1] + random.randint(-3,5)
+    absolute_x = window_rect[0] + offset_x
+    absolute_y = window_rect[1] + offset_y
 
-    absolute_x_moveTo = window_rect[0] + x_moveTo
-    absolute_y_moveTo = window_rect[1] + y_moveTo
+    # absolute_x = window_rect[0] + x
+    # absolute_y = window_rect[1] + y
+
+    offset_x_moveTo = window_rect[0] + random.randint(-3,5)
+    offset_y_moveTo = window_rect[1] + random.randint(-3,5)
+    absolute_x_moveTo = window_rect[0] + x_moveTo + offset_x_moveTo
+    absolute_y_moveTo = window_rect[1] + y_moveTo + offset_y_moveTo
+
+    # absolute_x_moveTo = window_rect[0] + x_moveTo
+    # absolute_y_moveTo = window_rect[1] + y_moveTo
 
     if debug: setlog(f"Moving from ({x}, {y}) to ({x_moveTo}, {y_moveTo})", "info")
 

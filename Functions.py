@@ -120,10 +120,14 @@ def click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, del
         move_duration = random.uniform(0.104, 0.217)
     if delay_before_click == 0.112:
         delay_before_click = random.uniform(0.112, 0.234)
-    
-    absolute_x = window_rect[0] + relative_x
-    absolute_y = window_rect[1] + relative_y
-    # print(relative_x, relative_y)
+
+    # absolute_x = window_rect[0] + relative_x
+    # absolute_y = window_rect[1] + relative_y
+
+    offset_x = relative_x + random.randint(-3,5)
+    offset_y = relative_y + random.randint(-3,5)
+    absolute_x = window_rect[0] + offset_x
+    absolute_y = window_rect[1] + offset_y
 
     if click_hold:
         pyautogui.moveTo(absolute_x, absolute_y, duration=move_duration)
@@ -151,8 +155,8 @@ def click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, del
     #         #     print(f"Clicked at ({relative_x}, {relative_y})" + " Random click:", random_click)
 
     #     else:
-    #         offset_x = relative_x + random.randint(-3,7)
-    #         offset_y = relative_y + random.randint(-3,7)
+    #         offset_x = relative_x + random.randint(-3,6)
+    #         offset_y = relative_y + random.randint(-3,6)
     #         absolute_x = window_rect[0] + offset_x
     #         absolute_y = window_rect[1] + offset_y
 
@@ -175,8 +179,13 @@ def scroll_to_zoom(move_mouse_to=(0,0), scroll_count=1, zoom_out=True):
     # use case: scroll_to_zoom((716, 117), 10, zoom_out=False) # zoom in 10 times, remove zoom_out=False to zoom out
     window_rect = get_window_rect(window_title)
 
-    absolute_x_moveTo = window_rect[0] + move_mouse_to[0]
-    absolute_y_moveTo = window_rect[1] + move_mouse_to[1]
+    offset_x = move_mouse_to[0] + random.randint(-3,5)
+    offset_y = move_mouse_to[1] + random.randint(-3,5)
+    absolute_x_moveTo = window_rect[0] + offset_x
+    absolute_y_moveTo = window_rect[1] + offset_y
+
+    # absolute_x_moveTo = window_rect[0] + move_mouse_to[0]
+    # absolute_y_moveTo = window_rect[1] + move_mouse_to[1]
 
     pyautogui.moveTo(absolute_x_moveTo, absolute_y_moveTo, duration=0.147)
     time.sleep(1)

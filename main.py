@@ -10,6 +10,31 @@ from PyQt6.QtWidgets import QApplication
 #TODO make it pick a challenge then make it go to bb, so me/user can run the script
 #TODO make it switch account if builder base storages are full
 
+
+def request_troops():
+
+    region_trash_btn = (421, 355, 105, 43)
+
+    trash_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\trash_btn.png'
+    ok_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\ok_btn.png'
+
+    if (trash_btn_location := check_image_presence(trash_btn_img, region=region_trash_btn)):
+        setlog("Found troops in cc, removing troops now")
+        click_random_within_image(trash_btn_location)
+        time.sleep(1)
+        if (ok_btn_location := check_image_presence(ok_btn_img)):
+            click_random_within_image(ok_btn_location)
+            click(734, 467) # click request button
+            time.sleep(1)
+            click(551, 402) # click send button
+            setlog("Troop request successfully sent!", 'info')
+    else:
+        setlog("No troops in cc, skip click trash", 'info')
+        click(734, 467) # click request button
+        time.sleep(1)
+        click(551, 402) # click send button
+        setlog("Troop request successfully sent!", 'info')
+
 def train_loons():
 
     click(41, 420) # click army tab
@@ -76,41 +101,17 @@ def donate_loop():
             else:
                 time.sleep(1)
                 break
-            time.sleep(2)
+            time.sleep(3)
 
         train_loons()
 
-def request_troops():
-
-    region_trash_btn = (421, 355, 105, 43)
-
-    trash_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\trash_btn.png'
-    ok_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\ok_btn.png'
-
-    if (trash_btn_location := check_image_presence(trash_btn_img, region=region_trash_btn)):
-        setlog("Found troops in cc, removing troops now")
-        click_random_within_image(trash_btn_location)
-        time.sleep(1)
-        if (ok_btn_location := check_image_presence(ok_btn_img)):
-            click_random_within_image(ok_btn_location)
-            click(734, 467) # click request button
-            time.sleep(1)
-            click(551, 402) # click send button
-            setlog("Troop request successfully sent!", 'info')
-    else:
-        setlog("No troops in cc, skip click trash", 'info')
-        click(734, 467) # click request button
-        time.sleep(1)
-        click(551, 402) # click send button
-        setlog("Troop request successfully sent!", 'info')
-
 if __name__ == "__main__":
 
-    # app = QApplication([])
-    # ex = ClashOfClansBotGUI()
-    # ex.show() # show the GUI
-    # app.exec() # start the application
+    app = QApplication([])
+    ex = ClashOfClansBotGUI()
+    ex.show() # show the GUI
+    app.exec() # start the application
 
-    bb_attack_time_limit()
+    # bb_attack_time_limit()
 
     # request_troops()

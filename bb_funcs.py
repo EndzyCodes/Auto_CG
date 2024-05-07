@@ -20,7 +20,7 @@ import time
 # import keyboard
 # import pygame
 
-def deploy_troops(sec_vill_battle=False):
+def deploy_troops(sec_vill_battle=False, is_2_camps=False):
 
     if sec_vill_battle:
         setlog("Deploying troops on the 2nd village battle ground", "info")
@@ -45,6 +45,8 @@ def deploy_troops(sec_vill_battle=False):
         click(417, 507)
         click(480, 506)
         click(532, 513)
+        if is_2_camps:
+            click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
         # minions drop points
         for i in range(3):
             click(515, 349)

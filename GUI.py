@@ -3,7 +3,7 @@ from Functions import setlog, get_coc_window, window_title
 from cg_funcs import cg_mode_loop
 from bb_funcs import bb_attack_loop
 from mv_funcs import main_village_attack_loop
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget, QRadioButton, QToolTip
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget, QRadioButton, QToolTip
 from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer
 
 # def main(attack_only_no_cg=False,
@@ -57,7 +57,7 @@ class TabBase(QWidget): # template for when we need to create a new tab just cop
         # Save settings for each tab (to be overridden by subclasses)
         pass
 
-class MiscTab(TabBase):
+class MiscTab(QWidget):
     def initUI(self):
         # Implement setup for the Miscellaneous tab
         modes_group_box = QGroupBox("Modes", self)
@@ -107,7 +107,7 @@ class MiscTab(TabBase):
         settings["switchAccounts"] = self.SwitchAccts_rd.isChecked()
         settings["soloAccount"] = self.SoloAcc_rd.isChecked()
 
-class BuilderBaseTab(TabBase):
+class BuilderBaseTab(QWidget):
     def initUI(self):
         # Implement setup for the Builder Base tab
         self.BBsettings_group_box = QGroupBox("Collect & Activate", self)
@@ -121,13 +121,22 @@ class BuilderBaseTab(TabBase):
         self.BBChkActivateCTBoost.move(10, 40)
         self.BBChkActivateCTBoost.setToolTip('Activate Clocktower boost in Builder Base.')
 
+        BBarmy_config_group_box = QGroupBox("BB Army Configuration", self)
+        BBarmy_config_group_box.setGeometry(225, 10, 200, 100)
+
+        self.BBsecondCamp = QCheckBox("2nd camp", BBarmy_config_group_box)
+        self.BBsecondCamp.move(10, 20)
+        self.BBsecondCamp.setToolTip('Enable this if the account has 2 reinforcement camps, 1st one for loons, 2nd one for minions.')
+
     def loadSettings(self, settings):
         self.BBChkCollectResources.setChecked(settings.get("BBCollectResources", False))
         self.BBChkActivateCTBoost.setChecked(settings.get("BBActivateCTBoost", False))
+        self.BBsecondCamp.setChecked(settings.get("BBsecondCamp", False))
 
     def saveSettings(self, settings):
         settings["BBCollectResources"] = self.BBChkCollectResources.isChecked()
         settings["BBActivateCTBoost"] = self.BBChkActivateCTBoost.isChecked()
+        settings["BBsecondCamp"] = self.BBsecondCamp.isChecked()
 
 class MainVillageTab(QWidget):
     def __init__(self, parent=None):
@@ -146,7 +155,7 @@ class MainVillageTab(QWidget):
         # Save settings for each tab (to be overridden by subclasses)
         pass
 
-class ClanGamesTab(TabBase):
+class ClanGamesTab(QWidget):
     def initUI(self):
         # Implement setup for the Clan Games tab
         self.CGsettings_group_box = QGroupBox("Clan Games Settings", self)
@@ -162,7 +171,7 @@ class ClanGamesTab(TabBase):
     def saveSettings(self, settings):
         settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
 
-class ClashOfClansBotGUI(QWidget):
+class ClashOfClansBotGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -240,6 +249,7 @@ class ClashOfClansBotGUI(QWidget):
                 "MVattackMode": False,
                 "BBCollectResources": False,
                 "BBActivateCTBoost": False,
+                "BBsecondCamp": False,
                 "gemCooldown": False
             }
         except json.JSONDecodeError:
@@ -251,6 +261,7 @@ class ClashOfClansBotGUI(QWidget):
                 "MVattackMode": False,
                 "BBCollectResources": False,
                 "BBActivateCTBoost": False,
+                "BBsecondCamp": False,
                 "gemCooldown": False
             }
 
@@ -279,6 +290,7 @@ class ClashOfClansBotGUI(QWidget):
         solo_account = self.settings["soloAccount"]
         # BB tab
         BBcollect_resources = self.settings["BBCollectResources"]
+        BBsecond_camp = self.settings["BBsecondCamp"]
         # CG tab
         enable_gem_cooldown = self.settings["gemCooldown"]
 
@@ -289,6 +301,7 @@ class ClashOfClansBotGUI(QWidget):
                 f"Switch Accounts: {switch_accounts}, "
                 f"Solo Account: {solo_account}, "
                 f"BB Collect Resources: {BBcollect_resources}, "
+                f"BB Second Camp: {BBsecond_camp}, "
                 f"Gem Cooldown: {enable_gem_cooldown}")
 
         # If there's an existing thread, wait for it to finish before creating a new one
@@ -303,7 +316,8 @@ class ClashOfClansBotGUI(QWidget):
                                     mv_atk_only_mode,
                                     switch_accounts, 
                                     solo_account, 
-                                    BBcollect_resources, 
+                                    BBcollect_resources,
+                                    BBsecond_camp,
                                     enable_gem_cooldown)
 
         self.bot_thread.finished.connect(self.onBotThreadFinished)
@@ -325,6 +339,8 @@ class BotThread(QThread):
                 switch_accounts,
                 solo_account,
                 BBcollect_resources,
+                BBactivate_CT_boost,
+                BBsecond_camp,
                 gem_cooldown):
 
         super().__init__()
@@ -336,6 +352,8 @@ class BotThread(QThread):
         self.solo_account = solo_account
         # BB tab variables
         self.BBcollect_resources = BBcollect_resources
+        self.BBactivate_CT_boost = BBactivate_CT_boost
+        self.BBsecond_camp = BBsecond_camp
         # CG tab variables
         self.gem_cooldown = gem_cooldown
 
@@ -348,6 +366,8 @@ class BotThread(QThread):
             solo_account = self.solo_account,
 
             BBcollect_resources = self.BBcollect_resources,
+            BBactivate_CT_boost = self.BBactivate_CT_boost,
+            BBsecond_camp = self.BBsecond_camp,
 
             gem_cooldown = self.gem_cooldown)
 
