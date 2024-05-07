@@ -1,2 +1,3 @@
 git rm --cached settings.json
+settings.json
 __pycache__/
