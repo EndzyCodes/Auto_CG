@@ -15,77 +15,108 @@ from Functions import (
 )
 # from mv_funcs import is_army_btn_visible
 import time
-# import random
+import random
 # import pyautogui
-# import keyboard
+import keyboard
 # import pygame
 
 def deploy_troops(sec_vill_battle=False, is_2_camps=False):
 
     if sec_vill_battle:
         setlog("Deploying troops on the 2nd village battle ground", "info")
-        setlog("Dropping loons", "info")
+        setlog("Deploying Hero", "info")
         click(160, 487) # click hero
-        click(583, 316) # drop hero
+        # click(583, 316) # drop hero
+        click_points = [
+            (515, 349),
+            (630, 279),
+            (740, 200),
+            (591, 314),
+            (678, 243)
+        ]
+
+        random_click_point = random.choice(click_points)
+        click(random_click_point[0], random_click_point[1])
+
         time.sleep(10)
 
         click(589, 485) # click loon icon just to be sure
-        # drop loons
-        click(515, 349)
-        # click(591, 314)
-        click(630, 279)
-        # click(678, 243)
-        click(740, 200)
-        click(591, 314)
-        click(678, 243)
+        #* ballons drop points
+        #  randomize drop order
+        click_points = [
+            (521, 375),
+            (630, 279),
+            (740, 200)
+        ]
+        random.shuffle(click_points)
+        for i, point in enumerate(click_points):
+            # setlog(f"Iteration {i+1}: Dropping loon at {point}", "info")
+            click(point[0], point[1])
 
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
-        # click all possible  minions icon
-        click(417, 507)
-        click(480, 506)
-        click(532, 513)
+
         if is_2_camps:
             click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
-        # minions drop points
-        for i in range(3):
-            click(515, 349)
-            click(591, 314)
-            click(630, 279)
-            click(678, 243)
-            click(740, 200)
+        else:
+            # click all possible  minions icon
+            click(417, 507)
+            click(480, 506)
+            click(532, 513)
+        #* minions drop points
+        # randomize minion drop order
+        minions = [(515, 349), (591, 314), (630, 279), (678, 243), (740, 200)]
+        random.shuffle(minions)
+        for _ in range(3):
+            for point in minions:
+                click(point[0], point[1])
 
         time.sleep(12)
         setlog("Activating hero ability", "info")
         click(165, 509) # activate hero ability
     else:
         setlog("Deploying troops on the 1st village battle ground", "info")
-        setlog("Deploying", "info")
+        setlog("Deploying Hero", "info")
         click(160, 487) # click hero
-        click(583, 316) # drop hero
-
+        # click(583, 316) # drop hero
+        # randomize hero drop
+        click_points = [
+            (515, 349),
+            (630, 279),
+            (740, 200),
+            (591, 314),
+            (678, 243)
+        ]
+        random_click_point = random.choice(click_points)
+        click(random_click_point[0], random_click_point[1])
         time.sleep(10) # wait a bit before dropping balloons
+
         setlog("Dropping loons", "info")
         click(231, 505) # click balloon icon
 
-        # ballons drop points
-        click(521, 375) 
-        # click(579, 333)
-        click(630, 279)
-        # click(619, 303)
-        click(740, 200)
+        #* ballons drop points
+        #  randomize drop order
+        click_points = [
+            (521, 375),
+            (630, 279),
+            (740, 200)
+        ]
+        random.shuffle(click_points)
+        for i, point in enumerate(click_points):
+            # setlog(f"Iteration {i+1}: Dropping loon at {point}", "info")
+            click(point[0], point[1])
 
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
         click(417, 507) # click minions icon
 
-        # minions drop points
-        for i in range(3):
-            click(515, 349)
-            click(591, 314)
-            click(630, 279)
-            click(678, 243)
-            click(740, 200)
+        #* minions drop points
+        # randomize minion drop order
+        minions = [(515, 349), (591, 314), (630, 279), (678, 243), (740, 200)]
+        random.shuffle(minions)
+        for _ in range(3):
+            for point in minions:
+                click(point[0], point[1])
 
         time.sleep(10)
         setlog("Activating hero ability", "info")
@@ -294,7 +325,7 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
     #     continue
     start_time = time.time()
     while 1:
-        time_left = int((60 * 60 - (time.time() - start_time)) / 60)
+        time_left = int((180 * 60 - (time.time() - start_time)) / 60)
         setlog(f"Time left: {time_left} minutes", 'info')
         attack_BB(is_2_camps=is_2_camps)
         time.sleep(1)
@@ -323,3 +354,9 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
                 setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
         else:
             setlog("Cart does not have elixir yet", "info")
+        
+        if time.time() - start_time >= 180 * 60:  # 3 hours in seconds
+            keyboard.press_and_release('esc')
+            time.sleep(1)
+            click(534, 349)
+            break

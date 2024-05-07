@@ -12,7 +12,7 @@ from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer
 
 #     bb_attack_loop(attack_only_no_cg=attack_only_no_cg, clan_games_mode=clan_games_mode, gem_cooldown=enable_gem_cooldown)
 
-def main(clan_games_mode, BB_atk_only_mode,
+def main(clan_games_mode, BB_atk_only_mode, 
         MV_atk_only_mode, switch_accounts, 
         solo_account, BBcollect_resources, 
         BBactivate_CT_boost, BBsecond_camp, 
@@ -29,10 +29,10 @@ def main(clan_games_mode, BB_atk_only_mode,
             cg_mode_loop(gem_cooldown=gem_cooldown)
             pass
         elif BB_atk_only_mode:
-            setlog("---- BB Attack Only Mode", "info")
+            setlog("---- BB Attack Only Mode ----", "info")
             bb_attack_loop(isSwitchAcc=switch_accounts, is_2_camps=BBsecond_camp)
         elif MV_atk_only_mode:
-            setlog("---- Main Village Attack Only Mode", "info")
+            setlog("---- Main Village Attack Only Mode ----", "info")
             main_village_attack_loop(isSwitchAcc=switch_accounts)
             pass
         else:
@@ -209,6 +209,7 @@ class ClashOfClansBotGUI(QMainWindow):
         self.clan_games_tab.initUI()
 
         self.setupBottomButtons()
+        self.move(560, 35) # move GUI window  beside the google play games emulator
 
     def setupBottomButtons(self):
         y_pos = 490
@@ -244,7 +245,7 @@ class ClashOfClansBotGUI(QMainWindow):
             self.settings = {
                 "clanGamesMode": False,
                 "BBattackOnlyMode": False,
-                "MVattackMode": False,
+                "MVattackOnlyMode": False,
                 "BBCollectResources": False,
                 "BBActivateCTBoost": False,
                 "BBsecondCamp": False,
@@ -256,7 +257,7 @@ class ClashOfClansBotGUI(QMainWindow):
             self.settings = {
                 "clanGamesMode": False,
                 "BBattackOnlyMode": False,
-                "MVattackMode": False,
+                "MVattackOnlyMode": False,
                 "BBCollectResources": False,
                 "BBActivateCTBoost": False,
                 "BBsecondCamp": False,
@@ -283,11 +284,12 @@ class ClashOfClansBotGUI(QMainWindow):
         # Misc tab
         clan_games_mode = self.settings["clanGamesMode"]
         bb_atk_only_mode = self.settings["BBattackOnlyMode"]
-        mv_atk_only_mode = self.settings["MVattackMode"]
+        mv_atk_only_mode = self.settings["MVattackOnlyMode"]
         switch_accounts = self.settings["switchAccounts"]
         solo_account = self.settings["soloAccount"]
         # BB tab
         BBcollect_resources = self.settings["BBCollectResources"]
+        BBactivate_CT_boost = self.settings["BBActivateCTBoost"]
         BBsecond_camp = self.settings["BBsecondCamp"]
         # CG tab
         enable_gem_cooldown = self.settings["gemCooldown"]
@@ -299,6 +301,7 @@ class ClashOfClansBotGUI(QMainWindow):
                 f"Switch Accounts: {switch_accounts}, "
                 f"Solo Account: {solo_account}, "
                 f"BB Collect Resources: {BBcollect_resources}, "
+                f"BB Activate CT Boost: {BBactivate_CT_boost},"
                 f"BB Second Camp: {BBsecond_camp}, "
                 f"Gem Cooldown: {enable_gem_cooldown}")
 
@@ -315,6 +318,7 @@ class ClashOfClansBotGUI(QMainWindow):
                                     switch_accounts, 
                                     solo_account, 
                                     BBcollect_resources,
+                                    BBactivate_CT_boost,
                                     BBsecond_camp,
                                     enable_gem_cooldown)
 
@@ -330,10 +334,17 @@ class ClashOfClansBotGUI(QMainWindow):
         setlog("Bot thread finished.", "success")
         self.bot_thread = None  # Reset the thread reference
 
+    def keyPressEvent(self, event):
+        '''
+            Overriding the key press event to handle Ctrl+X shortcut to close window
+        '''
+        if event.modifiers() == Qt.KeyboardModifier.ControlModifier and event.key() == Qt.Key.Key_X:
+            self.close()
+
 class BotThread(QThread):
     def __init__(self, clan_games_mode,  
-                bb_atk_only_mode, 
-                mv_atk_only_mode,
+                BB_atk_only_mode, 
+                MV_atk_only_mode,
                 switch_accounts,
                 solo_account,
                 BBcollect_resources,
@@ -344,8 +355,8 @@ class BotThread(QThread):
         super().__init__()
         # Misc tab variables
         self.clan_games_mode = clan_games_mode
-        self.bb_atk_only_mode = bb_atk_only_mode
-        self.mv_atk_only_mode = mv_atk_only_mode
+        self.bb_atk_only_mode = BB_atk_only_mode
+        self.mv_atk_only_mode = MV_atk_only_mode
         self.switch_accounts = switch_accounts
         self.solo_account = solo_account
         # BB tab variables
@@ -358,8 +369,8 @@ class BotThread(QThread):
     def run(self):
         # Call your main bot function from here
         main(clan_games_mode = self.clan_games_mode, 
-            bb_atk_only_mode = self.bb_atk_only_mode, 
-            mv_atk_only_mode = self.mv_atk_only_mode,
+            BB_atk_only_mode = self.bb_atk_only_mode, 
+            MV_atk_only_mode = self.mv_atk_only_mode,
             switch_accounts = self.switch_accounts,
             solo_account = self.solo_account,
 
