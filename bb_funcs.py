@@ -155,7 +155,7 @@ def bb_attack_time_limit():
     return True
 
 found_opponent = False
-def attack_BB():
+def attack_BB(is_2_camps=False):
     get_coc_window("Clash of Clans")
     global found_opponent
 
@@ -191,7 +191,7 @@ def attack_BB():
     time.sleep(1)
     click_drag(743, 429, 414, 200)
     time.sleep(1)
-    deploy_troops()
+    deploy_troops(is_2_camps=is_2_camps)
 
     return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn.png'
     sec_vill_loon = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\sec_vill_loon.png'
@@ -273,7 +273,7 @@ def go_to_bb(go_back_main=False):
                 setlog("Failed to click builder base", "error")
                 return False
 
-def bb_attack_loop(isSwitchAcc=False):
+def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
 
     close_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\close_btn.png'
     bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
@@ -296,7 +296,7 @@ def bb_attack_loop(isSwitchAcc=False):
     while 1:
         time_left = int((60 * 60 - (time.time() - start_time)) / 60)
         setlog(f"Time left: {time_left} minutes", 'info')
-        attack_BB()
+        attack_BB(is_2_camps=is_2_camps)
         time.sleep(1)
         for i in range(20):
             time.sleep(0.5)

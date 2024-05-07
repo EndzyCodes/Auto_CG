@@ -12,12 +12,10 @@ from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer
 
 #     bb_attack_loop(attack_only_no_cg=attack_only_no_cg, clan_games_mode=clan_games_mode, gem_cooldown=enable_gem_cooldown)
 
-def main(clan_games_mode,
-        BB_atk_only_mode,
-        MV_atk_only_mode, 
-        switch_accounts,
-        solo_account,
-        BBcollect_resources,
+def main(clan_games_mode, BB_atk_only_mode,
+        MV_atk_only_mode, switch_accounts, 
+        solo_account, BBcollect_resources, 
+        BBactivate_CT_boost, BBsecond_camp, 
         gem_cooldown
         ):
 
@@ -32,7 +30,7 @@ def main(clan_games_mode,
             pass
         elif BB_atk_only_mode:
             setlog("---- BB Attack Only Mode", "info")
-            bb_attack_loop(isSwitchAcc=switch_accounts)
+            bb_attack_loop(isSwitchAcc=switch_accounts, is_2_camps=BBsecond_camp)
         elif MV_atk_only_mode:
             setlog("---- Main Village Attack Only Mode", "info")
             main_village_attack_loop(isSwitchAcc=switch_accounts)
