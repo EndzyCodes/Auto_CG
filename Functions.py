@@ -664,6 +664,65 @@ def ocr_an_image():
 # Set up the root logger with the colored console handler
 # logging.root.setLevel(logging.INFO)
 # logging.root.addHandler(console_handler)
+def get_func_performance(func):
+    # function call example: get_func_performance(func_to_run
+    start_time = time.time()
+
+    func()
+
+    end_time = time.time()
+    runtime = end_time - start_time
+    setlog(f"Runtime: {runtime} seconds",'success')
+
+def func_to_run():
+    # click(312, 54,random_click=True)
+
+    window_rect = get_window_rect(window_title)
+
+    time.sleep(1)
+
+    # clan_chat_tab_img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\clan_chat_tab.png'
+    # if click_on_image(clan_chat_tab_img, confidence=0.8):
+    #     setlog("detected clan chat tab", 'success')
+    # else:
+    #     setlog("unable to find image", 'error')
+    # setlog("test 1", "warning")
+
+    # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
+    # get_region_within_window(img)
+
+    region1 = (1049, 129, 90, 21)
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\gold_loot.png'
+    ss_troop_cap = pyautogui.screenshot(region=region1)
+    ss_troop_cap.save(img)
+
+    troop_cap_info = extract_digit_from_image(img)
+    print
+    if troop_cap_info != "45":
+        print("True")
+        # print(troop_cap_info)
+    else:
+        # print(troop_cap_info)
+        print("false")
+    # equation_text = extract_digit_from_image(troop_cap_img_path)
+
+    # if find_image(troop_cap_img_path, confidence=0.8):
+    #     print("true")
+
+# window_size = (661, 32, 1932, 777)
+# terminal_window_size = (-7, 32, 563, 563)
+# def set_window_size(window_size):
+def set_window_size(terminal_noramal_size=False):
+    if terminal_noramal_size:
+        window_size = (-7, 32, 1013, 563)
+    else:
+        window_size = (-7, 32, 563, 563)
+    # call the function: set_window_size(window_size)
+    left, top, right, bottom = window_size
+    width = right - left
+    height = bottom - top
+    # gw.getWindowsWithTitle(window_title)[0].resizeTo(width, height)
+    gw.getWindowsWithTitle("Administrator: Desktop")[0].resizeTo(width, height)
 
 def setup_logging():
     log_formatter = colorlog.ColoredFormatter(
@@ -682,16 +741,6 @@ def setup_logging():
 
     logging.root.setLevel(logging.INFO)
     logging.root.addHandler(console_handler)
-
-def get_func_performance(func):
-    # function call example: get_func_performance(func_to_run
-    start_time = time.time()
-
-    func()
-
-    end_time = time.time()
-    runtime = end_time - start_time
-    setlog(f"Runtime: {runtime} seconds",'success')
 
 def setlog(string, log_level):
     # Define color codes
@@ -733,49 +782,6 @@ def setlog(string, log_level):
     else:
         print(f"[{current_time}]: {color}{string}{color_reset}")
 
-def func_to_run():
-    # click(312, 54,random_click=True)
-
-    window_rect = get_window_rect(window_title)
-
-    time.sleep(1)
-
-    # clan_chat_tab_img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\clan_chat_tab.png'
-    # if click_on_image(clan_chat_tab_img, confidence=0.8):
-    #     setlog("detected clan chat tab", 'success')
-    # else:
-    #     setlog("unable to find image", 'error')
-    # setlog("test 1", "warning")
-
-    # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
-    # get_region_within_window(img)
-
-    region1 = (1049, 129, 90, 21)
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\gold_loot.png'
-    ss_troop_cap = pyautogui.screenshot(region=region1)
-    ss_troop_cap.save(img)
-
-    troop_cap_info = extract_digit_from_image(img)
-    print
-    if troop_cap_info != "45":
-        print("True")
-        # print(troop_cap_info)
-    else:
-        # print(troop_cap_info)
-        print("false")
-    # equation_text = extract_digit_from_image(troop_cap_img_path)
-
-    # if find_image(troop_cap_img_path, confidence=0.8):
-    #     print("true")
-
-# window_size = (661, 32, 1932, 777)
-
-def set_window_size(window_size):
-    # call the function: set_window_size(window_size)
-    left, top, right, bottom = window_size
-    width = right - left
-    height = bottom - top
-    gw.getWindowsWithTitle(window_title)[0].resizeTo(width, height)
 
 setup_logging()
 

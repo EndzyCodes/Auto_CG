@@ -1,5 +1,5 @@
 import json
-from Functions import setlog, get_coc_window, window_title
+from Functions import setlog, get_coc_window, set_window_size, window_title
 from cg_funcs import cg_mode_loop
 from bb_funcs import bb_attack_loop
 from mv_funcs import main_village_attack_loop
@@ -20,7 +20,7 @@ def main(clan_games_mode, BB_atk_only_mode,
         ):
 
     get_coc_window(window_title)
-
+    set_window_size()
     print("Starting automated gameplay...")
     # Example: Implement automation logic
     while True:
@@ -30,6 +30,7 @@ def main(clan_games_mode, BB_atk_only_mode,
             pass
         elif BB_atk_only_mode:
             setlog("---- BB Attack Only Mode ----", "info")
+            print(BBsecond_camp)
             bb_attack_loop(isSwitchAcc=switch_accounts, is_2_camps=BBsecond_camp)
         elif MV_atk_only_mode:
             setlog("---- Main Village Attack Only Mode ----", "info")
@@ -108,8 +109,8 @@ class MiscTab(QWidget):
 class BuilderBaseTab(QWidget):
     def initUI(self):
         # Implement setup for the Builder Base tab
-        self.BBsettings_group_box = QGroupBox("Collect & Activate", self)
-        self.BBsettings_group_box.setGeometry(15, 15, 200, 100)
+        self.BBsettings_group_box = QGroupBox("Collect and Activate", self)
+        self.BBsettings_group_box.setGeometry(10, 10, 200, 100)
 
         self.BBChkCollectResources = QCheckBox("Collect Resources", self.BBsettings_group_box)
         self.BBChkCollectResources.move(10, 20)
@@ -180,6 +181,7 @@ class ClashOfClansBotGUI(QMainWindow):
         #                 "gemCooldown": False # Clan Games settings
         #                 }
         self.loadSettings()
+        set_window_size() # set terminal size for bot
         self.bot_thread = None
 
     def initUI(self):
@@ -290,7 +292,7 @@ class ClashOfClansBotGUI(QMainWindow):
         # BB tab
         BBcollect_resources = self.settings["BBCollectResources"]
         BBactivate_CT_boost = self.settings["BBActivateCTBoost"]
-        BBsecond_camp = self.settings["BBsecondCamp"]
+        is_2_camps = self.settings["BBsecondCamp"]
         # CG tab
         enable_gem_cooldown = self.settings["gemCooldown"]
 
@@ -302,7 +304,7 @@ class ClashOfClansBotGUI(QMainWindow):
                 f"Solo Account: {solo_account}, "
                 f"BB Collect Resources: {BBcollect_resources}, "
                 f"BB Activate CT Boost: {BBactivate_CT_boost},"
-                f"BB Second Camp: {BBsecond_camp}, "
+                f"BB Second Camp: {is_2_camps}, "
                 f"Gem Cooldown: {enable_gem_cooldown}")
 
         # If there's an existing thread, wait for it to finish before creating a new one
@@ -319,7 +321,7 @@ class ClashOfClansBotGUI(QMainWindow):
                                     solo_account, 
                                     BBcollect_resources,
                                     BBactivate_CT_boost,
-                                    BBsecond_camp,
+                                    is_2_camps,
                                     enable_gem_cooldown)
 
         self.bot_thread.finished.connect(self.onBotThreadFinished)
@@ -339,6 +341,7 @@ class ClashOfClansBotGUI(QMainWindow):
             Overriding the key press event to handle Ctrl+X shortcut to close window
         '''
         if event.modifiers() == Qt.KeyboardModifier.ControlModifier and event.key() == Qt.Key.Key_X:
+            set_window_size(terminal_noramal_size=True) # Reset terminal size
             self.close()
 
 class BotThread(QThread):

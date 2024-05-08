@@ -20,7 +20,33 @@ import random
 import keyboard
 # import pygame
 
+def BB_is_army_btn_visible(click=False):
+
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
+
+    count = 0
+    while 1: 
+        if not check_image_presence(img, confidence=0.8):
+            time.sleep(0.3)
+            count += 1
+            if count == 1: setlog("Waiting for army tab to appear", "info")
+        else:
+            setlog("Army tab found", "success")
+            click(867, 262)
+            click(867, 262)
+            click(867, 262)
+            if click:
+                if click_random_within_image(check_image_presence(img, confidence=0.8)):
+                    time.sleep(1)
+                    setlog("Clicked on army tab", "success")
+                    return True
+                else:
+                    setlog("No army tab", "info")
+                    return False
+            return True
+
 def deploy_troops(sec_vill_battle=False, is_2_camps=False):
+    print(f'deploy_troops, is_2_camps: {is_2_camps}')
 
     if sec_vill_battle:
         setlog("Deploying troops on the 2nd village battle ground", "info")
@@ -56,7 +82,8 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
 
-        if is_2_camps:
+        if is_2_camps == True:
+            setlog("Clicking minion from 2nd camp", "info")
             click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
         else:
             # click all possible  minions icon
@@ -138,6 +165,7 @@ def boost_troop_heroes():
 def bb_return_home():
     return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn.png'
     hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability.png'
+    connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
 
     timeout = 90  # timeout in seconds
     start_time = time.time()
@@ -150,6 +178,11 @@ def bb_return_home():
         if find_image_within_window(hero_ability_img, confidence=0.9):
             if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
                 setlog("Hero ability is ready again, clicking it now", "info")
+        # check for connection error
+        if click_random_within_image(check_image_presence(connection_err_img)):
+            setlog("Connection error detected, reconnecting...", "warning")
+            if BB_is_army_btn_visible():
+                return True
 
     # if find_image_within_window(return_home_btn_img):
     if click_random_within_image(check_image_presence(return_home_btn_img, confidence=0.8)):
@@ -187,6 +220,7 @@ def bb_attack_time_limit():
 
 found_opponent = False
 def attack_BB(is_2_camps=False):
+    print(f'attack_BB, is_2_camps: {is_2_camps}')
     get_coc_window("Clash of Clans")
     global found_opponent
 
@@ -227,6 +261,7 @@ def attack_BB(is_2_camps=False):
     return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn.png'
     sec_vill_loon = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\sec_vill_loon.png'
     hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability.png'
+    connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
 
     timeout = 120  # timeout in seconds
     start_time = time.time()
@@ -234,16 +269,21 @@ def attack_BB(is_2_camps=False):
     while not find_image_within_window(return_home_btn_img):
         if time.time() - start_time > timeout:
             break
-        time.sleep(1)
-        if find_image_within_window(hero_ability_img, confidence=0.9):
-            if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
-                setlog("Hero ability is ready again, clicking it now", "info")
+        # time.sleep(1)
+        # if find_image_within_window(hero_ability_img, confidence=0.9):
+        if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
+            setlog("Hero ability is ready again, clicking it now", "info")
         if find_image_within_window(sec_vill_loon):
             # setlog("We are at the 2nd village battle ground", "info")
             break
-        if find_image_within_window(hero_ability_img, confidence=0.9):
-            if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
-                setlog("Hero ability is ready again, clicking it now", "info")
+        # if find_image_within_window(hero_ability_img, confidence=0.9):
+        if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
+            setlog("Hero ability is ready again, clicking it now", "info")
+        # check for connection error
+        if click_random_within_image(check_image_presence(connection_err_img)):
+            setlog("Connection error detected, reconnecting...", "warning")
+            if BB_is_army_btn_visible():
+                return True
 
     if find_image_within_window(return_home_btn_img):
         if click_random_within_image(check_image_presence(return_home_btn_img, confidence=0.8)):
@@ -268,7 +308,7 @@ def attack_BB(is_2_camps=False):
             time.sleep(1)
             click_drag(743, 429, 414, 200)
             time.sleep(1)
-            deploy_troops(sec_vill_battle=True) # deploy troops on the 2nd village battle ground
+            deploy_troops(sec_vill_battle=True, is_2_camps=is_2_camps) # deploy troops on the 2nd village battle ground
             found_opponent = False
             bb_return_home()
 
@@ -305,7 +345,7 @@ def go_to_bb(go_back_main=False):
                 return False
 
 def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
-
+    print(f'bb attak loop, is_2_camps: {is_2_camps}')
     close_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\close_btn.png'
     bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
     # challenge_completed_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'
