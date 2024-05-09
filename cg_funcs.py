@@ -5,7 +5,7 @@ from Functions import (
     find_image_within_window,
     find_image,
 
-    click,
+    do_click,
     click_drag,
     scroll_to_zoom,
 
@@ -41,17 +41,17 @@ def purge_challenge(gem_cooldown=False, debug=False):
             click_random_within_image(check_image_presence(trash_btn_img)) # click trash button
 
             time.sleep(3)
-            click(537, 344) # click okay button
+            do_click(537, 344) # click okay button
 
             if gem_cooldown:
                 while not find_image_within_window(gem_cd_img):
                     time.sleep(0.2)
                 click_random_within_image(check_image_presence(gem_cd_img))
                 time.sleep(2.5)
-                click(547, 351) # click okay button
+                do_click(547, 351) # click okay button
             else:
-                click(867, 262) # click away to close clan games window
-                click(867, 262) # click away just to be sure
+                do_click(867, 262) # click away to close clan games window
+                do_click(867, 262) # click away just to be sure
             setlog("Challenge purged", 'success')
             purged = True
         else:
@@ -61,12 +61,12 @@ def purge_challenge(gem_cooldown=False, debug=False):
         time.sleep(3)
 
     if purged:
-        # click(867, 262) # click away to close clan games window
+        # do_click(867, 262) # click away to close clan games window
         # setlog("click away", "info")
         return True
     else:
         setlog("No challenge purged", "warning")
-        # click(867, 262) # click away to close clan games window
+        # do_click(867, 262) # click away to close clan games window
         # setlog("click away", "info")
         return False
 
@@ -126,8 +126,8 @@ def pick_challenge(debug=False):
                     time.sleep(0.2)
                 setlog("BB challenge started", "success")
                 time.sleep(0.5)
-                click(867, 262)  # Click away to close clan games window
-                click(867, 262)  # Click away to close clan games window
+                do_click(867, 262)  # Click away to close clan games window
+                do_click(867, 262)  # Click away to close clan games window
                 return True
             else:
                 return False
@@ -195,8 +195,8 @@ def cg_mode_loop(gem_cooldown=False):
                 if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
                     setlog("Collected elixir cart", "success")
                     time.sleep(1)
-                    click(867, 262) # click away
-                    click(867, 262)
+                    do_click(867, 262) # click away
+                    do_click(867, 262)
                 else:
                     setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
             else:
@@ -211,13 +211,13 @@ def cg_mode_loop(gem_cooldown=False):
             time.sleep(4)
             #* Try to pick a new challenge
             if pick_challenge():
-                click(891, 241) # click away
-                click(891, 241) # click away
+                do_click(891, 241) # click away
+                do_click(891, 241) # click away
                 continue #* if pick_challenge is successful then continue to the next iteration
             else:
                 purge_challenge(gem_cooldown=gem_cooldown)
                 time.sleep(3)
                 pick_challenge()
-                click(891, 241) # click away
-                click(891, 241) # click away
+                do_click(891, 241) # click away
+                do_click(891, 241) # click away
                 continue

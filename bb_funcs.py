@@ -6,7 +6,7 @@ from Functions import (
     check_image_presence,
     find_image_within_window,
 
-    click,
+    do_click,
     click_drag,
     scroll_to_zoom,
 
@@ -32,9 +32,9 @@ def BB_is_army_btn_visible(click=False):
             if count == 1: setlog("Waiting for army tab to appear", "info")
         else:
             setlog("Army tab found", "success")
-            click(867, 262)
-            click(867, 262)
-            click(867, 262)
+            do_click(867, 262)
+            do_click(867, 262)
+            do_click(867, 262)
             if click:
                 if click_random_within_image(check_image_presence(img, confidence=0.8)):
                     time.sleep(1)
@@ -51,8 +51,8 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
     if sec_vill_battle:
         setlog("Deploying troops on the 2nd village battle ground", "info")
         setlog("Deploying Hero", "info")
-        click(160, 487) # click hero
-        # click(583, 316) # drop hero
+        do_click(160, 487) # click hero
+        # do_click(583, 316) # drop hero
         click_points = [
             (515, 349),
             (630, 279),
@@ -62,11 +62,11 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         ]
 
         random_click_point = random.choice(click_points)
-        click(random_click_point[0], random_click_point[1])
+        do_click(random_click_point[0], random_click_point[1])
 
         time.sleep(10)
 
-        click(589, 485) # click loon icon just to be sure
+        do_click(589, 485) # click loon icon just to be sure
         #* ballons drop points
         #  randomize drop order
         click_points = [
@@ -77,35 +77,35 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         random.shuffle(click_points)
         for i, point in enumerate(click_points):
             # setlog(f"Iteration {i+1}: Dropping loon at {point}", "info")
-            click(point[0], point[1])
+            do_click(point[0], point[1])
 
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
 
         if is_2_camps == True:
             setlog("Clicking minion from 2nd camp", "info")
-            click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
+            do_click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
         else:
             # click all possible  minions icon
-            click(417, 507)
-            click(480, 506)
-            click(532, 513)
+            do_click(417, 507)
+            do_click(480, 506)
+            do_click(532, 513)
         #* minions drop points
         # randomize minion drop order
         minions = [(515, 349), (591, 314), (630, 279), (678, 243), (740, 200)]
         random.shuffle(minions)
         for _ in range(3):
             for point in minions:
-                click(point[0], point[1])
+                do_click(point[0], point[1])
 
         time.sleep(12)
         setlog("Activating hero ability", "info")
-        click(165, 509) # activate hero ability
+        do_click(165, 509) # activate hero ability
     else:
         setlog("Deploying troops on the 1st village battle ground", "info")
         setlog("Deploying Hero", "info")
-        click(160, 487) # click hero
-        # click(583, 316) # drop hero
+        do_click(160, 487) # click hero
+        # do_click(583, 316) # drop hero
         # randomize hero drop
         click_points = [
             (515, 349),
@@ -115,11 +115,11 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
             (678, 243)
         ]
         random_click_point = random.choice(click_points)
-        click(random_click_point[0], random_click_point[1])
+        do_click(random_click_point[0], random_click_point[1])
         time.sleep(10) # wait a bit before dropping balloons
 
         setlog("Dropping loons", "info")
-        click(231, 505) # click balloon icon
+        do_click(231, 505) # click balloon icon
 
         #* ballons drop points
         #  randomize drop order
@@ -131,11 +131,11 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         random.shuffle(click_points)
         for i, point in enumerate(click_points):
             # setlog(f"Iteration {i+1}: Dropping loon at {point}", "info")
-            click(point[0], point[1])
+            do_click(point[0], point[1])
 
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
-        click(417, 507) # click minions icon
+        do_click(417, 507) # click minions icon
 
         #* minions drop points
         # randomize minion drop order
@@ -143,24 +143,24 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         random.shuffle(minions)
         for _ in range(3):
             for point in minions:
-                click(point[0], point[1])
+                do_click(point[0], point[1])
 
         time.sleep(10)
         setlog("Activating hero ability", "info")
-        click(165, 509) # activate hero ability
+        do_click(165, 509) # activate hero ability
 
 def boost_troop_heroes():
-    click(39, 432) # click army tab
+    do_click(39, 432) # click army tab
     
-    click(473, 302) # click hero boost button
-    click(473, 352) # click to confirm boost
+    do_click(473, 302) # click hero boost button
+    do_click(473, 352) # click to confirm boost
     
     time.sleep(1)
     
-    click(596, 308) # click troop boost button
-    click(596, 358) # click to confirm boost
+    do_click(596, 308) # click troop boost button
+    do_click(596, 358) # click to confirm boost
     
-    click(902, 284) # click away
+    do_click(902, 284) # click away
 
 def bb_return_home():
     return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn.png'
@@ -205,7 +205,7 @@ def bb_attack_time_limit():
         if time.time() - start_time >= 60 * 60:  # 2 hours in seconds
             keyboard.press_and_release('esc')
             time.sleep(1)
-            click(534, 349)
+            do_click(534, 349)
             break
             # count += 1
             # if count > 21:
@@ -239,7 +239,7 @@ def attack_BB(is_2_camps=False):
         setlog("Clicked find now button", "success")
         time.sleep(1.5)
     else:
-        setlog("Failed to click find now button", "error")
+        setlog("Failed to    click find now button", "error")
 
     cancel_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\cancel_btn.png'
     if find_image_within_window(cancel_btn_img):
@@ -374,8 +374,8 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
             if find_image_within_window(bb_atk_btn_img):
                 setlog("We are back at builder base!", "success")
                 time.sleep(2)
-                click(867, 262) # click away just in case there is star bonus window
-                click(867, 262)
+                do_click(867, 262) # click away just in case there is star bonus window
+                do_click(867, 262)
                 break
         #* Check cart for elixir then collect it
         scroll_to_zoom((716, 117), 10)
@@ -388,8 +388,8 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
             if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
                 setlog("Collected elixir cart", "success")
                 time.sleep(1)
-                click(867, 262) # click away
-                click(867, 262)
+                do_click(867, 262) # click away
+                do_click(867, 262)
             else:
                 setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
         else:
@@ -398,5 +398,5 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
         if time.time() - start_time >= 180 * 60:  # 3 hours in seconds
             keyboard.press_and_release('esc')
             time.sleep(1)
-            click(534, 349)
+            do_click(534, 349)
             break

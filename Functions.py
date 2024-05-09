@@ -63,18 +63,20 @@ def get_coc_window(window_title):
         if window:
             # setlog("Clash of Clans window found.", "info")
             window.activate() # If the window is found, bring it to the front
+            return True
             # return window[0]
         else:
             setlog(f"No window with title '{window_title}' found.", "error")
+            return False
     except Exception as e:
         print(f"An error occurred: {e}")
 
 #* ----------------------------
-# def click(x, y):
+# def do_click(x, y):
 #     pyautogui.click(x, y)
 
-def random_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1, hold_duration_ms=0, debug = False):
-    # random_click(1792, 290, (20,100), (20,89), 1, random.randint(100,200), debug=True)
+def random_do_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1, hold_duration_ms=0, debug = False):
+    # random_do_click(1792, 290, (20,100), (20,89), 1, random.randint(100,200), debug=True)
     for i in range(clicks):
         # Generate random offsets between 5 and 10 pixels
         random_offset_x = random.randint(*rand_x_range)
@@ -105,7 +107,7 @@ def click_close():
     else: 
         print("Close button not found.")
 
-def click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = False, debug=False, click_hold=False):
+def do_click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = False, debug=False, click_hold=False):
 
     window_rect = get_window_rect(window_title)
     # print(window_rect)
@@ -137,7 +139,7 @@ def click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, del
     else:
         pyautogui.click(absolute_x, absolute_y, duration=move_duration)
 
-    return True
+    # return True
     # try:
     #     if not random_click:
     #         absolute_x = window_rect[0] + relative_x
@@ -269,10 +271,10 @@ def scroll_acc_switch(move_mouse_to=(0,0), scroll_count=1, scroll_down=False, sc
 def switch_acc(acc_num=0):
 
     get_window_handle(window_title)
-    if click(901, 425):
+    if do_click(901, 425):
         setlog("Click settings", "info")
         time.sleep(0.5)
-        if click(606, 141): # click switch account
+        if do_click(606, 141): # click switch account
             setlog("Click switch account", "info")
         else:
             setlog("Switch account button not found", "error")
@@ -281,29 +283,29 @@ def switch_acc(acc_num=0):
 
     if acc_num <= 4:
         time.sleep(0.3)
-        click(735, 300 + (acc_num - 1) * 70) # PEMDAS method
+        do_click(735, 300 + (acc_num - 1) * 70) # PEMDAS method
 
     elif acc_num <= 8 and acc_num > 4:
         scroll_acc_switch((745, 338), 6, scroll_down=True)
         time.sleep(0.3)
-        click(735, 300 + (acc_num - 5) * 70)
+        do_click(735, 300 + (acc_num - 5) * 70)
 
     elif acc_num <= 12 and acc_num > 8:
         scroll_acc_switch((745, 338), 12, scroll_down=True)
-        click(735, 300 + (acc_num - 9) * 70)
+        do_click(735, 300 + (acc_num - 9) * 70)
 
     elif acc_num <= 16 and acc_num > 12:
         scroll_acc_switch((745, 338), 18, scroll_down=True)
-        click(735, 283 + (acc_num - 13) * 70)
+        do_click(735, 283 + (acc_num - 13) * 70)
 
     elif acc_num <= 20 and acc_num > 16:
         scroll_acc_switch((745, 338), 24, scroll_down=True)
-        click(733, 283 + (acc_num - 17) * 70)
+        do_click(733, 283 + (acc_num - 17) * 70)
 
     elif acc_num == 21:
         scroll_acc_switch((745, 338), 30, scroll_down=True)
         time.sleep(0.3)
-        click(733, 393)
+        do_click(733, 393)
 
     setlog("Switching to account " + str(acc_num), "success")
     time.sleep(2)
@@ -675,7 +677,7 @@ def get_func_performance(func):
     setlog(f"Runtime: {runtime} seconds",'success')
 
 def func_to_run():
-    # click(312, 54,random_click=True)
+    # do_click(312, 54,random_click=True)
 
     window_rect = get_window_rect(window_title)
 
@@ -709,20 +711,150 @@ def func_to_run():
     # if find_image(troop_cap_img_path, confidence=0.8):
     #     print("true")
 
+def get_window_location():
+    import pyperclip
+    window_title = "Google Play Games Beta"
+    """
+    Retrieves the current location (x, y) of a window.
+    
+    Parameters:
+    window_title (str): The title of the window to get the location for.
+    
+    Returns:
+    tuple: A tuple containing the x and y coordinates of the window's location.
+    """
+    # Get the window object
+    window = gw.getWindowsWithTitle(window_title)[0]
+
+    # Get the window's current location
+    x = window.left
+    y = window.top
+    print(f'Window location: ({x}, {y})')
+    '''copy location to clipboard'''
+    pyperclip.copy(f'({x}, {y})')
+    return (x, y)
+
 # window_size = (661, 32, 1932, 777)
 # terminal_window_size = (-7, 32, 563, 563)
 # def set_window_size(window_size):
-def set_window_size(terminal_noramal_size=False):
+def set_window_size(window_name = '', terminal_noramal_size=False):
     if terminal_noramal_size:
-        window_size = (-7, 32, 1013, 563)
+        # window_size = (-7, 32, 1013, 563)
+        x = -7
+        y = 32
+        width = 1013
+        height = 563
+        window_size = (x, y, width, height)
     else:
-        window_size = (-7, 32, 563, 563)
+        # window_size = (-7, 32, 563, 563)
+        x = -7
+        y = 32
+        width = 572
+        height = 563
+        window_size = (x, y, width, height)
     # call the function: set_window_size(window_size)
-    left, top, right, bottom = window_size
-    width = right - left
-    height = bottom - top
-    # gw.getWindowsWithTitle(window_title)[0].resizeTo(width, height)
-    gw.getWindowsWithTitle("Administrator: Desktop")[0].resizeTo(width, height)
+    # left, top, right, bottom = window_size
+    # width = right - left
+    # height = bottom - top
+
+    if window_name == "terminal":
+        window_title = "Administrator: Desktop"  # Add the window title here
+    elif window_name == "launcher":
+        window_title = "Google Play Games beta"
+        x = 740
+        y = 32
+        width = 1184
+        height= 639
+        window_size = (x, y, width, height)
+    elif window_name == "coc":
+        window_title = "Clash of Clans"
+        x = 1008
+        y = 32
+        width = 913
+        height = 543
+        window_size = (x, y, width, height)
+
+    windows = gw.getWindowsWithTitle(window_title)
+    if windows:
+        window = windows[0]
+        window.resizeTo(width, height)
+        window.moveTo(x, y)
+
+import subprocess
+def launch_clash_of_clans_on_google_play_games():
+    """
+    Launches the Clash of Clans app using the Google Play Games app for Windows.
+    """
+    # Path to the Google Play Games app executable
+    google_play_games_path = r"C:\Program Files\Google\Play Games\Bootstrapper.exe"
+
+    # Package name of the Clash of Clans app
+    # app_package = "com.supercell.clashofclans"
+
+    # Launch the Google Play Games app and start the Clash of Clans app
+    # subprocess.run([google_play_games_path, "--launch-package", app_package])
+    subprocess.run([google_play_games_path, "--launch-package"])
+
+def close_launcher():
+    window_title = "Google Play Games beta"
+    """
+    Closes the app with the specified window title.
+
+    Parameters:
+    window_title (str): The title of the window to close.
+    """
+    window = gw.getWindowsWithTitle(window_title)
+    if window:
+        window[0].close()
+
+def is_coc_open():
+    """
+    Checks if an app with the window title "Clash of Clans" is open.
+
+    Returns:
+    bool: True if the app is open, False otherwise.
+    """
+    window = gw.getWindowsWithTitle("Clash of Clans")
+    if window:
+        setlog('Clash of Clans is open', 'info')
+        return True
+    else:
+        setlog('Clash of Clans is Close', 'warning')
+        return False
+
+def launch_coc():
+    from mv_funcs import is_army_btn_visible
+    if is_coc_open():
+        return
+
+    setlog("Launching Emulator...", 'info')
+    launch_clash_of_clans_on_google_play_games()
+    time.sleep(2)
+    setlog("Set window size of Emulator", 'info')
+    set_window_size(window_name='launcher')
+    time.sleep(7)
+    coc_icon_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\coc_icon.png'
+    # while not pyautogui.locateOnWindow(coc_icon_img, 'Google Play Games beta'):
+    while not pyautogui.locateOnWindow(coc_icon_img, 'Google Play Games beta'):
+        time.sleep(0.2)
+        setlog("looking for coc icon...", 'info')
+
+    setlog('Launching Clash of Clans...', 'info')
+    pyautogui.click(1756, 165)
+    setlog('Close Launcher', 'info')
+    close_launcher()
+
+    # while Google Play Games beta app is open sleep for 1 sec
+    while gw.getWindowsWithTitle("Google Play Games beta"):
+        # setlog("waiting for Clash of Clans to load...", 'info')
+        time.sleep(2)
+
+    setlog("Set window size of Clash of Clans window", 'info')
+    set_window_size(window_name='coc')
+
+    is_army_btn_visible()
+
+    return True
 
 def setup_logging():
     log_formatter = colorlog.ColoredFormatter(

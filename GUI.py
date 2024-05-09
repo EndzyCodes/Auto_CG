@@ -1,5 +1,5 @@
 import json
-from Functions import setlog, get_coc_window, set_window_size, window_title
+from Functions import setlog, get_coc_window, set_window_size, launch_coc, window_title
 from cg_funcs import cg_mode_loop
 from bb_funcs import bb_attack_loop
 from mv_funcs import main_village_attack_loop
@@ -19,8 +19,11 @@ def main(clan_games_mode, BB_atk_only_mode,
         gem_cooldown
         ):
 
-    get_coc_window(window_title)
-    set_window_size()
+    if get_coc_window(window_title):
+        pass
+    else:
+        launch_coc()
+    # set_window_size(window_name="terminal")
     print("Starting automated gameplay...")
     # Example: Implement automation logic
     while True:
@@ -175,17 +178,17 @@ class ClashOfClansBotGUI(QMainWindow):
         super().__init__()
         self.initUI()
         # self.settings = {"clanGamesMode": False, # Misc Settings
-        #                 "BBattackOnlyMode": False, 
+        #                 "BBattackOnlyMode": False,
         #                 "BBCollectResources": False, # Builder base settings
         #                 "BBActivateCTBoost": False,
         #                 "gemCooldown": False # Clan Games settings
         #                 }
         self.loadSettings()
-        set_window_size() # set terminal size for bot
+        set_window_size(window_name="terminal") # set terminal size for bot
         self.bot_thread = None
 
     def initUI(self):
-        self.setWindowTitle('Clash of Clans Bot Configuration')
+        self.setWindowTitle('Clash Buddy v1.0')
         self.setFixedSize(452, 550) # Set the fixed size of the window (width, height)
         # this is the main window
         self.tab_widget = QTabWidget(self)
@@ -198,13 +201,13 @@ class ClashOfClansBotGUI(QMainWindow):
         self.main_village_tab = MainVillageTab()
         self.clan_games_tab = ClanGamesTab()
 
-        #* create the tabs here
+        # * create the tabs here
         self.tab_widget.addTab(self.misc_tab, "Misc")
         self.tab_widget.addTab(self.bb_attack_tab, "Builder Base")
         self.tab_widget.addTab(self.main_village_tab, "Main Village")
         self.tab_widget.addTab(self.clan_games_tab, "Clan Games")
 
-        #* Setup specific tab UIs and connect events if needed
+        # * Setup specific tab UIs and connect events if needed
         self.misc_tab.initUI()
         self.bb_attack_tab.initUI()
         self.main_village_tab.initUI()
@@ -215,7 +218,7 @@ class ClashOfClansBotGUI(QMainWindow):
 
     def setupBottomButtons(self):
         y_pos = 490
-        #* Add buttons to bottom
+        # * Add buttons to bottom
         self.saveSettingsButton = QPushButton("Save Settings", self)
         self.saveSettingsButton.move(310, y_pos)
         self.saveSettingsButton.resize(120, 40)
@@ -236,7 +239,7 @@ class ClashOfClansBotGUI(QMainWindow):
             with open("settings.json", "r") as file:
                 self.settings = json.load(file)
                 setlog(f"Settings loaded successfully: {self.settings}", 'success')
-                #* load settings into tabs
+                # * load settings into tabs
                 self.misc_tab.loadSettings(self.settings)
                 self.bb_attack_tab.loadSettings(self.settings)
                 self.main_village_tab.loadSettings(self.settings)
@@ -268,7 +271,7 @@ class ClashOfClansBotGUI(QMainWindow):
 
     def saveSettings(self):
         try:
-            #* Save settings for each tab
+            # * Save settings for each tab
             self.misc_tab.saveSettings(self.settings)
             self.bb_attack_tab.saveSettings(self.settings)
             self.main_village_tab.saveSettings(self.settings)
@@ -281,7 +284,7 @@ class ClashOfClansBotGUI(QMainWindow):
             setlog(f"Error saving settings: {e}", 'error')
 
     def startBot(self):
-        #* Set variables boolean value based on checkboxes state, it a checkbox is checked, it will be True, otherwise False
+        # * Set variables boolean value based on checkboxes state, it a checkbox is checked, it will be True, otherwise False
         self.saveSettings()  # Save settings when starting the bot
         # Misc tab
         clan_games_mode = self.settings["clanGamesMode"]
@@ -296,33 +299,37 @@ class ClashOfClansBotGUI(QMainWindow):
         # CG tab
         enable_gem_cooldown = self.settings["gemCooldown"]
 
-        print(f"Starting bot with configurations: "
-                f"Clan Games Mode: {clan_games_mode}, "
-                f"BB Attack Only Mode: {bb_atk_only_mode}, "
-                f"MV Attack Only Mode: {mv_atk_only_mode}, "
-                f"Switch Accounts: {switch_accounts}, "
-                f"Solo Account: {solo_account}, "
-                f"BB Collect Resources: {BBcollect_resources}, "
-                f"BB Activate CT Boost: {BBactivate_CT_boost},"
-                f"BB Second Camp: {is_2_camps}, "
-                f"Gem Cooldown: {enable_gem_cooldown}")
+        print(
+            f"Starting bot with configurations: "
+            f"Clan Games Mode: {clan_games_mode}, "
+            f"BB Attack Only Mode: {bb_atk_only_mode}, "
+            f"MV Attack Only Mode: {mv_atk_only_mode}, "
+            f"Switch Accounts: {switch_accounts}, "
+            f"Solo Account: {solo_account}, "
+            f"BB Collect Resources: {BBcollect_resources}, "
+            f"BB Activate CT Boost: {BBactivate_CT_boost},"
+            f"BB Second Camp: {is_2_camps}, "
+            f"Gem Cooldown: {enable_gem_cooldown}"
+        )
 
         # If there's an existing thread, wait for it to finish before creating a new one
         if self.bot_thread and self.bot_thread.isRunning():
             print("Waiting for the previous bot thread to finish...")
             self.bot_thread.wait()
 
-        #* pass the variables to the functions that need them
+        # * pass the variables to the functions that need them
         # Create a new thread to run the bot
-        self.bot_thread = BotThread(clan_games_mode, 
-                                    bb_atk_only_mode, 
-                                    mv_atk_only_mode,
-                                    switch_accounts, 
-                                    solo_account, 
-                                    BBcollect_resources,
-                                    BBactivate_CT_boost,
-                                    is_2_camps,
-                                    enable_gem_cooldown)
+        self.bot_thread = BotThread(
+            clan_games_mode,
+            bb_atk_only_mode,
+            mv_atk_only_mode,
+            switch_accounts,
+            solo_account,
+            BBcollect_resources,
+            BBactivate_CT_boost,
+            is_2_camps,
+            enable_gem_cooldown,
+        )
 
         self.bot_thread.finished.connect(self.onBotThreadFinished)
         self.bot_thread.start()
@@ -341,7 +348,7 @@ class ClashOfClansBotGUI(QMainWindow):
             Overriding the key press event to handle Ctrl+X shortcut to close window
         '''
         if event.modifiers() == Qt.KeyboardModifier.ControlModifier and event.key() == Qt.Key.Key_X:
-            set_window_size(terminal_noramal_size=True) # Reset terminal size
+            set_window_size(window_name="terminal", terminal_noramal_size=True) # Reset terminal size
             self.close()
 
 class BotThread(QThread):
@@ -382,4 +389,3 @@ class BotThread(QThread):
             BBsecond_camp = self.BBsecond_camp,
 
             gem_cooldown = self.gem_cooldown)
-

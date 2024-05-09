@@ -11,7 +11,7 @@ from Functions import (
     find_image_within_window,
     find_image,
 
-    click,
+    do_click,
     click_drag,
     scroll_to_zoom,
 
@@ -34,26 +34,24 @@ def is_army_btn_visible(click=False):
 
     img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
 
-    count = 0
-    while 1: 
-        if not check_image_presence(img, confidence=0.8):
-            time.sleep(0.3)
-            count += 1
-            if count == 1: setlog("Waiting for army tab to appear", "info")
-        else:
-            setlog("Army tab found", "success")
-            click(867, 262)
-            click(867, 262)
-            click(867, 262)
-            if click:
-                if click_random_within_image(check_image_presence(img, confidence=0.8)):
-                    time.sleep(1)
-                    setlog("Clicked on army tab", "success")
-                    return True
-                else:
-                    setlog("No army tab", "info")
-                    return False
+    setlog("Waiting for army tab to appear", "info")
+    while  not check_image_presence(img, confidence=0.8):
+        time.sleep(0.3)
+
+    setlog("Army tab found", "success")
+    do_click(867, 262)
+    do_click(867, 262)
+    do_click(867, 262)
+    if click:
+        if click_random_within_image(check_image_presence(img, confidence=0.8)):
+            time.sleep(1)
+            setlog("Clicked on army tab", "success")
             return True
+        else:
+            setlog("No army tab", "info")
+            return False
+
+    return True
 
 def check_daily_reward():
     img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\claim_btn.png'
@@ -61,7 +59,7 @@ def check_daily_reward():
     if find_image(img, confidence=0.9):
         if click_random_within_image(claim_btn_location):
             time.sleep(1)
-            click(867, 262) # click away
+            do_click(867, 262) # click away
             setlog("Claimed daily reward", "success")
             return True
         else:
@@ -127,14 +125,14 @@ def main2(skip_acc_num=0): # for purging loop
         # click all possible claims button
         if find_image_within_window(r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\daily_reward.png'):
             setlog("Daily reward window found", "success")
-            click(197, 250)
-            click(341, 252)
-            click(485, 252)
-            click(203, 401)
-            click(341, 404)
-            click(483, 404)
+            do_click(197, 250)
+            do_click(341, 252)
+            do_click(485, 252)
+            do_click(203, 401)
+            do_click(341, 404)
+            do_click(483, 404)
 
-        click(884, 242) # click away first just in case if there is a window pausinging the village
+        do_click(884, 242) # click away first just in case if there is a window pausinging the village
         scroll_to_zoom((716, 117), 10)
         # time.sleep(1)
         click_drag(716, 117, 419, 376)
@@ -142,7 +140,7 @@ def main2(skip_acc_num=0): # for purging loop
 
         time.sleep(1)
         collect_resources()
-        # click(252, 134) # click clan games
+        # do_click(252, 134) # click clan games
 
 
         time.sleep(3) # wait for clan games to open/load
@@ -242,7 +240,7 @@ def click_drag_troops(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
 
 def superBarbs_strat_deploy():
     scroll_to_zoom((300, 353), 10)
-    click(164, 502) # click troop - super barb
+    do_click(164, 502) # click troop - super barb
 
     # Randomly decide deployment order (batch1_first = True means batch 1 deploys first)
     batch1_first = random.choice([True, False])
@@ -285,19 +283,19 @@ def superBarbs_strat_deploy():
     for unit in deployment_order:
         if unit == 'cc':
             keyboard.press('z'); time.sleep(0.5); keyboard.release('z')  # Clan castle
-            click(207, 68)  # Drop cc
+            do_click(207, 68)  # Drop cc
         elif unit == 'King':
             keyboard.press('q'); time.sleep(1); keyboard.release('q')  # King
-            click(222, 295)  # Drop King
+            do_click(222, 295)  # Drop King
         elif unit == 'Champion':
             keyboard.press('r'); time.sleep(0.5); keyboard.release('r')  # Champion
-            click(220, 273)  # Drop Champion
+            do_click(220, 273)  # Drop Champion
         elif unit == 'Queen':
             keyboard.press('w'); time.sleep(0.5); keyboard.release('w')  # Queen
-            click(711, 233)  # Drop Queen
+            do_click(711, 233)  # Drop Queen
         elif unit == 'Warden':
             keyboard.press('e'); time.sleep(0.5); keyboard.release('e')  # Warden
-            click(703, 253)  # Drop Warden
+            do_click(703, 253)  # Drop Warden
     
     # Randomly activate hero abilities after a delay
     time.sleep(10)  # Wait for 10 seconds before activating abilities
@@ -305,7 +303,7 @@ def superBarbs_strat_deploy():
     for ability in abilities_to_activate:
         if ability == 'King':
             keyboard.press('q'); time.sleep(0.5); keyboard.release('q')  # King ability
-            click(296, 485)
+            do_click(296, 485)
         elif ability == 'Champion':
             keyboard.press('r'); time.sleep(0.5); keyboard.release('r')  # Champion ability
         elif ability == 'Queen':
@@ -410,14 +408,14 @@ def main_village_attack_loop(isSwitchAcc=False):
                     break
 
         if is_army_btn_visible():
-            click(867, 262) # click away for any window popup
+            do_click(867, 262) # click away for any window popup
             setlog("We are back in the main village!", "success")
 
         if is_army_btn_visible(click=True): # open army window
-            click(674, 96) # click quick train
+            do_click(674, 96) # click quick train
             time.sleep(1)
-            click(733, 176) # click train, previous army
-            click(867, 262) # click away
+            do_click(733, 176) # click train, previous army
+            do_click(867, 262) # click away
 
 def is_army_full():
 

@@ -24,24 +24,24 @@ def request_troops():
         time.sleep(1)
         if (ok_btn_location := check_image_presence(ok_btn_img)):
             click_random_within_image(ok_btn_location)
-            click(734, 467) # click request button
+            do_click(734, 467) # click request button
             time.sleep(1)
-            click(551, 402) # click send button
+            do_click(551, 402) # click send button
             setlog("Troop request successfully sent!", 'info')
     else:
         setlog("No troops in cc, skip click trash", 'info')
-        click(734, 467) # click request button
+        do_click(734, 467) # click request button
         time.sleep(1)
-        click(551, 402) # click send button
+        do_click(551, 402) # click send button
         setlog("Troop request successfully sent!", 'info')
 
 def train_loons():
 
-    click(41, 420) # click army tab
+    do_click(41, 420) # click army tab
     time.sleep(1)
-    click(680, 98) # click Quick train tab
+    do_click(680, 98) # click Quick train tab
     time.sleep(1)
-    click(740, 277) # click "train" on the first army comp
+    do_click(740, 277) # click "train" on the first army comp
 
     time.sleep(1)
     ok_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\ok_btn.png'
@@ -51,10 +51,10 @@ def train_loons():
     if ok_btn_location:
         setlog("Ok button found, clicking", "info")
         click_random_within_image(ok_btn_location)
-        click(867, 262) # click away to close army indow
+        do_click(867, 262) # click away to close army indow
         # return True
     else:
-        click(867, 262) # click away to close army window
+        do_click(867, 262) # click away to close army window
     return True
 
 def donate_troops():
@@ -66,13 +66,13 @@ def donate_troops():
         setlog("Found a donate button, donating now!", "info")
         time.sleep(1.5)
         setlog("Donating loons...", "info")
-        click(342, 213, click_hold=True) # click loons to donate
-        click(723, 50) # click away to close donate window
+        do_click(342, 213, click_hold=True) # click loons to donate
+        do_click(723, 50) # click away to close donate window
         return True
     else:
         setlog("No more donate buttons found.", "info")
         setlog("Exiting donate loop to train troops...", "info")
-        click(320, 262) # close clan chat
+        do_click(320, 262) # close clan chat
         time.sleep(1)
         return False
 
@@ -91,7 +91,7 @@ def donate_loop():
 
         time.sleep(1)
         scroll_to_zoom((570, 274), 10) # zoom out first
-        click(46, 261) # open chat tab
+        do_click(46, 261) # open chat tab
         time.sleep(1)
 
         #* Donate loop
@@ -111,7 +111,3 @@ if __name__ == "__main__":
     ex = ClashOfClansBotGUI()
     ex.show() # show the GUI
     app.exec() # start the application
-
-    # bb_attack_time_limit()
-
-    # request_troops()

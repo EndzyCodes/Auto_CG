@@ -84,9 +84,33 @@ def get_region_within_window(image_path, confidence=0.8, timeout=10):
         print(f"Error: {e}")
         return False
 
+import pyperclip
+
+def get_window_location_and_size(window_title = ''):
+    """
+    ​<light>Retrieves the location (x, y) and size (width, height) of a window, and copies the coordinates to the clipboard.</light>
+    
+    Parameters:
+    window_title (str): The title of the window to get the location and size for.
+    """
+    # Get the window object
+    window = gw.getWindowsWithTitle(window_title)[0]
+
+    # Get the window's location and size
+    x = window.left
+    y = window.top
+    width = window.width
+    height = window.height
+
+    # Format the coordinates as a string
+    coords_str = f"({x}, {y}, {width}, {height})"
+
+    # Copy the coordinates to the clipboard
+    pyperclip.copy(coords_str)
+
+
 if __name__ == "__main__":
 
     # img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\trash.png'
     # get_region_within_window(img)
-    window_dim = get_window_rect("Administrator: Desktop")
-    print(window_dim)
+    get_window_location_and_size(window_title="Coc Bot Con  ")
