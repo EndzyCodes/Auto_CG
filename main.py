@@ -111,3 +111,10 @@ if __name__ == "__main__":
     ex = ClashOfClansBotGUI()
     ex.show() # show the GUI
     app.exec() # start the application
+
+    # trophy_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\trophy_icon.png'
+    
+    # if check_image_presence(trophy_icn_img):
+    #     setlog("Trophy icon found", "info")
+    # else:
+    #     setlog("Trophy icon not found", "info")

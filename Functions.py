@@ -829,10 +829,10 @@ def launch_coc():
 
     setlog("Launching Emulator...", 'info')
     launch_clash_of_clans_on_google_play_games()
-    time.sleep(2)
+    time.sleep(4)
     setlog("Set window size of Emulator", 'info')
     set_window_size(window_name='launcher')
-    time.sleep(7)
+    time.sleep(4)
     coc_icon_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\coc_icon.png'
     # while not pyautogui.locateOnWindow(coc_icon_img, 'Google Play Games beta'):
     while not pyautogui.locateOnWindow(coc_icon_img, 'Google Play Games beta'):
@@ -882,14 +882,22 @@ def setlog(string, log_level):
     error_color = "\033[91m"  # Red
     info_color = "\033[96m"   # Cyan
     warning_color = "\033[93m"  # Yellow
+    heading_color = "\033[94m"
     # other colors
     # \033[30m - Black
+    # \033[90m - Bright Black
     # \033[31m - Red
+    # \033[91m - Bright Red
     # \033[32m - Green
+    # \033[92m - Bright Green
     # \033[33m - Yellow
+    # \033[93m - Bright Yellow
     # \033[34m - Blue
-    # \033[35m - Magenta
+    # \033[94m - Bright Blue
+    # \033[35m - Magenta/purple
+    # \033[95m - Bright Magenta/purple
     # \033[36m - Cyan
+    # \033[96m - Bright Cyan
     # \033[37m - White
     # Set color based on log_level
     if log_level == "success":
@@ -902,6 +910,8 @@ def setlog(string, log_level):
         color = info_color
     elif log_level == "warning":
         color = warning_color
+    elif log_level == "heading":
+        color = heading_color
     else:
         color = ""  # Default to no color if log_level is not recognized
 

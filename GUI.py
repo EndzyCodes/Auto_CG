@@ -24,7 +24,7 @@ def main(clan_games_mode, BB_atk_only_mode,
     else:
         launch_coc()
     # set_window_size(window_name="terminal")
-    print("Starting automated gameplay...")
+    setlog("Starting automated gameplay...", 'info')
     # Example: Implement automation logic
     while True:
         if clan_games_mode:
