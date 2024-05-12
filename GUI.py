@@ -3,8 +3,11 @@ from Functions import setlog, get_coc_window, set_window_size, launch_coc, windo
 from cg_funcs import cg_mode_loop
 from bb_funcs import bb_attack_loop
 from mv_funcs import main_village_attack_loop
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget, QRadioButton, QToolTip
-from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget, QRadioButton, QToolTip, QSplashScreen, QLabel
+from PyQt6.QtCore import QThread, pyqtSignal, Qt, QTimer, QRect
+from PyQt6.QtGui import QPixmap
+import sys
+import time
 
 # def main(attack_only_no_cg=False,
 #         enable_gem_cooldown=False,
@@ -174,9 +177,38 @@ class ClanGamesTab(QWidget):
     def saveSettings(self, settings):
         settings["gemCooldown"] = self.gemCooldownCheckbox.isChecked()
 
+class CustomSplashScreen(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Custom Splash Screen')
+        self.setFixedSize(800, 300)  # Set the size of the splash screen widget
+
+        # Create a layout for the splash screen
+        layout = QVBoxLayout(self)
+
+        # Load and display the splash screen image
+        pixmap = QPixmap('C:/Users/Mark/Documents/GitHub/EndzyCodes/Auto_CG/assets/coc_loading_Screen.png')
+        splash_image = QLabel(self)
+        splash_image.setPixmap(pixmap)
+        layout.addWidget(splash_image, alignment=Qt.AlignmentFlag.AlignCenter)
+
+        # Add a loading message
+        loading_label = QLabel('Loading...', self)  # Create the loading label here
+        loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(loading_label)
+
+        # Timer to close the splash screen after a delay (e.g., 2 seconds)
+        QTimer.singleShot(2000, self.close)
+
+
 class ClashOfClansBotGUI(QMainWindow):
     def __init__(self):
         super().__init__()
+        # Show splash screen
+        splash = CustomSplashScreen()
+        splash.show()
+        time.sleep(2)
+
         self.initUI()
         # self.settings = {"clanGamesMode": False, # Misc Settings
         #                 "BBattackOnlyMode": False,
@@ -187,6 +219,9 @@ class ClashOfClansBotGUI(QMainWindow):
         self.loadSettings()
         set_window_size(window_name="terminal") # set terminal size for bot
         self.bot_thread = None
+
+        # Close splash screen after main window is shown
+        splash.close()
 
     def initUI(self):
         self.setWindowTitle('Clash Buddy v1.0')
