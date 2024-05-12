@@ -737,21 +737,8 @@ def get_window_location():
 # window_size = (661, 32, 1932, 777)
 # terminal_window_size = (-7, 32, 563, 563)
 # def set_window_size(window_size):
-def set_window_size(window_name = '', terminal_noramal_size=False):
-    if terminal_noramal_size:
-        # window_size = (-7, 32, 1013, 563)
-        x = -7
-        y = 32
-        width = 1013
-        height = 563
-        window_size = (x, y, width, height)
-    else:
-        # window_size = (-7, 32, 563, 563)
-        x = -7
-        y = 32
-        width = 572
-        height = 563
-        window_size = (x, y, width, height)
+def set_window_size(window_name = "", noramal_size=False):
+
     # call the function: set_window_size(window_size)
     # left, top, right, bottom = window_size
     # width = right - left
@@ -759,6 +746,15 @@ def set_window_size(window_name = '', terminal_noramal_size=False):
 
     if window_name == "terminal":
         window_title = "Administrator: Desktop"  # Add the window title here
+        x = -7
+        y = 32
+        width = 572
+        height = 563
+        if noramal_size:
+            x = -7
+            y = 32
+            width = 1013
+            height = 563
     elif window_name == "launcher":
         window_title = "Google Play Games beta"
         x = 740

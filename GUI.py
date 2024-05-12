@@ -23,7 +23,8 @@ def main(clan_games_mode, BB_atk_only_mode,
         pass
     else:
         launch_coc()
-    # set_window_size(window_name="terminal")
+
+    set_window_size(window_name="coc")
     setlog("Starting automated gameplay...", 'info')
     # Example: Implement automation logic
     while True:
@@ -348,7 +349,7 @@ class ClashOfClansBotGUI(QMainWindow):
             Overriding the key press event to handle Ctrl+X shortcut to close window
         '''
         if event.modifiers() == Qt.KeyboardModifier.ControlModifier and event.key() == Qt.Key.Key_X:
-            set_window_size(window_name="terminal", terminal_noramal_size=True) # Reset terminal size
+            set_window_size(window_name="terminal", noramal_size=True) # Reset terminal size
             self.close()
 
 class BotThread(QThread):

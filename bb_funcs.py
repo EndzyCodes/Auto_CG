@@ -220,9 +220,9 @@ def bb_attack_time_limit():
 
 found_opponent = False
 def attack_BB(is_2_camps=False):
-    print(f'attack_BB, is_2_camps: {is_2_camps}')
-    get_coc_window("Clash of Clans")
+
     global found_opponent
+    # get_coc_window("Clash of Clans")
 
     bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
     if find_image_within_window(bb_atk_btn_img):
