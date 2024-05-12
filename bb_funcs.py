@@ -234,12 +234,18 @@ def attack_BB(is_2_camps=False):
     else:
         setlog("Builder base attack button not found", "error")
 
+    connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
     find_now_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\find_now_btn.png'
-    if click_random_within_image(check_image_presence(find_now_btn_img, confidence=0.8)):
-        setlog("Clicked find now button", "success")
-        time.sleep(1.5)
-    else:
-        setlog("Failed to    click find now button", "error")
+    while 1:
+        while not click_random_within_image(check_image_presence(find_now_btn_img, confidence=0.8)):
+            time.sleep(0.1)
+            if click_random_within_image(check_image_presence(connection_err_img)):
+                setlog("Connection error detected, reconnecting...", "warning")
+                if BB_is_army_btn_visible():
+                    continue # go back to loop
+        else:
+            setlog("Clicked find now button", "success")
+            break
 
     cancel_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\cancel_btn.png'
     if find_image_within_window(cancel_btn_img):
