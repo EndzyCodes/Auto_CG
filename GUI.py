@@ -15,10 +15,10 @@ import time
 
 #     bb_attack_loop(attack_only_no_cg=attack_only_no_cg, clan_games_mode=clan_games_mode, gem_cooldown=enable_gem_cooldown)
 
-def main(clan_games_mode, BB_atk_only_mode, 
-        MV_atk_only_mode, switch_accounts, 
-        solo_account, BBcollect_resources, 
-        BBactivate_CT_boost, BBsecond_camp, 
+def main(clan_games_mode, BB_atk_only_mode,
+        MV_atk_only_mode, switch_accounts,
+        solo_account, BBcollect_resources,
+        BBactivate_CT_boost, BBsecond_camp,
         gem_cooldown
         ):
 
@@ -46,7 +46,7 @@ def main(clan_games_mode, BB_atk_only_mode,
         else:
             setlog("No mode selected", "warning")
 
-class TabBase(QWidget): # template for when we need to create a new tab just copy paste this then change the class name
+class TabBase(QWidget):  # template for when we need to create a new tab just copy paste this then change the class name
     def __init__(self, parent=None):
         super().__init__(parent)
         self.initUI()
@@ -65,7 +65,7 @@ class TabBase(QWidget): # template for when we need to create a new tab just cop
 
 class MiscTab(QWidget):
     def initUI(self):
-        # Implement setup for the Miscellaneous tab
+        #* Modes Group Box
         modes_group_box = QGroupBox("Modes", self)
         modes_group_box.setGeometry(10, 10, 200, 110)
 
@@ -85,7 +85,7 @@ class MiscTab(QWidget):
         self.DonateOnlymode_rd.move(10, 80)
         self.DonateOnlymode_rd.setToolTip('Donate troops on current acc, switches acc if no more req then goes back to the selected acc for donation')
 
-
+        #* Switch Account Settings Group Box
         SA_modes_group_box = QGroupBox("Switch Account Settings", self)
         SA_modes_group_box.setGeometry(225, 10, 200, 100)
 
@@ -200,14 +200,13 @@ class CustomSplashScreen(QWidget):
         # Timer to close the splash screen after a delay (e.g., 2 seconds)
         QTimer.singleShot(2000, self.close)
 
-
 class ClashOfClansBotGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         # Show splash screen
-        splash = CustomSplashScreen()
-        splash.show()
-        time.sleep(2)
+        # splash = CustomSplashScreen()
+        # splash.show()
+        # time.sleep(2)
 
         self.initUI()
         # self.settings = {"clanGamesMode": False, # Misc Settings
@@ -217,18 +216,18 @@ class ClashOfClansBotGUI(QMainWindow):
         #                 "gemCooldown": False # Clan Games settings
         #                 }
         self.loadSettings()
-        set_window_size(window_name="terminal") # set terminal size for bot
+        set_window_size(window_name="terminal")  # set terminal size for bot
         self.bot_thread = None
 
         # Close splash screen after main window is shown
-        splash.close()
+        # splash.close()
 
     def initUI(self):
         self.setWindowTitle('Clash Buddy v1.0')
-        self.setFixedSize(452, 550) # Set the fixed size of the window (width, height)
+        self.setFixedSize(452, 550)  # Set the fixed size of the window (width, height)
         # this is the main window
         self.tab_widget = QTabWidget(self)
-        self.tab_widget.setGeometry(7, 10, 440, 470) # x, y, width, height of the tabs
+        self.tab_widget.setGeometry(7, 10, 440, 470)  # x, y, width, height of the tabs
         # self.tab_widget.currentChanged.connect(self.tabChanged)  # Connect tab change event
 
         # Create and add tabs
@@ -250,7 +249,7 @@ class ClashOfClansBotGUI(QMainWindow):
         self.clan_games_tab.initUI()
 
         self.setupBottomButtons()
-        self.move(560, 35) # move GUI window  beside the google play games emulator
+        self.move(560, 35)  # move GUI window  beside the google play games emulator
 
     def setupBottomButtons(self):
         y_pos = 490
@@ -384,12 +383,13 @@ class ClashOfClansBotGUI(QMainWindow):
             Overriding the key press event to handle Ctrl+X shortcut to close window
         '''
         if event.modifiers() == Qt.KeyboardModifier.ControlModifier and event.key() == Qt.Key.Key_X:
-            set_window_size(window_name="terminal", noramal_size=True) # Reset terminal size
+            set_window_size(window_name="terminal", noramal_size=True)  # Reset terminal size
             self.close()
 
+
 class BotThread(QThread):
-    def __init__(self, clan_games_mode,  
-                BB_atk_only_mode, 
+    def __init__(self, clan_games_mode,
+                BB_atk_only_mode,
                 MV_atk_only_mode,
                 switch_accounts,
                 solo_account,
@@ -397,7 +397,6 @@ class BotThread(QThread):
                 BBactivate_CT_boost,
                 BBsecond_camp,
                 gem_cooldown):
-
         super().__init__()
         # Misc tab variables
         self.clan_games_mode = clan_games_mode
@@ -414,8 +413,8 @@ class BotThread(QThread):
 
     def run(self):
         # Call your main bot function from here
-        main(clan_games_mode = self.clan_games_mode, 
-            BB_atk_only_mode = self.bb_atk_only_mode, 
+        main(clan_games_mode = self.clan_games_mode,
+            BB_atk_only_mode = self.bb_atk_only_mode,
             MV_atk_only_mode = self.mv_atk_only_mode,
             switch_accounts = self.switch_accounts,
             solo_account = self.solo_account,

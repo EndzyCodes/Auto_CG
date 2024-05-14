@@ -835,10 +835,10 @@ def launch_coc():
         time.sleep(0.2)
         setlog("looking for coc icon...", 'info')
 
-    setlog('Launching Clash of Clans...', 'info')
-    pyautogui.click(1756, 165)
+    pyautogui.click(1756, 165) # click coc icon in the launcher
     setlog('Close Launcher', 'info')
     close_launcher()
+    setlog('Launching Clash of Clans...', 'info')
 
     # while Google Play Games beta app is open sleep for 1 sec
     while gw.getWindowsWithTitle("Google Play Games beta"):

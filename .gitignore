@@ -2,3 +2,7 @@ git rm --cached settings.json
 settings.json
 __pycache__/
 __pycache__/GUI.cpython-312.pyc
+.idea/Auto_CG.iml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/modules.xml
