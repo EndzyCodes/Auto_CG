@@ -1,7 +1,7 @@
 # user intruction: manually start a challenge then go to builder base then run the script
 from GUI import ClashOfClansBotGUI
 from Functions import *
-from mv_funcs import is_army_btn_visible
+from mv_funcs import is_army_btn_visible, main_village_attack_loop, EdragLoons_strat
 from bb_funcs import bb_attack_time_limit
 from PyQt6.QtWidgets import QApplication
 
@@ -107,14 +107,11 @@ def donate_loop():
 
 if __name__ == "__main__":
 
+    # main_village_attack_loop()
+
     app = QApplication([])
     ex = ClashOfClansBotGUI()
     ex.show() # show the GUI
     app.exec() # start the application
 
-    # trophy_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\trophy_icon.png'
-    
-    # if check_image_presence(trophy_icn_img):
-    #     setlog("Trophy icon found", "info")
-    # else:
-    #     setlog("Trophy icon not found", "info")
+    # EdragLoons_strat()

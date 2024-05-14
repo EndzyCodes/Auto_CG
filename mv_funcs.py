@@ -147,6 +147,26 @@ def main2(skip_acc_num=0): # for purging loop
         purge_challenge()
         time.sleep(1)
 
+def is_army_full():
+
+    troop_count_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\troop_count.png'
+
+    # region = (1263, 697, 118, 30)
+    troop_count = extract_digit_from_image(troop_count_img)
+    
+    if troop_count is not None:  # Check if troop_count is not None
+        if troop_count > 100:
+            setlog("Troop count is full!", "warning")
+            setlog(f'Troop count: {troop_count}', "warning")
+            return True
+        else:
+            setlog("Troop count is not full", "info")
+            setlog(f'Troop count: {troop_count}', "info")
+            return False
+    else:
+        setlog("Failed to extract troop count from image", "error")
+        return False  # Return False or handle the error case appropriately
+
 def get_resources_value(resource_target='', target_val=400000):
     # Define regions and image paths
     regions = {
@@ -238,7 +258,8 @@ def click_drag_troops(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
     time.sleep(0.2)
     pyautogui.mouseUp()
 
-def superBarbs_strat_deploy():
+#* ---- ATTACK STRATEGIES ----
+def superBarbs_strat():
     scroll_to_zoom((300, 353), 10)
     do_click(164, 502) # click troop - super barb
 
@@ -312,6 +333,124 @@ def superBarbs_strat_deploy():
             keyboard.press('e'); time.sleep(0.5); keyboard.release('e')  # Warden ability
 
     setlog("Done deploying troops!", "success")
+
+def EdragLoons_strat():
+    # TH14 - 300 army camps space | 8 Edrags 12 Loons | 4 rage 3 Freeze | CC Edrag loons, 2 lightning 1 Freeze
+    # TH13 - Same as TH14
+    # TH12 - 280 army camps space | 8 Edrags 8 Loons | 4 rage 3 Freeze | CC Edrag loons, 2 lightning
+    # TH11 - 260 army camps space | 8 Edrags 4 Loons | same as TH12 | same as TH12
+
+    scroll_to_zoom((300, 353), 10)
+
+    #* ---- BOTTOM-RIGHT DEPLOYMENT ----
+    click_drag(636, 314, 460, 200) # Drag to bottom-right
+    king_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\king_icon.png'
+    queen_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\queen_icon.png'
+
+    if check_image_presence(king_icn_img) and check_image_presence(queen_icn_img):
+        setlog("King and Queen are available", "info")
+        keyboard.send('q')
+        do_click(420, 429, 'Drop King')
+        keyboard.send('w')
+        do_click(760, 166, 'Drop Queen')
+    elif check_image_presence(king_icn_img) and not check_image_presence(queen_icn_img):
+        setlog('King is available but Queen is not', 'info')
+        keyboard.send('q')
+        do_click(420, 429, 'Drop King')
+    elif not check_image_presence(king_icn_img) and check_image_presence(queen_icn_img):
+        setlog('Queen is available but King is not', 'info')
+        keyboard.send('w')
+        do_click(760, 166, 'Drop Queen')
+    else:
+        setlog("King and Queen is not available", 'warning')
+        setlog('Using edrag to clear sides...', 'info')
+        #* deploy loons on each corner left and right
+        keyboard.send('1') # switch to loons
+        do_click(420, 429)
+        do_click(760, 166)
+
+        time.sleep(2)
+        #* deploy edrag on each side
+        keyboard.send('2') # switch to edrag
+        do_click(420, 429)
+        do_click(760, 166)
+
+    #* drop 2 lightning on air sweeper facing 270 degrees
+    keyboard.send('d')
+    as_270_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\mv_assets\as_270deg.png'
+    as_270_img_location = check_image_presence(as_270_img, confidence=0.8)
+    if click_random_within_image(as_270_img_location):
+        setlog("Dropping lightning on air sweeper facing 270 degrees", "info")
+        click_random_within_image(as_270_img_location)  # Click second time
+
+    time.sleep(7)
+    #* deploy all loons
+    keyboard.send('1') # switch to loons
+    loons_drop_points = [
+        (538, 364),
+        (572, 340),
+        (600, 317),
+        (636, 290),
+        (673, 270),
+        (690, 254),
+        (564, 351),
+        (603, 332),
+        (630, 310),
+        (668, 276),
+        (506, 401),
+        (703, 251)
+    ]
+    random.shuffle(loons_drop_points)
+    for point in loons_drop_points:
+        do_click(point[0], point[1])
+
+    time.sleep(1)
+
+    #* deploy all edrag
+    keyboard.send('2') # switch to edrag
+    edrag_drop_points = [
+        (524, 369),
+        (560, 339),
+        (596, 311),
+        (632, 283),
+        (657, 262),
+        (620, 294)
+    ]
+    random.shuffle(edrag_drop_points)
+    for point in edrag_drop_points:
+        do_click(point[0], point[1])
+
+    #* Drop warden
+    keyboard.send('e')  # Switch to warden
+    warden_drop_points = [
+        (636, 290),
+        (673, 270),
+        (690, 254),
+        (564, 351)
+    ]
+    random.shuffle(warden_drop_points)
+    do_click(warden_drop_points[0][0], warden_drop_points[0][1])  # Drop Warden, bottom-right
+
+    time.sleep(9)
+
+    keyboard.send('a') # switch to Rage spell
+    rage_drop_points = [
+        (427, 267),
+        (504, 219),
+        (565, 168)
+    ]
+    random.shuffle(rage_drop_points)
+    for point in rage_drop_points:
+        do_click(point[0], point[1])
+
+    keyboard.send('r')
+    do_click(220, 273, 'Drop Champion')
+
+    # TODO - make freeze spell deployment random and make 3 drop points for Champion and randomize it and pick one
+
+    setlog("Done deploying troops!", "success")
+
+#* ---- END OF ATTACK STRATEGIES ----
 
 def play_sound():
     sound_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\sound\tokyo_drift.mp3'
@@ -394,7 +533,7 @@ def main_village_attack_loop(isSwitchAcc=False):
             if get_resources_value(resource_target='gold', target_val=300000) and get_resources_value(resource_target='elixir', target_val=300000): # or get_resources_value(resource_target='dark_elixir', target_val=2000):
                 setlog("Found a base!", "success")
                 play_sound()
-                superBarbs_strat_deploy()
+                superBarbs_strat()
                 mv_return_home()
                 break
             else:
@@ -417,22 +556,4 @@ def main_village_attack_loop(isSwitchAcc=False):
             do_click(733, 176) # click train, previous army
             do_click(867, 262) # click away
 
-def is_army_full():
-
-    troop_count_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\troop_count.png'
-
-    # region = (1263, 697, 118, 30)
-    troop_count = extract_digit_from_image(troop_count_img)
-    
-    if troop_count is not None:  # Check if troop_count is not None
-        if troop_count > 100:
-            setlog("Troop count is full!", "warning")
-            setlog(f'Troop count: {troop_count}', "warning")
-            return True
-        else:
-            setlog("Troop count is not full", "info")
-            setlog(f'Troop count: {troop_count}', "info")
-            return False
-    else:
-        setlog("Failed to extract troop count from image", "error")
-        return False  # Return False or handle the error case appropriately
+        keyboard.press('1'); keyboard.release('1')

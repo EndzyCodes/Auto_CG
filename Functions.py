@@ -107,8 +107,8 @@ def click_close():
     else: 
         print("Close button not found.")
 
-def do_click(relative_x, relative_y, click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = False, debug=False, click_hold=False):
-
+def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = False, debug=False, click_hold=False):
+    # setlog(debug_txt, "info")
     window_rect = get_window_rect(window_title)
     # print(window_rect)
     # print(window_rect[0], window_rect[1])
