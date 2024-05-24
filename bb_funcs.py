@@ -51,7 +51,7 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
     if sec_vill_battle:
         setlog("Deploying troops on the 2nd village battle ground", "info")
         setlog("Deploying Hero", "info")
-        do_click(160, 487) # click hero
+        do_click(157, 485, random_click=False) # click hero
         # do_click(583, 316) # drop hero
         click_points = [
             (515, 349),
@@ -60,7 +60,6 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
             (591, 314),
             (678, 243)
         ]
-
         random_click_point = random.choice(click_points)
         do_click(random_click_point[0], random_click_point[1])
 
@@ -82,7 +81,7 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
 
-        if is_2_camps == True:
+        if is_2_camps:
             setlog("Clicking minion from 2nd camp", "info")
             do_click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
         else:
@@ -104,7 +103,7 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
     else:
         setlog("Deploying troops on the 1st village battle ground", "info")
         setlog("Deploying Hero", "info")
-        do_click(160, 487) # click hero
+        do_click(157, 485, random_click=False) # click hero
         # do_click(583, 316) # drop hero
         # randomize hero drop
         click_points = [
@@ -163,8 +162,8 @@ def boost_troop_heroes():
     do_click(902, 284) # click away
 
 def bb_return_home():
-    return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn.png'
-    hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability.png'
+    return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn2.png'
+    hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability2.png'
     connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
 
     timeout = 90  # timeout in seconds
@@ -175,10 +174,10 @@ def bb_return_home():
             setlog("Something went wrong on detecting return home button", "error")
             break
         time.sleep(1)
-        if find_image_within_window(hero_ability_img, confidence=0.9):
-            if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
+        if (hero_ability_location := check_image_presence(hero_ability_img, confidence=0.9)):
+            if click_random_within_image(hero_ability_location):
                 setlog("Hero ability is ready again, clicking it now", "info")
-        # check for connection error
+        #* check for connection error
         if click_random_within_image(check_image_presence(connection_err_img)):
             setlog("Connection error detected, reconnecting...", "warning")
             if BB_is_army_btn_visible():
@@ -193,6 +192,47 @@ def bb_return_home():
         return False
     # else:
     #     setlog("Return home button did not appear", "warning")
+
+def go_to_bb(go_back_main=False):
+
+    boat_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\boat.png'
+
+    if go_back_main:
+        scroll_to_zoom((716, 117), 10)
+        click_drag(854, 271, 700, 429)
+        time.sleep(3)
+        setlog("Going back to main village", "info")
+        if (boat_location := check_image_presence(boat_img, confidence=0.7)):
+            if click_random_within_image(boat_location):
+                setlog("Clicked builder base boat", "success")
+                time.sleep(5)
+                if BB_is_army_btn_visible():
+                    scroll_to_zoom((716, 117), 10)
+                    return True
+                else:
+                    setlog("Failed to click builder base", "error")
+                    return False
+            else:
+                setlog("Failed to go back to main village, cannot find the boat", "error")
+                return False
+
+    else:
+        scroll_to_zoom((716, 117), 10)
+        click_drag(470, 316, 725, 82)
+        time.sleep(2)
+
+        if (boat_location := check_image_presence(boat_img, confidence=0.7)):
+            if click_random_within_image(boat_location):
+                setlog("Clicked builder base boat", "success")
+                time.sleep(5)
+                if BB_is_army_btn_visible():
+                    return True
+                else:
+                    setlog("Failed to go to bb", "error")
+                    return False
+            else:
+                setlog("Failed to click builder base boat", "error")
+                return False
 
 def bb_attack_time_limit():
     import keyboard
@@ -257,34 +297,40 @@ def attack_BB(is_2_camps=False):
             setlog("Found an opponent", "success")
             found_opponent = True
 
-    time.sleep(3) # wait a bit to load battle ground
+
+    troop_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\troop_icn.png'
+    # if troop icon is visible it means the battle ground is loaded
+    while not find_image_within_window(troop_icn_img):
+        time.sleep(1)
+    setlog("Battle ground loaded", "success")
+    # time.sleep(3) # wait a bit to load battle ground
     scroll_to_zoom((300, 353), 10)
     time.sleep(1)
     click_drag(743, 429, 414, 200)
     time.sleep(1)
     deploy_troops(is_2_camps=is_2_camps)
 
-    return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn.png'
+    return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn2.png'
     sec_vill_loon = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\sec_vill_loon.png'
-    hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability.png'
+    hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability2.png'
     connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
 
     timeout = 120  # timeout in seconds
     start_time = time.time()
     setlog("Waiting for battle to finish", "info")
-    while not find_image_within_window(return_home_btn_img):
+    while not find_image_within_window(return_home_btn_img, confidence=0.7):
         if time.time() - start_time > timeout:
             break
         # time.sleep(1)
-        # if find_image_within_window(hero_ability_img, confidence=0.9):
-        if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
-            setlog("Hero ability is ready again, clicking it now", "info")
+        if (hero_ability_location := check_image_presence(hero_ability_img, confidence=0.9)):
+            if click_random_within_image(hero_ability_location):
+                setlog("Hero ability is ready again, clicking it now", "info")
         if find_image_within_window(sec_vill_loon):
             # setlog("We are at the 2nd village battle ground", "info")
             break
-        # if find_image_within_window(hero_ability_img, confidence=0.9):
-        if click_random_within_image(check_image_presence(hero_ability_img, confidence=0.9)):
-            setlog("Hero ability is ready again, clicking it now", "info")
+        if (hero_ability_location := check_image_presence(hero_ability_img, confidence=0.9)):
+            if click_random_within_image(hero_ability_location):
+                setlog("Hero ability is ready again, clicking it now", "info")
         # check for connection error
         if click_random_within_image(check_image_presence(connection_err_img)):
             setlog("Connection error detected, reconnecting...", "warning")
@@ -318,40 +364,9 @@ def attack_BB(is_2_camps=False):
             found_opponent = False
             bb_return_home()
 
-def go_to_bb(go_back_main=False):
-
-    boat_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\boat.png'
-
-    if go_back_main:
-        scroll_to_zoom((716, 117), 10)
-        click_drag(854, 271, 700, 429)
-        time.sleep(2)
-        setlog("Going back to main village", "info")
-        if find_image_within_window(boat_img, confidence=0.7):
-            setlog("Found builder base boat", "success")
-            if click_random_within_image(check_image_presence(boat_img, confidence=0.7)):
-                setlog("Clicked builder base boat", "success")
-                scroll_to_zoom((716, 117), 10)
-                return True
-            else:
-                setlog("Failed to click builder base", "error")
-                return False
-    
-    else:
-        click_drag(470, 316, 725, 82)
-        time.sleep(1)
-
-        if find_image_within_window(boat_img):
-            setlog("Found builder base boat", "success")
-            if click_random_within_image(check_image_presence(boat_img, confidence=0.9)):
-                setlog("Clicked builder base boat", "success")
-                return True
-            else:
-                setlog("Failed to click builder base", "error")
-                return False
-
 def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
-    print(f'bb attak loop, is_2_camps: {is_2_camps}')
+    setlog(f'bb attak loop, is_2_camps: {is_2_camps}', 'info')
+
     close_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\close_btn.png'
     bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
     # challenge_completed_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'

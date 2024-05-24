@@ -9,12 +9,6 @@ from PyQt6.QtGui import QPixmap
 import sys
 import time
 
-# def main(attack_only_no_cg=False,
-#         enable_gem_cooldown=False,
-#         clan_games_mode=False):
-
-#     bb_attack_loop(attack_only_no_cg=attack_only_no_cg, clan_games_mode=clan_games_mode, gem_cooldown=enable_gem_cooldown)
-
 def main(clan_games_mode, BB_atk_only_mode,
         MV_atk_only_mode, switch_accounts,
         solo_account, BBcollect_resources,
@@ -29,20 +23,21 @@ def main(clan_games_mode, BB_atk_only_mode,
 
     set_window_size(window_name="coc")
     setlog("Starting automated gameplay...", 'info')
-    # Example: Implement automation logic
+
     while True:
         if clan_games_mode:
             setlog("---- Clan Games Mode ----", "info")
-            cg_mode_loop(gem_cooldown=gem_cooldown)
-            pass
+            setlog("Warning: Pick a Challenge first", 'warning')
+            cg_mode_loop(gem_cooldown=gem_cooldown, is_2_camps=BBsecond_camp, collect_cart=False) # if cg loop disable collect cart
+            # pass
         elif BB_atk_only_mode:
             setlog("---- BB Attack Only Mode ----", "info")
-            print(BBsecond_camp)
+            setlog(f'is second camp enable:{BBsecond_camp}', 'info')
             bb_attack_loop(isSwitchAcc=switch_accounts, is_2_camps=BBsecond_camp)
         elif MV_atk_only_mode:
             setlog("---- Main Village Attack Only Mode ----", "info")
             main_village_attack_loop(isSwitchAcc=switch_accounts)
-            pass
+            # pass
         else:
             setlog("No mode selected", "warning")
 
@@ -306,7 +301,7 @@ class ClashOfClansBotGUI(QMainWindow):
 
     def saveSettings(self):
         try:
-            # * Save settings for each tab
+            #* Save settings for each tab
             self.misc_tab.saveSettings(self.settings)
             self.bb_attack_tab.saveSettings(self.settings)
             self.main_village_tab.saveSettings(self.settings)
@@ -385,7 +380,6 @@ class ClashOfClansBotGUI(QMainWindow):
         if event.modifiers() == Qt.KeyboardModifier.ControlModifier and event.key() == Qt.Key.Key_X:
             set_window_size(window_name="terminal", noramal_size=True)  # Reset terminal size
             self.close()
-
 
 class BotThread(QThread):
     def __init__(self, clan_games_mode,

@@ -107,7 +107,7 @@ def click_close():
     else: 
         print("Close button not found.")
 
-def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = False, debug=False, click_hold=False):
+def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = True, debug=False, click_hold=False):
     # setlog(debug_txt, "info")
     window_rect = get_window_rect(window_title)
     # print(window_rect)
@@ -126,10 +126,14 @@ def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_du
     # absolute_x = window_rect[0] + relative_x
     # absolute_y = window_rect[1] + relative_y
 
-    offset_x = relative_x + random.randint(-3,5)
-    offset_y = relative_y + random.randint(-3,5)
-    absolute_x = window_rect[0] + offset_x
-    absolute_y = window_rect[1] + offset_y
+    if random_click:
+        offset_x = relative_x + random.randint(-3,5)
+        offset_y = relative_y + random.randint(-3,5)
+        absolute_x = window_rect[0] + offset_x
+        absolute_y = window_rect[1] + offset_y
+    else:
+        absolute_x = window_rect[0] + relative_x
+        absolute_y = window_rect[1] + relative_y
 
     if click_hold:
         pyautogui.moveTo(absolute_x, absolute_y, duration=move_duration)
@@ -139,7 +143,7 @@ def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_du
     else:
         pyautogui.click(absolute_x, absolute_y, duration=move_duration)
 
-    # return True
+    return True
     # try:
     #     if not random_click:
     #         absolute_x = window_rect[0] + relative_x
@@ -271,10 +275,10 @@ def scroll_acc_switch(move_mouse_to=(0,0), scroll_count=1, scroll_down=False, sc
 def switch_acc(acc_num=0):
 
     get_window_handle(window_title)
-    if do_click(901, 425):
+    if do_click(855, 412):
         setlog("Click settings", "info")
         time.sleep(0.5)
-        if do_click(606, 141): # click switch account
+        if do_click(573, 137): # click switch account
             setlog("Click switch account", "info")
         else:
             setlog("Switch account button not found", "error")
@@ -764,10 +768,10 @@ def set_window_size(window_name = "", noramal_size=False):
         window_size = (x, y, width, height)
     elif window_name == "coc":
         window_title = "Clash of Clans"
-        x = 1008
-        y = 32
-        width = 913
-        height = 543
+        x = 1013
+        y = 38
+        width = 898
+        height = 535
         window_size = (x, y, width, height)
 
     windows = gw.getWindowsWithTitle(window_title)

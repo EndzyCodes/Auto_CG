@@ -113,4 +113,4 @@ if __name__ == "__main__":
 
     # img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\trash.png'
     # get_region_within_window(img)
-    get_window_location_and_size(window_title="Coc Bot Con  ")
+    get_window_location_and_size(window_title="Clash of Clans")
