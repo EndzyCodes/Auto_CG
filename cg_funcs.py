@@ -16,9 +16,12 @@ from bb_funcs import attack_BB, go_to_bb
 # from mv_funcs import is_army_btn_visible
 import time
 
-def is_army_btn_visible(click=False):
+assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
+def is_army_btn_visible(click=False):
+    global assets_path
+
+    img = assets_path + '\\army_btn.png'
 
     setlog("Waiting for army tab to appear", "info")
     while  not check_image_presence(img, confidence=0.8):
@@ -40,16 +43,17 @@ def is_army_btn_visible(click=False):
     return True
 
 def purge_challenge(gem_cooldown=False, purge_once=False):
+    global assets_path
 
-    ok_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\okay_btn.png'
-    gem_cd_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\gem_cd.png'
+    ok_btn_img = assets_path + '\\okay_btn.png'
+    gem_cd_img = assets_path + '\\gem_cd.png'
 
     purged = False
-    start_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\start_btn.png'
-    trash_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\trash_btn.png'
-    home_vill_challenge_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\home_vill_challenge.png'
-    running_challenge_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\running_challenge.png'
-    challenge_cooldown_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\challenge_cooldown.png'
+    start_btn_img = assets_path + '\\start_btn.png'
+    trash_btn_img = assets_path + '\\trash_btn.png'
+    home_vill_challenge_img = assets_path + '\\home_vill_challenge.png'
+    running_challenge_img = assets_path + '\\running_challenge.png'
+    challenge_cooldown_img = assets_path + '\\challenge_cooldown.png'
     # bb_vill_challenge_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_vill_challenge.png'
 
     while 1:
@@ -112,18 +116,20 @@ def purge_challenge(gem_cooldown=False, purge_once=False):
         return False
 
 def pick_challenge(debug=False):
-    start_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\start_btn.png'
-    trash_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\trash_btn.png'
-    ok_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\okay_btn.png'
-    gem_cd_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\gem_cd.png'
+    global assets_path
 
-    bb_challenge = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_challenge.png'
+    start_btn_img = assets_path + '\\start_btn.png'
+    trash_btn_img = assets_path + '\\trash_btn.png'
+    ok_btn_img = assets_path + '\\okay_btn.png'
+    gem_cd_img = assets_path + '\\gem_cd.png'
+
+    bb_challenge = assets_path + '\\bb_assets\\bb_challenge.png'
     challenges_to_purge = [
-        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\boxer_giant_punch_up.png',
-        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\riding_n_gliding.png',
-        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\bomber_blow_em_up.png',
-        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\wall_wipe_out.png',
-        r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_bb\XBow_Explosion.png',
+        assets_path + '\\cg_bb\\boxer_giant_punch_up.png',
+        assets_path + '\\cg_bb\\riding_n_gliding.png',
+        assets_path + '\\cg_bb\\bomber_blow_em_up.png',
+        assets_path + '\\cg_bb\\wall_wipe_out.png',
+        assets_path + '\\cg_bb\\XBow_Explosion.png',
     ]
 
     def remove_challenge(challenge_img):
@@ -179,8 +185,9 @@ def pick_challenge(debug=False):
         time.sleep(2)
 
 def open_cg_window():
+    global assets_path
 
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_cart2.png'
+    img = assets_path + '\\cg_cart2.png'
     if find_image(img):
         setlog("found clan games cart", "success")
         setlog("Opening clan games window", "info")
@@ -198,14 +205,14 @@ def open_cg_window():
         if find_image(img):
             setlog("found on 2nd try", "success")
             time.sleep(1)
-            img2 = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_cart2.png'
+            img2 = assets_path + '\\cg_cart2.png'
             clan_games_location2 = check_image_presence(img2, confidence=0.8)
             click_random_within_image(clan_games_location2) # open clan games window
             return True
     return False
 
 def switch_acc_purge(skip_acc_num=0, skip_acc_num2=0):
-
+    global assets_path
     count = 0
     while 1:
         count += 1
@@ -227,7 +234,7 @@ def switch_acc_purge(skip_acc_num=0, skip_acc_num2=0):
         click_drag(473, 268, 372, 459)
 
         time.sleep(3)
-        cg_cart_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_cart3.png'
+        cg_cart_img = assets_path + '\\cg_cart3.png'
         if (cg_cart_location := check_image_presence(cg_cart_img)):
             click_random_within_image(cg_cart_location)
             setlog("Cart found, switch_acc_purge", 'info')
@@ -248,13 +255,16 @@ def switch_acc_purge(skip_acc_num=0, skip_acc_num2=0):
         purge_challenge(purge_once=True)
 
 def cg_mode_loop(gem_cooldown=False, is_2_camps=False, collect_cart=True):
-    challenge_completed_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed2.png'
-    bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
 
-    cart_w_elixir = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\cart_with_elixir.png'
-    btn_collect_elixir_cart = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\collect_elixir_cart.png'
-    cart_full_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\elixir_cart_full.png'
-    cart2_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\elixir_cart2.png'
+    global assets_path
+
+    challenge_completed_img = assets_path + '\\bb_assets\\challenge_completed2.png'
+    bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
+
+    cart_w_elixir = assets_path + '\\bb_assets\\cart_with_elixir.png'
+    btn_collect_elixir_cart = assets_path + '\\bb_assets\\collect_elixir_cart.png'
+    cart_full_img = assets_path + '\\bb_assets\\elixir_cart_full.png'
+    cart2_img = assets_path + '\\bb_assets\\elixir_cart2.png'
 
     while 1:
         #* Check if cg chellenge has been completed
@@ -275,7 +285,7 @@ def cg_mode_loop(gem_cooldown=False, is_2_camps=False, collect_cart=True):
                     do_click(867, 262)
                     break
 
-            star_bonus_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\star_bonus.png'
+            star_bonus_img = assets_path + '\\bb_assets\\star_bonus.png'
             if find_image_within_window(star_bonus_img):
                 setlog("Star bonus found, clicking now", 'info')
                 do_click(867, 262)
@@ -323,7 +333,7 @@ def cg_mode_loop(gem_cooldown=False, is_2_camps=False, collect_cart=True):
                 click_drag(473, 268, 372, 459)
 
                 time.sleep(2)
-                cg_cart_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_cart3.png'
+                cg_cart_img = assets_path + '\\cg_cart3.png'
                 if (cg_cart_location := check_image_presence(cg_cart_img)):
                     click_random_within_image(cg_cart_location)
                     setlog("Cart found, cg_mode_loop", 'info')

@@ -29,10 +29,11 @@ import pyautogui
 import keyboard
 import pygame
 
+assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 
-def is_army_btn_visible(click=False):
+def is_army_btn_visible(assets_path, click=False):
 
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
+    img = assets_path + '\\army_btn.png'
 
     setlog("Waiting for army tab to appear", "info")
     while  not check_image_presence(img, confidence=0.8):
@@ -53,8 +54,9 @@ def is_army_btn_visible(click=False):
 
     return True
 
-def check_daily_reward():
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\claim_btn.png'
+def check_daily_reward(assets_path):
+
+    img = assets_path + '\\claim_btn.png'
     claim_btn_location = check_image_presence(img, confidence=0.9)
     if find_image(img, confidence=0.9):
         if click_random_within_image(claim_btn_location):
@@ -69,10 +71,11 @@ def check_daily_reward():
         setlog("No daily reward", "info")
         return False
 
-def collect_resources():
-    gold_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\gold.png'
-    elixir_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\elixir.png'
-    dark_elixir_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\dark_elixir.png'
+def collect_resources(assets_path):
+
+    gold_img = assets_path + '\\gold.png'
+    elixir_img = assets_path + '\\elixir.png'
+    dark_elixir_img = assets_path + '\\dark_elixir.png'
     
     # Create a list of resource images
     resource_images = [gold_img, elixir_img, dark_elixir_img]
@@ -102,6 +105,7 @@ def collect_resources():
 
 def main2(skip_acc_num=0): # for purging loop
     # when calling main function, put the acc number that you are currently playing coc manually, see the coc emulator switch acc to know what acc number to skip
+    global assets_path
 
     count = 0
     while 1:
@@ -123,7 +127,7 @@ def main2(skip_acc_num=0): # for purging loop
         # check_daily_reward() # this for accounts that have been opened just now, "Chief you're back!"
 
         # click all possible claims button
-        if find_image_within_window(r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\daily_reward.png'):
+        if find_image_within_window(assets_path + '\\daily_reward.png'):
             setlog("Daily reward window found", "success")
             do_click(197, 250)
             do_click(341, 252)
@@ -147,11 +151,11 @@ def main2(skip_acc_num=0): # for purging loop
         purge_challenge()
         time.sleep(1)
 
-def is_army_full():
+def is_army_full(assets_path):
 
-    troop_count_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\troop_count.png'
+    troop_count_img = assets_path + '\\test\\troop_count.png'
 
-    # region = (1263, 697, 118, 30)
+    #region = (1263, 697, 118, 30)
     troop_count = extract_digit_from_image(troop_count_img)
     
     if troop_count is not None:  # Check if troop_count is not None
@@ -168,6 +172,7 @@ def is_army_full():
         return False  # Return False or handle the error case appropriately
 
 def get_resources_value(resource_target='', target_val=400000):
+    global assets_path
     # Define regions and image paths
     regions = {
         'gold': (46, 86, 70, 24),
@@ -176,9 +181,9 @@ def get_resources_value(resource_target='', target_val=400000):
     }
     
     image_paths = {
-        'gold': r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\gold_loot.png',
-        'elixir': r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\elixir_loot.png',
-        'dark_elixir': r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\dark_elixir_loot.png'
+        'gold': assets_path + '\\test\\gold_loot.png',
+        'elixir': assets_path + '\\test\\elixir_loot.png',
+        'dark_elixir': assets_path + '\\test\\dark_elixir_loot.png'
     }
 
     if resource_target not in regions:
@@ -219,8 +224,8 @@ def get_resources_value(resource_target='', target_val=400000):
         print(f'{resource_target}: Error extracting value')
         return None
 
-def click_next():
-    next_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\next_btn.png'
+def click_next(assets_path):
+    next_btn_img = assets_path + '\\test\\next_btn.png'
 
     if click_random_within_image(check_image_presence(next_btn_img, confidence=0.8)):
         print('Clicked next')
@@ -340,12 +345,13 @@ def EdragLoons_strat():
     # TH12 - 280 army camps space | 8 Edrags 8 Loons | 4 rage 3 Freeze | CC Edrag loons, 2 lightning
     # TH11 - 260 army camps space | 8 Edrags 4 Loons | same as TH12 | same as TH12
 
+    global assets_path
     scroll_to_zoom((300, 353), 10)
 
     #* ---- BOTTOM-RIGHT DEPLOYMENT ----
     click_drag(636, 314, 460, 200) # Drag to bottom-right
-    king_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\king_icon.png'
-    queen_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\queen_icon.png'
+    king_icn_img = assets_path + '\\donate_assets\\king_icon.png'
+    queen_icn_img = assets_path + '\\donate_assets\\queen_icon.png'
 
     if check_image_presence(king_icn_img) and check_image_presence(queen_icn_img):
         setlog("King and Queen are available", "info")
@@ -377,7 +383,7 @@ def EdragLoons_strat():
 
     #* drop 2 lightning on air sweeper facing 270 degrees
     keyboard.send('d')
-    as_270_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\mv_assets\as_270deg.png'
+    as_270_img = assets_path + '\\mv_assets\\as_270deg.png'
     as_270_img_location = check_image_presence(as_270_img, confidence=0.8)
     if click_random_within_image(as_270_img_location):
         setlog("Dropping lightning on air sweeper facing 270 degrees", "info")
@@ -465,8 +471,8 @@ def play_sound():
     #     pygame.time.Clock().tick(10)  # Adjust tick rate as needed
     pygame.mixer.quit()
 
-def mv_return_home():
-    return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\mv_return_home_btn.png'
+def mv_return_home(assets_path):
+    return_home_btn_img = assets_path + '\\test\\mv_return_home_btn.png'
 
     timeout = 90  # timeout in seconds
     start_time = time.time()
@@ -482,10 +488,11 @@ def mv_return_home():
     return True
 
 def main_village_attack_loop(isSwitchAcc=False):
+    global assets_path
 
-    next_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\next_btn.png'
-    atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\atk_btn.png'
-    find_match_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\find_match_btn.png'
+    next_btn_img = assets_path + '\\test\\next_btn.png'
+    atk_btn_img = assets_path + '\\test\\atk_btn.png'
+    find_match_btn_img = assets_path + '\\test\\find_match_btn.png'
 
     # Define resource targets and their corresponding target values
     targets = {

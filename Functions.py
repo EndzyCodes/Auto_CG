@@ -12,7 +12,7 @@ from datetime import datetime
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Mark\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
-
+assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test'
 window_title = "Clash of Clans"  # window title
 window_rect=()
 
@@ -99,8 +99,8 @@ def random_do_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1
         time.sleep(hold_duration_ms / 1000)
         pyautogui.mouseUp()
 
-def click_close():
-    close_btn_img_path = r'C:\Users\Mark\Desktop\coc\Images\close_btn.png'
+def click_close(assets_path):
+    close_btn_img_path = assets_path + '\\close_btn.png'
     close_btn_present = check_image_presence(close_btn_img_path, confidence=0.8)
     if close_btn_present: 
         click_random_within_image(close_btn_present)
@@ -613,7 +613,7 @@ def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False
 # pyautogui.moveTo(final_rx, final_ry)
 # print(f"Clicking at x: {final_rx}, y: {final_ry}")
 
-def ocr_an_image():
+def ocr_an_image(assets_path):
     # Get window rectangle
     window_rect = get_window_rect(window_title)
     if not window_rect:
@@ -629,8 +629,8 @@ def ocr_an_image():
         region_width,
         region_height
     )
-    
-    troop_count_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\troop_count.png' 
+
+    troop_count_img = assets_path + '\\test\\troop_count.png' 
     ss = pyautogui.screenshot(region=screenshot_region)
     ss.save(troop_count_img)
 
@@ -680,7 +680,7 @@ def get_func_performance(func):
     runtime = end_time - start_time
     setlog(f"Runtime: {runtime} seconds",'success')
 
-def func_to_run():
+def func_to_run(assets_path):
     # do_click(312, 54,random_click=True)
 
     window_rect = get_window_rect(window_title)
@@ -698,7 +698,7 @@ def func_to_run():
     # get_region_within_window(img)
 
     region1 = (1049, 129, 90, 21)
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\gold_loot.png'
+    img = assets_path + '\\test\\gold_loot.png'
     ss_troop_cap = pyautogui.screenshot(region=region1)
     ss_troop_cap.save(img)
 
@@ -822,7 +822,7 @@ def is_coc_open():
         setlog('Clash of Clans is Close', 'warning')
         return False
 
-def launch_coc():
+def launch_coc(assets_path):
     from mv_funcs import is_army_btn_visible
     if is_coc_open():
         return
@@ -833,7 +833,7 @@ def launch_coc():
     setlog("Set window size of Emulator", 'info')
     set_window_size(window_name='launcher')
     time.sleep(4)
-    coc_icon_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\coc_icon.png'
+    coc_icon_img = assets_path + '\\coc_icon.png'
     # while not pyautogui.locateOnWindow(coc_icon_img, 'Google Play Games beta'):
     while not pyautogui.locateOnWindow(coc_icon_img, 'Google Play Games beta'):
         time.sleep(0.2)

@@ -18,7 +18,8 @@ import time
 import random
 # import pyautogui
 import keyboard
-# import pygame
+
+assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 
 def BB_is_army_btn_visible(click=False):
 
@@ -150,21 +151,23 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
 
 def boost_troop_heroes():
     do_click(39, 432) # click army tab
-    
+
     do_click(473, 302) # click hero boost button
     do_click(473, 352) # click to confirm boost
-    
+
     time.sleep(1)
-    
+
     do_click(596, 308) # click troop boost button
     do_click(596, 358) # click to confirm boost
-    
+
     do_click(902, 284) # click away
 
 def bb_return_home():
-    return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn2.png'
-    hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability2.png'
-    connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
+    global assets_path
+
+    return_home_btn_img = assets_path + '\\bb_assets\\return_home_btn2.png'
+    hero_ability_img = assets_path + '\\bb_assets\\hero_ability2.png'
+    connection_err_img = assets_path + '\\connection_error.png'
 
     timeout = 90  # timeout in seconds
     start_time = time.time()
@@ -194,8 +197,9 @@ def bb_return_home():
     #     setlog("Return home button did not appear", "warning")
 
 def go_to_bb(go_back_main=False):
+    global assets_path
 
-    boat_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\boat.png'
+    boat_img = assets_path + '\\bb_assets\\boat.png'
 
     if go_back_main:
         scroll_to_zoom((716, 117), 10)
@@ -262,9 +266,9 @@ found_opponent = False
 def attack_BB(is_2_camps=False):
 
     global found_opponent
-    # get_coc_window("Clash of Clans")
+    global assets_path
 
-    bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
+    bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
     if find_image_within_window(bb_atk_btn_img):
         if click_random_within_image(check_image_presence(bb_atk_btn_img, confidence=0.8)):
             setlog("Clicked attack button", "success")
@@ -274,8 +278,8 @@ def attack_BB(is_2_camps=False):
     else:
         setlog("Builder base attack button not found", "error")
 
-    connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
-    find_now_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\find_now_btn.png'
+    connection_err_img = assets_path + '\\connection_error.png'
+    find_now_btn_img = assets_path + '\\bb_assets\\find_now_btn.png'
     while 1:
         while not click_random_within_image(check_image_presence(find_now_btn_img, confidence=0.8)):
             time.sleep(0.1)
@@ -287,7 +291,7 @@ def attack_BB(is_2_camps=False):
             setlog("Clicked find now button", "success")
             break
 
-    cancel_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\cancel_btn.png'
+    cancel_btn_img = assets_path + '\\bb_assets\\cancel_btn.png'
     if find_image_within_window(cancel_btn_img):
         time.sleep(0.5)
         setlog("Finding an opponent...", "info")
@@ -298,7 +302,7 @@ def attack_BB(is_2_camps=False):
             found_opponent = True
 
 
-    troop_icn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\troop_icn.png'
+    troop_icn_img = assets_path + '\\bb_assets\\troop_icn.png'
     # if troop icon is visible it means the battle ground is loaded
     while not find_image_within_window(troop_icn_img):
         time.sleep(1)
@@ -310,10 +314,10 @@ def attack_BB(is_2_camps=False):
     time.sleep(1)
     deploy_troops(is_2_camps=is_2_camps)
 
-    return_home_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\return_home_btn2.png'
-    sec_vill_loon = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\sec_vill_loon.png'
-    hero_ability_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\hero_ability2.png'
-    connection_err_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\connection_error.png'
+    return_home_btn_img = assets_path + '\\bb_assets\\return_home_btn2.png'
+    sec_vill_loon = assets_path + '\\bb_assets\\sec_vill_loon.png'
+    hero_ability_img = assets_path + '\\bb_assets\\hero_ability2.png'
+    connection_err_img = assets_path + '\\connection_error.png'
 
     timeout = 120  # timeout in seconds
     start_time = time.time()
@@ -365,16 +369,16 @@ def attack_BB(is_2_camps=False):
             bb_return_home()
 
 def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
-    setlog(f'bb attak loop, is_2_camps: {is_2_camps}', 'info')
+    global assets_path
 
-    close_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\close_btn.png'
-    bb_atk_btn_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_atk_btn.png'
+    close_btn_img = assets_path + '\\close_btn.png'
+    bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
     # challenge_completed_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'
 
-    cart_w_elixir = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\cart_with_elixir.png'
-    btn_collect_elixir_cart = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\collect_elixir_cart.png'
-    cart_full_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\elixir_cart_full.png'
-    cart2_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\elixir_cart2.png'
+    cart_w_elixir = assets_path + '\\bb_assets\\cart_with_elixir.png'
+    btn_collect_elixir_cart = assets_path + '\\bb_assets\\collect_elixir_cart.png'
+    cart_full_img = assets_path + '\\bb_assets\\elixir_cart_full.png'
+    cart2_img = assets_path + '\\bb_assets\\elixir_cart2.png'
 
     # if attack_only_no_cg:
     #TODO - detect if storage is full, put time limit per acc
