@@ -109,13 +109,13 @@ def donate_loop():
 if __name__ == "__main__":
 
     # main_village_attack_loop()
-    # bb_attack_loop(is_2_camps=True)
+    bb_attack_loop(is_2_camps=True)
     # attack_BB(True)
 
-    app = QApplication([])
-    ex = ClashOfClansBotGUI()
-    ex.show() # show the GUI
-    app.exec() # start the application
+    # app = QApplication([])
+    # ex = ClashOfClansBotGUI()
+    # ex.show() # show the GUI
+    # app.exec() # start the application
 
     # EdragLoons_strat()
 

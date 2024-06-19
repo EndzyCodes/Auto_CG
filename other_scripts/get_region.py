@@ -17,7 +17,7 @@ def get_window_rect(window_title, debug=False):
     window_handle = get_window_handle(window_title) # bring window to foreground
     window_rect1 = win32gui.GetWindowRect(window_handle) # get window rectangle
 
-    # check 
+    # check
     if window_rect == window_rect1:
         if debug: print("Window rect is the same")
     elif window_rect == ():  # if window_rect is not initialized
@@ -89,7 +89,7 @@ import pyperclip
 def get_window_location_and_size(window_title = ''):
     """
     ​<light>Retrieves the location (x, y) and size (width, height) of a window, and copies the coordinates to the clipboard.</light>
-    
+
     Parameters:
     window_title (str): The title of the window to get the location and size for.
     """
@@ -108,9 +108,8 @@ def get_window_location_and_size(window_title = ''):
     # Copy the coordinates to the clipboard
     pyperclip.copy(coords_str)
 
-
 if __name__ == "__main__":
 
-    # img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\trash.png'
-    # get_region_within_window(img)
-    get_window_location_and_size(window_title="Clash of Clans")
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\mv_assets\full_camp.png'
+
+    get_region_within_window(img)

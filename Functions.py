@@ -12,7 +12,7 @@ from datetime import datetime
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Mark\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test'
+assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 window_title = "Clash of Clans"  # window title
 window_rect=()
 
@@ -24,7 +24,7 @@ def get_window_rect(window_title, debug=False):
     window_handle = get_window_handle(window_title) # bring window to foreground
     window_rect1 = win32gui.GetWindowRect(window_handle) # get window rectangle
 
-    # check 
+    # check
     if window_rect == window_rect1:
         if debug: print("Window rect is the same")
     elif window_rect == ():  # if window_rect is not initialized
@@ -100,11 +100,11 @@ def random_do_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1
         pyautogui.mouseUp()
 
 def click_close(assets_path):
-    close_btn_img_path = assets_path + '\\close_btn.png'
+    close_btn_img_path = assets_path + '\\test\\close_btn.png'
     close_btn_present = check_image_presence(close_btn_img_path, confidence=0.8)
-    if close_btn_present: 
+    if close_btn_present:
         click_random_within_image(close_btn_present)
-    else: 
+    else:
         print("Close button not found.")
 
 def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = True, debug=False, click_hold=False):
@@ -116,7 +116,7 @@ def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_du
     # get_coc_window(window_title)
     if click_duration == 0.075:
         click_duration = random.uniform(0.075, 0.123)
-    else: 
+    else:
         click_duration = random.uniform(0.075, click_duration)
     if move_duration == 0.104:
         move_duration = random.uniform(0.104, 0.217)
@@ -127,8 +127,8 @@ def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_du
     # absolute_y = window_rect[1] + relative_y
 
     if random_click:
-        offset_x = relative_x + random.randint(-3,5)
-        offset_y = relative_y + random.randint(-3,5)
+        offset_x = relative_x + random.randint(-2,4)
+        offset_y = relative_y + random.randint(-2,4)
         absolute_x = window_rect[0] + offset_x
         absolute_y = window_rect[1] + offset_y
     else:
@@ -272,18 +272,30 @@ def scroll_acc_switch(move_mouse_to=(0,0), scroll_count=1, scroll_down=False, sc
             pyautogui.scroll(120)
         time.sleep(0.1)
 
-def switch_acc(acc_num=0):
+def switch_acc(assets_path, acc_num=0):
+
+    settings_img = assets_path + '\\mv_assets\\settings.png'
+    switch_acc_btn_img = assets_path +  '\\mv_assets\\switch_acc_btn.png'
+    account_indicator_img = assets_path + '\\mv_assets\\accounts_indicator.png'
 
     get_window_handle(window_title)
-    if do_click(855, 412):
-        setlog("Click settings", "info")
-        time.sleep(0.5)
-        if do_click(573, 137): # click switch account
-            setlog("Click switch account", "info")
+
+    if (settings_btn_location := check_image_presence(settings_img, confidence=0.8)):
+        click_random_within_image(settings_btn_location)
+        setlog("Clicked settings", "info")
+        time.sleep(2)
+        if (switch_acc_btn_location := check_image_presence(switch_acc_btn_img, confidence=0.8)):
+            click_random_within_image(switch_acc_btn_location)
+            setlog("Clicked switch account", "info")
         else:
             setlog("Switch account button not found", "error")
+            do_click(606, 142) # just click it
+    else:
+        setlog("Settings button not found", "error")
 
-    time.sleep(2.5)
+    while not (account_indicator_location := check_image_presence(account_indicator_img, confidence=0.8)):
+        time.sleep(0.1)
+    setlog("Accounts window found", "info")
 
     if acc_num <= 4:
         time.sleep(0.3)
@@ -312,7 +324,9 @@ def switch_acc(acc_num=0):
         do_click(733, 393)
 
     setlog("Switching to account " + str(acc_num), "success")
-    time.sleep(2)
+    while (switch_acc_btn_location := check_image_presence(switch_acc_btn_img, confidence=0.8)):
+        time.sleep(0.1)
+    setlog("switch account button is gone", "info")
 
 #* ----------------------------
 
@@ -331,13 +345,13 @@ def click_if_pixel_matches(pixel_x, pixel_y, expected_color, tolerance=10, click
     try:
         # get the specified window's current position and size on the screen
         # window_rect = win32gui.GetWindowRect(window_handle)
-        if not random_click:    
+        if not random_click:
             # calculate absolute coordinates
             absolute_x = window_rect[0] + pixel_x
             absolute_y = window_rect[1] + pixel_y
             # check if the pixel color matches the expected color
             if pyautogui.pixelMatchesColor(absolute_x, absolute_y, expected_color, tolerance=tolerance):
-                pyautogui.moveTo(x=absolute_x, y=absolute_y, duration=move_duration)  
+                pyautogui.moveTo(x=absolute_x, y=absolute_y, duration=move_duration)
                 pyautogui.mouseDown()
                 time.sleep(click_duration)
                 pyautogui.mouseUp()
@@ -353,7 +367,7 @@ def click_if_pixel_matches(pixel_x, pixel_y, expected_color, tolerance=10, click
             absolute_x = window_rect[0] + rand_pix_x
             absolute_y = window_rect[1] + rand_pix_y
             if pyautogui.pixelMatchesColor(absolute_x, absolute_y, expected_color, tolerance=tolerance):
-                pyautogui.moveTo(x=absolute_x, y=absolute_y, duration=move_duration)  
+                pyautogui.moveTo(x=absolute_x, y=absolute_y, duration=move_duration)
                 pyautogui.mouseDown()
                 time.sleep(click_duration)
                 pyautogui.mouseUp()
@@ -399,7 +413,7 @@ def click_on_image(image_path, confidence=0.8, timeout=10, is_donate = False, cl
         move_duration = random.uniform(0.104, 0.217)
 
     if is_donate: # do not randomize from 0.1 when is_donate is True, only randomize if not donating
-        pass 
+        pass
     # if user specify a click_duration then randomize it from default value to user specified value
     if click_duration != 0.1 and not is_donate:
         click_duration = random.uniform(0.1, click_duration)
@@ -417,7 +431,7 @@ def click_on_image(image_path, confidence=0.8, timeout=10, is_donate = False, cl
                 # Click on the center of the found image
                 rand_offset_x = random.randint(-7, 10)
                 rand_offset_y = random.randint(-7, 10)
-                
+
                 final_x = result.left + result.width // 2 + rand_offset_x
                 final_y = result.top + result.height // 2 + rand_offset_y
                 pyautogui.moveTo(x=final_x, y=final_y, duration=move_duration)
@@ -500,7 +514,7 @@ def find_image(image_path, confidence=0.8, timeout=10, debug=False):
 
 def check_image_presence(image_path, confidence=0.8, region=None):
     window_rect = get_window_rect(window_title)
-    if region is None: 
+    if region is None:
         region = window_rect
     else: # make user specifed region relative to window_rect if not None
         region = (
@@ -578,8 +592,8 @@ def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False
             if result is not None:
                 # Click on the center of the found image
 
-                final_x = result.left 
-                final_y = result.top 
+                final_x = result.left
+                final_y = result.top
                 final_width = result.width
                 final_height = result.height
 
@@ -630,7 +644,7 @@ def ocr_an_image(assets_path):
         region_height
     )
 
-    troop_count_img = assets_path + '\\test\\troop_count.png' 
+    troop_count_img = assets_path + '\\test\\troop_count.png'
     ss = pyautogui.screenshot(region=screenshot_region)
     ss.save(troop_count_img)
 
@@ -720,10 +734,10 @@ def get_window_location():
     window_title = "Google Play Games Beta"
     """
     Retrieves the current location (x, y) of a window.
-    
+
     Parameters:
     window_title (str): The title of the window to get the location for.
-    
+
     Returns:
     tuple: A tuple containing the x and y coordinates of the window's location.
     """

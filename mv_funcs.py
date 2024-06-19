@@ -75,11 +75,11 @@ def collect_resources(assets_path):
 
     gold_img = assets_path + '\\gold.png'
     elixir_img = assets_path + '\\elixir.png'
-    dark_elixir_img = assets_path + '\\dark_elixir.png'
-    
+    dark_elixir_img = assets_path + '\\mv_funcs\\dark_elixir.png'
+
     # Create a list of resource images
     resource_images = [gold_img, elixir_img, dark_elixir_img]
-    
+
     # Randomize the order of resource collection
     random.shuffle(resource_images)
 
@@ -157,7 +157,7 @@ def is_army_full(assets_path):
 
     #region = (1263, 697, 118, 30)
     troop_count = extract_digit_from_image(troop_count_img)
-    
+
     if troop_count is not None:  # Check if troop_count is not None
         if troop_count > 100:
             setlog("Troop count is full!", "warning")
@@ -179,7 +179,7 @@ def get_resources_value(resource_target='', target_val=400000):
         'elixir': (43, 108, 72, 24),
         'dark_elixir': (43, 131, 67, 24)
     }
-    
+
     image_paths = {
         'gold': assets_path + '\\test\\gold_loot.png',
         'elixir': assets_path + '\\test\\elixir_loot.png',
@@ -237,25 +237,17 @@ def click_drag_troops(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
     # use case: click_drag(716, 117, 419, 376)
     window_rect = get_window_rect(window_title)
 
-    offset_x = window_rect[0] + random.randint(-3,5)
-    offset_y = window_rect[1] + random.randint(-3,5)
-    absolute_x = window_rect[0] + offset_x
-    absolute_y = window_rect[1] + offset_y
+    # randomize the click position
+    offset_x = window_rect[0] + x + random.randint(-3,5)
+    offset_y = window_rect[1] + y + random.randint(-3,5)
 
-    # absolute_x = window_rect[0] + x
-    # absolute_y = window_rect[1] + y
-
-    offset_x_moveTo = window_rect[0] + random.randint(-3,5)
-    offset_y_moveTo = window_rect[1] + random.randint(-3,5)
-    absolute_x_moveTo = window_rect[0] + x_moveTo + offset_x_moveTo
-    absolute_y_moveTo = window_rect[1] + y_moveTo + offset_y_moveTo
-
-    # absolute_x_moveTo = window_rect[0] + x_moveTo
-    # absolute_y_moveTo = window_rect[1] + y_moveTo
+    # randomize the moveTo position
+    absolute_x_moveTo = window_rect[0] + x_moveTo + random.randint(-3,5)
+    absolute_y_moveTo = window_rect[1] + y_moveTo + random.randint(-3,5)
 
     if debug: setlog(f"Moving from ({x}, {y}) to ({x_moveTo}, {y_moveTo})", "info")
 
-    pyautogui.moveTo(absolute_x, absolute_y, duration=duration)
+    pyautogui.moveTo(offset_x, offset_y, duration=duration)
     # time.sleep(0.5)
     pyautogui.mouseDown()
     time.sleep(0.2)
@@ -267,7 +259,7 @@ def click_drag_troops(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
 def superBarbs_strat():
     scroll_to_zoom((300, 353), 10)
     do_click(164, 502) # click troop - super barb
-
+    # time.sleep(2)
     # Randomly decide deployment order (batch1_first = True means batch 1 deploys first)
     batch1_first = random.choice([True, False])
 
@@ -275,27 +267,32 @@ def superBarbs_strat():
         setlog("Deploying troops in batch 1 first", "info")
         # Batch 1 deploy
         click_drag(636, 314, 460, 200)  # Drag to bottom-right
+        # time.sleep(1)
         click_drag_troops(62, 185, 373, 417)
         click_drag_troops(440, 434, 767, 192)
 
         # Batch 2 deploy
         click_drag(467, 155, 456, 412)  # Drag to top side
+        # time.sleep(1)
         click_drag_troops(770, 314, 482, 102)
         click_drag_troops(409, 89, 96, 322)
     else:
         setlog("Deploying troops in batch 2 first", "info")
         # Batch 2 deploy
         click_drag(467, 155, 456, 412)  # Drag to top side
+        # time.sleep(1)
         click_drag_troops(770, 314, 482, 102)
         click_drag_troops(409, 89, 96, 322)
 
         # Batch 1 deploy
         click_drag(636, 314, 460, 200)  # Drag to bottom-right
+        # time.sleep(1)
         click_drag_troops(62, 185, 373, 417)
         click_drag_troops(440, 434, 767, 192)
 
     #  drop troops again in bottom just in case there is troops left
     click_drag(636, 314, 460, 200) # drag to bottom-right
+    # time.sleep(1)
     click_drag_troops(62, 185, 373, 417)
     click_drag_troops(440, 434, 767, 192)
 
@@ -322,7 +319,7 @@ def superBarbs_strat():
         elif unit == 'Warden':
             keyboard.press('e'); time.sleep(0.5); keyboard.release('e')  # Warden
             do_click(703, 253)  # Drop Warden
-    
+
     # Randomly activate hero abilities after a delay
     time.sleep(10)  # Wait for 10 seconds before activating abilities
     abilities_to_activate = random.sample(['King', 'Champion', 'Queen', 'Warden'], k=2)  # Randomly select 2 heroes to activate
@@ -474,17 +471,18 @@ def play_sound():
 def mv_return_home(assets_path):
     return_home_btn_img = assets_path + '\\test\\mv_return_home_btn.png'
 
-    timeout = 90  # timeout in seconds
+    timeout = 120  # timeout in seconds
     start_time = time.time()
     setlog("Waiting for return home button to appear", "info")
     while not find_image_within_window(return_home_btn_img, confidence=0.7):
         if time.time() - start_time > timeout:
             setlog("Something went wrong on detecting return home button", "error")
-            break
-        if click_random_within_image(check_image_presence(return_home_btn_img, confidence=0.7)):
+            do_click(476, 473) # just click it
             break
         time.sleep(1)
 
+    time.sleep(2)
+    do_click(476, 473) # just click the return home button
     return True
 
 def main_village_attack_loop(isSwitchAcc=False):
@@ -564,3 +562,65 @@ def main_village_attack_loop(isSwitchAcc=False):
             do_click(867, 262) # click away
 
         keyboard.press('1'); keyboard.release('1')
+
+def isCampFull(assets_path):
+    full_camp_img = assets_path + '\\mv_assets\\full_camp.png'
+    full_camp2_img = assets_path + '\\mv_assets\\full_camp2.png'
+    if check_image_presence(full_camp_img, confidence=0.7, region=(134, 127, 19, 23)) or check_image_presence(full_camp2_img, confidence=0.8):
+        setlog("Camp is full", "info")
+        return True
+    else:
+        setlog("Camp is not full", "warning")
+        return False
+
+def checkArmy(assets_path):
+    do_click(37, 432) # click army tab
+    while not isCampFull(assets_path):
+        setlog("Camp is not full", "warning")
+        time.sleep(1)
+
+    setlog("Camp is full, exit checkArmy()", "info")
+    do_click(902, 277) # click away
+    return True
+
+def atk_loop(assets_path):
+    next_btn_img = assets_path + '\\test\\next_btn.png'
+    atk_btn_img = assets_path + '\\test\\atk_btn.png'
+    find_match_btn_img = assets_path + '\\test\\find_match_btn.png'
+
+    atk_count = 0
+    while 1:
+        checkArmy(assets_path)
+        atk_count += 1
+        setlog(f"Attack round {atk_count}", "info")
+        while not check_image_presence(atk_btn_img, confidence=0.8):
+            time.sleep(0.2)
+        click_random_within_image(check_image_presence(atk_btn_img, confidence=0.8))
+
+        while not check_image_presence(find_match_btn_img, confidence=0.7):
+            time.sleep(0.2)
+        click_random_within_image(check_image_presence(find_match_btn_img, confidence=0.7))
+
+        setlog("Searching for opponent...", "info")
+        while not check_image_presence(next_btn_img, confidence=0.8):
+            time.sleep(0.2)
+
+        setlog("Found a base!", "success")
+        # play_sound()
+        superBarbs_strat()
+        mv_return_home(assets_path)
+
+        while not is_army_btn_visible(assets_path):
+            time.sleep(0.2)
+        do_click(867, 262) # click away for any window popup
+        setlog("We are back in the main village!", "success")
+
+        if is_army_btn_visible(assets_path, click=True): # open army window
+            do_click(674, 96, random_click=False) # click quick train
+            time.sleep(1)
+            do_click(733, 176, random_click=False) # click train, previous army
+            do_click(867, 262) # click away
+        setlog(f"Attack round {atk_count}", "info")
+
+if __name__ == '__main__':
+    atk_loop(assets_path)
