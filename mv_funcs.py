@@ -215,10 +215,20 @@ def get_resources_value(resource_target='', target_val=400000):
 
     if value is not None:
         if value >= target_val:
-            print(f'{resource_target}: {value} - True')
+            if resource_target == 'gold':
+                setlog(f'{resource_target}: {value} - True', "warning")
+            elif resource_target == 'elixir':
+                setlog(f'{resource_target}: {value} - True', "purple")
+            else:
+                print(f'{resource_target}: {value} - True')
             return True
         else:
-            print(f'{resource_target}: {value} - False')
+            if resource_target == 'gold':
+                setlog(f'{resource_target}: {value} - False', "warning")
+            elif resource_target == 'elixir':
+                setlog(f'{resource_target}: {value} - False', "purple")
+            else:
+                print(f'{resource_target}: {value} - False')
             return False
     else:
         print(f'{resource_target}: Error extracting value')
@@ -477,12 +487,12 @@ def mv_return_home(assets_path):
     while not find_image_within_window(return_home_btn_img, confidence=0.7):
         if time.time() - start_time > timeout:
             setlog("Something went wrong on detecting return home button", "error")
-            do_click(476, 473) # just click it
+            do_click(489, 474) # just click it
             break
         time.sleep(1)
 
     time.sleep(2)
-    do_click(476, 473) # just click the return home button
+    do_click(489, 474) # just click the return home button
     return True
 
 def main_village_attack_loop(isSwitchAcc=False):
@@ -539,11 +549,11 @@ def main_village_attack_loop(isSwitchAcc=False):
                 setlog("Found a base!", "success")
                 play_sound()
                 superBarbs_strat()
-                mv_return_home()
+                mv_return_home(assets_path)
                 break
             else:
                 try:
-                    click_next()
+                    click_next(assets_path)
                     setlog("Searching for opponent...", "info")
                     while not check_image_presence(next_btn_img, confidence=0.8):
                         time.sleep(0.2)
@@ -574,16 +584,41 @@ def isCampFull(assets_path):
         return False
 
 def checkArmy(assets_path):
-    do_click(37, 432) # click army tab
+    do_click(46, 435) # click army tab
     while not isCampFull(assets_path):
         setlog("Camp is not full", "warning")
         time.sleep(1)
 
     setlog("Camp is full, exit checkArmy()", "info")
-    do_click(902, 277) # click away
+    do_click(905, 283) # click away
     return True
 
+def detect_loot(assets_path):
+    next_btn_img = assets_path + '\\test\\next_btn.png'
+
+    targets = {
+        'gold': 400000,
+        'elixir': 400000,
+        # 'dark_elixir': 2000
+    }
+
+    while 1:
+        time.sleep(3)
+        if get_resources_value(resource_target='gold', target_val=400000) and get_resources_value(resource_target='elixir', target_val=400000): # or get_resources_value(resource_target='dark_elixir', target_val=2000):
+            setlog("Found a base!", "success")
+            return True
+        else:
+            try:
+                click_next(assets_path)
+                setlog("Searching for opponent...", "info")
+                while not check_image_presence(next_btn_img, confidence=0.8):
+                    time.sleep(0.2)
+            except Exception as e:
+                setlog(f"Error clicking next button: {e}", "error")
+                return False
+
 def atk_loop(assets_path):
+
     next_btn_img = assets_path + '\\test\\next_btn.png'
     atk_btn_img = assets_path + '\\test\\atk_btn.png'
     find_match_btn_img = assets_path + '\\test\\find_match_btn.png'
@@ -593,22 +628,23 @@ def atk_loop(assets_path):
         checkArmy(assets_path)
         atk_count += 1
         setlog(f"Attack round {atk_count}", "info")
-        while not check_image_presence(atk_btn_img, confidence=0.8):
-            time.sleep(0.2)
-        click_random_within_image(check_image_presence(atk_btn_img, confidence=0.8))
+        # while not (atk_btn_loc := check_image_presence(atk_btn_img, confidence=0.7)):
+        #     time.sleep(0.2)
+        # click_random_within_image(atk_btn_loc)
 
-        while not check_image_presence(find_match_btn_img, confidence=0.7):
+        do_click(59, 502) # click attack button
+        while not (match_btn_loc := check_image_presence(find_match_btn_img, confidence=0.7)):
             time.sleep(0.2)
-        click_random_within_image(check_image_presence(find_match_btn_img, confidence=0.7))
+        click_random_within_image(match_btn_loc)
 
         setlog("Searching for opponent...", "info")
         while not check_image_presence(next_btn_img, confidence=0.8):
             time.sleep(0.2)
 
-        setlog("Found a base!", "success")
-        # play_sound()
-        superBarbs_strat()
-        mv_return_home(assets_path)
+        if detect_loot(assets_path):
+            play_sound()
+            superBarbs_strat()
+            mv_return_home(assets_path)
 
         while not is_army_btn_visible(assets_path):
             time.sleep(0.2)
@@ -621,6 +657,48 @@ def atk_loop(assets_path):
             do_click(733, 176, random_click=False) # click train, previous army
             do_click(867, 262) # click away
         setlog(f"Attack round {atk_count}", "info")
+import os
+def dmg_percentage_change(assets_path):
+
+    window_rect = get_window_rect(window_title)
+
+    dmg_percentage_img = assets_path + '\\mv_assets\\damage_percentage.png'
+    region_ss = (window_rect[0] + 791, window_rect[1] + 401, 137, 63)
+
+    # time.sleep(2)
+
+    # setlog(f"Damage percentage: {percentage}", "info")
+
+    while 1:
+        time.sleep(1)
+        ss = pyautogui.screenshot(region=region_ss)
+        ss.save(dmg_percentage_img)
+
+        percentage = extract_digit_from_image(dmg_percentage_img)
+        if percentage is not None and percentage != 100:
+            percentage = int(str(percentage)[:2])
+        previous_percentage = percentage
+        start_time = time.time()
+        if percentage is not None:
+        #     if percentage > 33:
+        #         setlog("True", "info")
+        #         setlog(f"Damage percentage: {percentage}", "info")
+        #     else:
+        #         setlog("False", "info")
+        #         setlog(f"Damage percentage: {percentage}", "info")
+        # else:
+        #     setlog("Failed to extract damage percentage", "error")
+
+            if time.time() - start_time > 5:
+                if percentage == previous_percentage:
+                    setlog("Damage percentage did not change within 10 seconds", "warning")
+                break
+            previous_percentage = percentage
+            time.sleep(1)
+            percentage = extract_digit_from_image(dmg_percentage_img)
+
+        os.remove(dmg_percentage_img)
 
 if __name__ == '__main__':
-    atk_loop(assets_path)
+
+    dmg_percentage_change(assets_path)

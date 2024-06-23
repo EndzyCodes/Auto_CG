@@ -22,8 +22,8 @@ def get_window_rect(window_title, debug=False):
     global window_rect
 
     window_handle = get_window_handle(window_title) # bring window to foreground
-    window_rect1 = win32gui.GetWindowRect(window_handle) # get window rectangle
-
+    window_rect1 = gw.getWindowsWithTitle(window_title)[0].box  # get window rectangle using pygetwindow
+    # print(window_rect1)
     # check
     if window_rect == window_rect1:
         if debug: print("Window rect is the same")
@@ -542,10 +542,10 @@ def get_pixel_color(x, y):
 def extract_digit_from_image(image_path):
     try:
         image = Image.open(image_path)  # Open the image file
-        custom_config = r'-c tessedit_char_whitelist=0123456789'
+        custom_config = r'-c tessedit_char_whitelist=0123456789 -c tessedit_char_blacklist=%'
         digit = pytesseract.image_to_string(image, config=custom_config)  # Extract the digit from the image using OCR
         # digit = pytesseract.image_to_string(image)  # Extract the digit from the image using OCR
-        print(digit)
+        # print(digit)
         digit = digit.replace('s', '5').replace('S', '5').replace('i', '1').replace('I', '1').replace('x','')
 
         digit1 = str(digit)
@@ -557,7 +557,7 @@ def extract_digit_from_image(image_path):
 
         digit2 = ''.join(filter(str.isdigit, digit1))  # Extract only digits from OCR result
         digit3 = digit2.strip()
-        print(digit3)
+        # print(digit3)
         if digit3.isdigit():  # Check if extracted string is a valid digit
             return int(digit3)
         else:
@@ -897,6 +897,7 @@ def setlog(string, log_level):
     info_color = "\033[96m"   # Cyan
     warning_color = "\033[93m"  # Yellow
     heading_color = "\033[94m"
+    purple_color = "\033[35m"
     # other colors
     # \033[30m - Black
     # \033[90m - Bright Black
@@ -926,6 +927,8 @@ def setlog(string, log_level):
         color = warning_color
     elif log_level == "heading":
         color = heading_color
+    elif log_level == "purple":
+        color = purple_color
     else:
         color = ""  # Default to no color if log_level is not recognized
 

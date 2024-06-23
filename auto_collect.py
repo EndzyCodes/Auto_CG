@@ -89,7 +89,7 @@ def boost_clock_tower(assets_path):
                     click_random_within_image(clocktower_boost_btn2_location)
                     time.sleep(1)
                     setlog("Boosted clock tower", "success")
-                    do_click(902, 284) # click away
+                    do_click(905, 283) # click away
                     return True
                 else:
                     setlog("Error: Boost button not found!", 'error')
@@ -156,8 +156,8 @@ def collect_gem_box(assets_path):
         time.sleep(1)
         do_click(467, 449)
         setlog("Collected gem box", "success")
-        do_click(902, 284) # click away
-        do_click(902, 284) # click away
+        do_click(905, 283) # click away
+        do_click(905, 283) # click away
         return True
     else:
         setlog("Gem box not found", "warning")

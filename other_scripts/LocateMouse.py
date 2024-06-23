@@ -23,9 +23,9 @@ def get_window_rect(window_title, debug=False):
     global window_rect
 
     window_handle = get_window_handle(window_title) # bring window to foreground
-    window_rect1 = win32gui.GetWindowRect(window_handle) # get window rectangle
+    window_rect1 = gw.getWindowsWithTitle(window_title)[0].box # get window rectangle
 
-    # check 
+    # check
     if window_rect == window_rect1:
         if debug: print("Window rect is the same")
     elif window_rect == ():  # if window_rect is not initialized
