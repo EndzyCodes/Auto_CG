@@ -110,6 +110,6 @@ def get_window_location_and_size(window_title = ''):
 
 if __name__ == "__main__":
 
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\damage_percentage.png'
+    img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\damage_percentage.png'
 
     get_region_within_window(img)

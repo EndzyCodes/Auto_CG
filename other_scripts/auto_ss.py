@@ -79,8 +79,8 @@ def take_ss():
         (1707, 310, 59, 36)
     ]
 
-    output_path_1 = r'C:\Users\Mark\Desktop\AutoPurge_coc\assets\cg_nv\full_imgs'
-    output_path_2 = r'C:\Users\Mark\Desktop\AutoPurge_coc\assets\cg_nv'
+    output_path_1 = r'C:\Users\fastl\OneDrive\Desktop\AutoPurge_coc\assets\cg_nv\full_imgs'
+    output_path_2 = r'C:\Users\fastl\OneDrive\Desktop\AutoPurge_coc\assets\cg_nv'
 
     # print("FULL IMAGES")
     # screenshot_regions(region_1, output_path_1)

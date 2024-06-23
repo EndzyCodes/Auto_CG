@@ -10,9 +10,9 @@ import pytesseract
 from PIL import Image
 from datetime import datetime
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Mark\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\fastl\OneDrive\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 window_title = "Clash of Clans"  # window title
 window_rect=()
 
@@ -579,7 +579,7 @@ def extract_digit_from_image(image_path):
 #         return None  # Return None if extraction fails
 
 def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False):
-    # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
+    # img = r'C:\Users\fastl\OneDrive\Desktop\PyAutomateEmulator\images\troop_cap.png'
     # get_region_within_window(img)
     window_rect = get_window_rect(window_title)
 
@@ -701,14 +701,14 @@ def func_to_run(assets_path):
 
     time.sleep(1)
 
-    # clan_chat_tab_img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\clan_chat_tab.png'
+    # clan_chat_tab_img = r'C:\Users\fastl\OneDrive\Desktop\PyAutomateEmulator\images\clan_chat_tab.png'
     # if click_on_image(clan_chat_tab_img, confidence=0.8):
     #     setlog("detected clan chat tab", 'success')
     # else:
     #     setlog("unable to find image", 'error')
     # setlog("test 1", "warning")
 
-    # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
+    # img = r'C:\Users\fastl\OneDrive\Desktop\PyAutomateEmulator\images\troop_cap.png'
     # get_region_within_window(img)
 
     region1 = (1049, 129, 90, 21)

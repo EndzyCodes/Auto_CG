@@ -19,11 +19,11 @@ import random
 # import pyautogui
 import keyboard
 
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets'
 
 def BB_is_army_btn_visible(click=False):
 
-    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
+    img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
 
     count = 0
     while 1: 
@@ -269,8 +269,8 @@ def attack_BB(is_2_camps=False):
     global assets_path
 
     bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
-    if find_image_within_window(bb_atk_btn_img):
-        if click_random_within_image(check_image_presence(bb_atk_btn_img, confidence=0.8)):
+    if (bb_atk_btn_location := check_image_presence(bb_atk_btn_img, confidence=0.7)):
+        if click_random_within_image(bb_atk_btn_location):
             setlog("Clicked attack button", "success")
             time.sleep(1.5)
         else:
@@ -350,7 +350,7 @@ def attack_BB(is_2_camps=False):
         # setlog("Return home button did not appear", "warning")
         # setlog("Maybe we are on the next village")
         time.sleep(1)
-        # balloon_troop = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\balloon_troop.png'
+        # balloon_troop = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\balloon_troop.png'
         if find_image_within_window(sec_vill_loon):
             setlog("We are at the 2nd village battle ground", "info")
             # if click_random_within_image(check_image_presence(sec_vill_loon, confidence=0.9)):
@@ -373,7 +373,7 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
 
     close_btn_img = assets_path + '\\close_btn.png'
     bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
-    # challenge_completed_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'
+    # challenge_completed_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'
 
     cart_w_elixir = assets_path + '\\bb_assets\\cart_with_elixir.png'
     btn_collect_elixir_cart = assets_path + '\\bb_assets\\collect_elixir_cart.png'
@@ -425,3 +425,6 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
             time.sleep(1)
             do_click(534, 349)
             break
+
+if __name__ == '__main__':
+    bb_attack_loop(is_2_camps=True)

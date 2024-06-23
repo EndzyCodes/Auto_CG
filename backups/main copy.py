@@ -107,7 +107,7 @@ def random_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1, h
         pyautogui.mouseUp()
 
 def click_close():
-    close_btn_img_path = r'C:\Users\Mark\Desktop\coc\Images\close_btn.png'
+    close_btn_img_path = r'C:\Users\fastl\OneDrive\Desktop\coc\Images\close_btn.png'
     close_btn_present = check_image_presence(close_btn_img_path, confidence=0.8)
     if close_btn_present: 
         click_random_within_image(close_btn_present)
@@ -126,7 +126,7 @@ def click_close():
 
 def is_army_btn_visible():
 
-    img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\army_btn.png'
+    img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\army_btn.png'
 
     count = 0
     while 1: 
@@ -140,7 +140,7 @@ def is_army_btn_visible():
             # break
 
 def check_daily_reward():
-    img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\claim_btn.png'
+    img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\claim_btn.png'
     claim_btn_location = check_image_presence(img, confidence=0.9)
     if find_image(img, confidence=0.9):
         if click_random_within_image(claim_btn_location):
@@ -156,9 +156,9 @@ def check_daily_reward():
         return False
 
 def collect_resources():
-    gold_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gold.png'
-    elixir_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\elixir.png'
-    dark_elixir_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\dark_elixir.png'
+    gold_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\gold.png'
+    elixir_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\elixir.png'
+    dark_elixir_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\dark_elixir.png'
     
     # Create a list of resource images
     resource_images = [gold_img, elixir_img, dark_elixir_img]
@@ -188,7 +188,7 @@ def collect_resources():
 
 def open_cg_window():
 
-    img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_cart2.png'
+    img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\cg_cart2.png'
     if find_image(img):
         setlog("found clan games cart", "success")
         setlog("Opening clan games window", "info")
@@ -206,7 +206,7 @@ def open_cg_window():
         if find_image(img):
             setlog("found on 2nd try", "success")
             time.sleep(1)
-            img2 = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_cart2.png'
+            img2 = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\cg_cart2.png'
             clan_games_location2 = check_image_presence(img2, confidence=0.8)
             click_random_within_image(clan_games_location2) # open clan games window
             return True
@@ -235,7 +235,7 @@ def main(skip_acc_num=0):
         # check_daily_reward() # this for accounts that have been opened just now, "Chief you're back!"
 
         # click all possible claims button
-        if find_image_within_window(r'C:\Users\Mark\Desktop\AutoAttackBB\assets\daily_reward.png'):
+        if find_image_within_window(r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\daily_reward.png'):
             setlog("Daily reward window found", "success")
             click(197, 250)
             click(341, 252)
@@ -342,8 +342,8 @@ def boost_troop_heroes():
     click(902, 284) # click away
 
 def return_home():
-    return_home_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\return_home_btn.png'
-    hero_ability_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\hero_ability.png'
+    return_home_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\return_home_btn.png'
+    hero_ability_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\hero_ability.png'
 
     count = 0
     timeout = 90  # timeout in seconds
@@ -375,7 +375,7 @@ found_opponent = False
 def attack_BB():
     global found_opponent
     get_coc_window("Clash of Clans")
-    bb_atk_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
+    bb_atk_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
     if find_image_within_window(bb_atk_btn_img):
         if click_random_within_image(check_image_presence(bb_atk_btn_img, confidence=0.8)):
             setlog("Clicked attack button", "success")
@@ -385,14 +385,14 @@ def attack_BB():
     else:
         setlog("Builder base attack button not found", "error")
 
-    find_now_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\find_now_btn.png'
+    find_now_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\find_now_btn.png'
     if click_random_within_image(check_image_presence(find_now_btn_img, confidence=0.8)):
         setlog("Clicked find now button", "success")
         time.sleep(1.5)
     else:
         setlog("Failed to click find now button", "error")
 
-    cancel_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cancel_btn.png'
+    cancel_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\cancel_btn.png'
     if find_image_within_window(cancel_btn_img):
         time.sleep(0.5)
         setlog("Finding an opponent...", "info")
@@ -409,9 +409,9 @@ def attack_BB():
     time.sleep(1)
     deploy_troops()
 
-    return_home_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\return_home_btn.png'
-    sec_vill_loon = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\sec_vill_loon.png'
-    hero_ability_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\hero_ability.png'
+    return_home_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\return_home_btn.png'
+    sec_vill_loon = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\sec_vill_loon.png'
+    hero_ability_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\hero_ability.png'
 
     timeout = 120  # timeout in seconds
     start_time = time.time()
@@ -439,7 +439,7 @@ def attack_BB():
         # setlog("Return home button did not appear", "warning")
         # setlog("Maybe we are on the next village")
         time.sleep(1)
-        # balloon_troop = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\balloon_troop.png'
+        # balloon_troop = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\balloon_troop.png'
         if find_image_within_window(sec_vill_loon):
             setlog("We are at the 2nd village battle ground", "info")
             # if click_random_within_image(check_image_presence(sec_vill_loon, confidence=0.9)):
@@ -459,7 +459,7 @@ def attack_BB():
 
 def go_to_bb(go_back_main=False):
 
-    boat_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\boat.png'
+    boat_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\boat.png'
 
     if go_back_main:
         scroll_to_zoom((716, 117), 10)
@@ -517,13 +517,13 @@ def cg_loop():
 
     # click_drag(738, 369, 672, 439)
 def bb_attack_loop(enable_attack=False):
-    close_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\close_btn.png'
-    bb_atk_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
-    challenge_completed_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\challenge_completed.png'
-    cart_w_elixir = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart_with_elixir.png'
-    collect_elixir_cart = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\collect_elixir_cart.png'
-    cart_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart.png'
-    cart2_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\cart2.png'
+    close_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\close_btn.png'
+    bb_atk_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\bb_atk_btn.png'
+    challenge_completed_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\challenge_completed.png'
+    cart_w_elixir = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\cart_with_elixir.png'
+    collect_elixir_cart = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\collect_elixir_cart.png'
+    cart_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\cart.png'
+    cart2_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\cart2.png'
 
     if not enable_attack:
         setlog("Attack disabled", "info")

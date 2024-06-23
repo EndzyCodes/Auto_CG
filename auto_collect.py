@@ -16,7 +16,7 @@ from Functions import (
 from bb_funcs import go_to_bb
 import random, time, pyautogui
 
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 
 def is_army_btn_visible(click=False):
     global assets_path

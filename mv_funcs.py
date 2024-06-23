@@ -29,7 +29,7 @@ import pyautogui
 import keyboard
 import pygame
 
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 
 def is_army_btn_visible(assets_path, click=False):
 
@@ -466,7 +466,7 @@ def EdragLoons_strat():
 #* ---- END OF ATTACK STRATEGIES ----
 
 def play_sound():
-    sound_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\sound\tokyo_drift.mp3'
+    sound_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\sound\tokyo_drift.mp3'
     pygame.mixer.init()
     pygame.mixer.music.load(sound_path)
     pygame.mixer.music.play()

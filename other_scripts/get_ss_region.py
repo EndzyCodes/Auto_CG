@@ -12,7 +12,7 @@ import pytesseract
 import pyperclip
 from PIL import Image
 
-# pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Mark\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Users\fastl\OneDrive\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 def read_text_from_image(image_path):
     try:

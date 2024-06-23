@@ -16,7 +16,7 @@ from bb_funcs import attack_BB, go_to_bb
 # from mv_funcs import is_army_btn_visible
 import time
 
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets'
 
 def is_army_btn_visible(click=False):
     global assets_path
@@ -54,7 +54,7 @@ def purge_challenge(gem_cooldown=False, purge_once=False):
     home_vill_challenge_img = assets_path + '\\home_vill_challenge.png'
     running_challenge_img = assets_path + '\\running_challenge.png'
     challenge_cooldown_img = assets_path + '\\challenge_cooldown.png'
-    # bb_vill_challenge_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_vill_challenge.png'
+    # bb_vill_challenge_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_vill_challenge.png'
 
     while 1:
         if find_image_within_window(challenge_cooldown_img, confidence=0.7):
@@ -258,7 +258,7 @@ def switch_acc_purge(skip_acc_num=0, skip_acc_num2=0):
             do_click(280, 119) # just click the cart
             do_click(226, 131) # click it again
 
-        # cg_indicator_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_indicator.png'
+        # cg_indicator_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_indicator.png'
         # while not check_image_presence(cg_indicator_img):
         #     setlog("Waiting for CG window to open...", 'info')
         #     time.sleep(0.5)
@@ -356,7 +356,7 @@ def cg_mode_loop(gem_cooldown=False, is_2_camps=False, collect_cart=True):
                     setlog("Cart not found, exiting script...", 'error')
                     do_click(280, 119) # just click the cart
                     do_click(226, 131) # click it again
-                # cg_indicator_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_indicator.png'
+                # cg_indicator_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_indicator.png'
                 # while not check_image_presence(cg_indicator_img):
                 #     setlog("Waiting for CG window to open...", 'info')
                 #     time.sleep(0.5)
@@ -404,7 +404,7 @@ def play_sound():
     from os import environ
     environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
     import pygame
-    sound_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\sound\tokyo_drift.mp3'
+    sound_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\sound\tokyo_drift.mp3'
     pygame.mixer.init()
     pygame.mixer.music.load(sound_path)
     pygame.mixer.music.play()

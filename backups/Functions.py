@@ -10,7 +10,7 @@ import pytesseract
 from PIL import Image
 from datetime import datetime
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Mark\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\fastl\OneDrive\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
 
 window_title = "Clash of Clans"  # window title
@@ -484,16 +484,16 @@ def get_pixel_color(x, y):
 
 def purge_challenge(debug=False):
 
-    ok_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\okay_btn.png'
-    gem_cd_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gem_cd.png'
+    ok_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\okay_btn.png'
+    gem_cd_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\gem_cd.png'
 
     purged = False
-    start_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\start_btn.png'
-    trash_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\trash_btn.png'
-    home_vill_challenge_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\home_vill_challenge.png'
-    running_challenge_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\running_challenge.png'
-    challenge_cooldown_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\challenge_cooldown.png'
-    # bb_vill_challenge_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_vill_challenge.png'
+    start_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\start_btn.png'
+    trash_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\trash_btn.png'
+    home_vill_challenge_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\home_vill_challenge.png'
+    running_challenge_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\running_challenge.png'
+    challenge_cooldown_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\challenge_cooldown.png'
+    # bb_vill_challenge_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_vill_challenge.png'
 
     while 1:
         if find_image_within_window(home_vill_challenge_img):
@@ -539,15 +539,15 @@ def purge_challenge(debug=False):
         return False
 
 def pick_challenge(debug=False):
-    start_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\start_btn.png'
-    trash_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\trash_btn.png'
-    ok_btn_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\okay_btn.png'
-    gem_cd_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gem_cd.png'
+    start_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\start_btn.png'
+    trash_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\trash_btn.png'
+    ok_btn_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\okay_btn.png'
+    gem_cd_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\gem_cd.png'
 
-    bb_challenge = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\bb_assets\bb_challenge.png'
-    boxer_giant_challenge_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_bb\boxer_giant_punch_up.png'
-    riding_gliding_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_bb\riding_n_gliding.png'
-    bomber_blow_em_up_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\cg_bb\bomber_blow_em_up.png'
+    bb_challenge = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\bb_assets\bb_challenge.png'
+    boxer_giant_challenge_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\cg_bb\boxer_giant_punch_up.png'
+    riding_gliding_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\cg_bb\riding_n_gliding.png'
+    bomber_blow_em_up_img = r'C:\Users\fastl\OneDrive\Desktop\AutoAttackBB\assets\cg_bb\bomber_blow_em_up.png'
 
     while 1:
         if find_image_within_window(boxer_giant_challenge_img):
@@ -748,7 +748,7 @@ def extract_digit_from_image(image_path):
         return None  # Return None if extraction fails
 
 def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False):
-    # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
+    # img = r'C:\Users\fastl\OneDrive\Desktop\PyAutomateEmulator\images\troop_cap.png'
     # get_region_within_window(img)
     # window_rect = get_window_rect(window_title)
 
@@ -791,14 +791,14 @@ def func_to_run():
 
     time.sleep(1)
 
-    # clan_chat_tab_img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\clan_chat_tab.png'
+    # clan_chat_tab_img = r'C:\Users\fastl\OneDrive\Desktop\PyAutomateEmulator\images\clan_chat_tab.png'
     # if click_on_image(clan_chat_tab_img, confidence=0.8):
     #     setlog("detected clan chat tab", 'success')
     # else:
     #     setlog("unable to find image", 'error')
     # setlog("test 1", "warning")
 
-    # img = r'C:\Users\Mark\Desktop\PyAutomateEmulator\images\troop_cap.png'
+    # img = r'C:\Users\fastl\OneDrive\Desktop\PyAutomateEmulator\images\troop_cap.png'
     # get_region_within_window(img)
 
     region_troop_cap = (1054, 344, 27, 30)
