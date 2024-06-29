@@ -16,7 +16,7 @@ from Functions import (
 from bb_funcs import go_to_bb
 import random, time, pyautogui
 
-assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets'
 
 def is_army_btn_visible(click=False):
     global assets_path
@@ -191,10 +191,8 @@ def collect_loop(skip_scc_num=0):
             boost_clock_tower(assets_path)
             go_to_bb(True) # go back to main village
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    collect_loop(skip_scc_num=1)
-
-
+#     collect_loop(skip_scc_num=1)
 
 

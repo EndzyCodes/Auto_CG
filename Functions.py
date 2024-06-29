@@ -12,7 +12,7 @@ from datetime import datetime
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\fastl\OneDrive\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
-assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets'
 window_title = "Clash of Clans"  # window title
 window_rect=()
 

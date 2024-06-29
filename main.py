@@ -16,8 +16,8 @@ def request_troops():
 
     region_trash_btn = (421, 355, 105, 43)
 
-    trash_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\trash_btn.png'
-    ok_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\ok_btn.png'
+    trash_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\donate_assets\trash_btn.png'
+    ok_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\donate_assets\ok_btn.png'
 
     if (trash_btn_location := check_image_presence(trash_btn_img, region=region_trash_btn)):
         setlog("Found troops in cc, removing troops now")
@@ -45,7 +45,7 @@ def train_loons():
     do_click(740, 277) # click "train" on the first army comp
 
     time.sleep(1)
-    ok_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\ok_btn.png'
+    ok_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\donate_assets\ok_btn.png'
 
     ok_btn_location = check_image_presence(ok_btn_img)
 
@@ -60,7 +60,7 @@ def train_loons():
 
 def donate_troops():
     donate_btn_region = (189, 421, 89, 67) # x, y, width, height
-    donate_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\donate_assets\donate_btn.png'
+    donate_btn_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\donate_assets\donate_btn.png'
 
     if (donate_btn_location := check_image_presence(donate_btn_img, region=donate_btn_region)):
         click_random_within_image(donate_btn_location)

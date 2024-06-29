@@ -23,10 +23,10 @@ assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\
 
 def BB_is_army_btn_visible(click=False):
 
-    img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
+    img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\army_btn.png'
 
     count = 0
-    while 1: 
+    while 1:
         if not check_image_presence(img, confidence=0.8):
             time.sleep(0.3)
             count += 1
@@ -47,7 +47,7 @@ def BB_is_army_btn_visible(click=False):
             return True
 
 def deploy_troops(sec_vill_battle=False, is_2_camps=False):
-    print(f'deploy_troops, is_2_camps: {is_2_camps}')
+    # print(f'deploy_troops, is_2_camps: {is_2_camps}')
 
     if sec_vill_battle:
         setlog("Deploying troops on the 2nd village battle ground", "info")
@@ -82,14 +82,14 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
 
-        if is_2_camps:
-            setlog("Clicking minion from 2nd camp", "info")
-            do_click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
-        else:
+        # if is_2_camps:
+        #     setlog("Clicking minion from 2nd camp", "info")
+        #     do_click(640, 490) # click minion on 2nd camp if the account has a 2nd camp
+        # else:
             # click all possible  minions icon
-            do_click(417, 507)
-            do_click(480, 506)
-            do_click(532, 513)
+        do_click(417, 507)
+        do_click(480, 506)
+        do_click(532, 513)
         #* minions drop points
         # randomize minion drop order
         minions = [(515, 349), (591, 314), (630, 279), (678, 243), (740, 200)]
@@ -165,14 +165,15 @@ def boost_troop_heroes():
 def bb_return_home():
     global assets_path
 
-    return_home_btn_img = assets_path + '\\bb_assets\\return_home_btn2.png'
+    return_home_btn_img = assets_path + '\\bb_assets\\return_home_btn.png'
+    return_home_btn_img2 = assets_path + '\\bb_assets\\return_home_btn2.png'
     hero_ability_img = assets_path + '\\bb_assets\\hero_ability2.png'
     connection_err_img = assets_path + '\\connection_error.png'
 
     timeout = 90  # timeout in seconds
     start_time = time.time()
     setlog("Waiting for return home button to appear", "info")
-    while not find_image_within_window(return_home_btn_img):
+    while not find_image_within_window(return_home_btn_img, confidence=0.7) or not find_image_within_window(return_home_btn_img2, confidence=0.7):
         if time.time() - start_time > timeout:
             setlog("Something went wrong on detecting return home button", "error")
             break
@@ -187,11 +188,16 @@ def bb_return_home():
                 return True
 
     # if find_image_within_window(return_home_btn_img):
-    if click_random_within_image(check_image_presence(return_home_btn_img, confidence=0.8)):
+    if click_random_within_image(check_image_presence(return_home_btn_img, confidence=0.7)):
         setlog("Clicked return home button", "success")
+        return True
+    elif click_random_within_image(check_image_presence(return_home_btn_img2, confidence=0.7)):
+        setlog("Clicked return home2 button", "success")
         return True
     else:
         setlog("Failed to click return home button", "error")
+        setlog("Clicking the button...", "error")
+        do_click(438, 452) # just click the return home button
         return False
     # else:
     #     setlog("Return home button did not appear", "warning")
@@ -246,7 +252,7 @@ def bb_attack_time_limit():
         # main(attack_only_no_cg=True, enable_gem_cooldown=False, clan_games_mode=False)
         bb_attack_loop()
         # if time.time() - start_time >= 90 * 60:  # 90 minutes in seconds
-        if time.time() - start_time >= 60 * 60:  # 2 hours in seconds
+        if time.time() - start_time >= 60 * 120:  # 2 hours in seconds
             keyboard.press_and_release('esc')
             time.sleep(1)
             do_click(534, 349)
@@ -350,7 +356,7 @@ def attack_BB(is_2_camps=False):
         # setlog("Return home button did not appear", "warning")
         # setlog("Maybe we are on the next village")
         time.sleep(1)
-        # balloon_troop = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\balloon_troop.png'
+        # balloon_troop = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\bb_assets\balloon_troop.png'
         if find_image_within_window(sec_vill_loon):
             setlog("We are at the 2nd village battle ground", "info")
             # if click_random_within_image(check_image_presence(sec_vill_loon, confidence=0.9)):
@@ -373,7 +379,7 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
 
     close_btn_img = assets_path + '\\close_btn.png'
     bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
-    # challenge_completed_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\challenge_completed.png'
+    # challenge_completed_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\bb_assets\challenge_completed.png'
 
     cart_w_elixir = assets_path + '\\bb_assets\\cart_with_elixir.png'
     btn_collect_elixir_cart = assets_path + '\\bb_assets\\collect_elixir_cart.png'
@@ -419,7 +425,7 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
                 setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
         else:
             setlog("Cart does not have elixir yet", "info")
-        
+
         if time.time() - start_time >= 180 * 60:  # 3 hours in seconds
             keyboard.press_and_release('esc')
             time.sleep(1)
@@ -427,4 +433,4 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
             break
 
 if __name__ == '__main__':
-    bb_attack_loop(is_2_camps=True)
+    bb_attack_time_limit()

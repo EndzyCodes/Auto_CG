@@ -16,7 +16,7 @@ from bb_funcs import attack_BB, go_to_bb
 # from mv_funcs import is_army_btn_visible
 import time
 
-assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets'
+assets_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets'
 
 def is_army_btn_visible(click=False):
     global assets_path
@@ -26,7 +26,7 @@ def is_army_btn_visible(click=False):
     setlog("Waiting for army tab to appear", "info")
     while  not check_image_presence(img, confidence=0.8):
         time.sleep(0.3)
-
+    2
     setlog("Army tab found", "success")
     do_click(867, 262)
     do_click(867, 262)
@@ -54,38 +54,38 @@ def purge_challenge(gem_cooldown=False, purge_once=False):
     home_vill_challenge_img = assets_path + '\\home_vill_challenge.png'
     running_challenge_img = assets_path + '\\running_challenge.png'
     challenge_cooldown_img = assets_path + '\\challenge_cooldown.png'
-    # bb_vill_challenge_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_vill_challenge.png'
+    # bb_vill_challenge_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\bb_vill_challenge.png'
 
     while 1:
-        if find_image_within_window(challenge_cooldown_img, confidence=0.7):
+        if check_image_presence(challenge_cooldown_img, confidence=0.7):
             setlog("Purge is on cooldown", "info")
             time.sleep(1)
             do_click(867, 262) # click away to close clan games window
             do_click(867, 262) # click away just to be sure
             return True
-        if find_image_within_window(home_vill_challenge_img):
+        if check_image_presence(home_vill_challenge_img):
             setlog("Home Village Challenge found", "success")
 
             click_random_within_image(check_image_presence(home_vill_challenge_img, confidence=0.8))
             time.sleep(2)
-            while not (start_btn_location := check_image_presence(start_btn_img)):
+            while not (start_btn_location := check_image_presence(start_btn_img, confidence=0.7)):
                 time.sleep(0.2)
             click_random_within_image(start_btn_location)
             setlog("Start button clicked", 'info')
 
-            while not (trash_btn_location := check_image_presence(trash_btn_img)):
+            while not (trash_btn_location := check_image_presence(trash_btn_img, confidence=0.7)):
                 time.sleep(0.5)
             click_random_within_image(trash_btn_location) # click trash button
             setlog("Trash button clicked", 'info')
 
-            while not (ok_btn_location := check_image_presence(ok_btn_img)):
+            while not (ok_btn_location := check_image_presence(ok_btn_img, confidence=0.7)):
                 setlog("Waiting for OK button to appear...", 'info')
                 time.sleep(0.5)
             click_random_within_image(ok_btn_location)
             setlog("OK button clicked", 'info')
 
             if gem_cooldown:
-                while not (gem_cd_location := check_image_presence(gem_cd_img)):
+                while not (gem_cd_location := check_image_presence(gem_cd_img, confidence=0.7)):
                     time.sleep(0.5)
                 click_random_within_image(gem_cd_location)
                 time.sleep(2.5)
@@ -114,7 +114,7 @@ def purge_challenge(gem_cooldown=False, purge_once=False):
         # do_click(867, 262) # click away to close clan games window
         # setlog("click away", "info")
         return False
-    
+
 cg_points_full = False
 
 def pick_challenge(debug=False):
@@ -122,7 +122,7 @@ def pick_challenge(debug=False):
     global assets_path
 
     cg_points_full = assets_path + '\\cg_points_full.png'
-    if find_image_within_window(cg_points_full):
+    if check_image_presence(cg_points_full):
         setlog("CLAN GAMES COMPLETED", "info")
         cg_points_full = True
         return False
@@ -139,6 +139,7 @@ def pick_challenge(debug=False):
         assets_path + '\\cg_bb\\wall_wipe_out.png',
         assets_path + '\\cg_bb\\XBow_Explosion.png',
         assets_path + '\\cg_bb\\electrofire_crackle.png',
+        assets_path + '\\cg_bb\\raged_barb_rampage.png'
     ]
 
     def remove_challenge(challenge_img):
@@ -146,25 +147,25 @@ def pick_challenge(debug=False):
         setlog("Removing it now...", "info")
         click_random_within_image(check_image_presence(challenge_img))
 
-        while not (start_btn_location := check_image_presence(start_btn_img)):
+        while not (start_btn_location := check_image_presence(start_btn_img, confidence=0.7)):
             time.sleep(0.5)
         click_random_within_image(start_btn_location)
         time.sleep(1)
-        while not (trash_btn_location := check_image_presence(trash_btn_img)):
+        while not (trash_btn_location := check_image_presence(trash_btn_img, confidence=0.7)):
             time.sleep(0.5)
         click_random_within_image(trash_btn_location)
 
-        while not (ok_btn_location := check_image_presence(ok_btn_img)):
+        while not (ok_btn_location := check_image_presence(ok_btn_img, confidence=0.7)):
             time.sleep(0.2)
         click_random_within_image(ok_btn_location)
 
         # TODO make gemming the purge an option, pass it as parameter, temporarily gem it because we are rushing cg right now
         # TODO maybe make a GUI "gem unwanted challenges" option
-        while not (gem_cd_location := check_image_presence(gem_cd_img)):
+        while not (gem_cd_location := check_image_presence(gem_cd_img, confidence=0.7)):
             time.sleep(0.2)
         click_random_within_image(gem_cd_location)
         # TODO --------------------------------------------------------
-        while not (ok_btn_location := check_image_presence(ok_btn_img)):
+        while not (ok_btn_location := check_image_presence(ok_btn_img, confidence=0.7)):
             time.sleep(0.2)
         click_random_within_image(ok_btn_location)
 
@@ -258,7 +259,7 @@ def switch_acc_purge(skip_acc_num=0, skip_acc_num2=0):
             do_click(280, 119) # just click the cart
             do_click(226, 131) # click it again
 
-        # cg_indicator_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_indicator.png'
+        # cg_indicator_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\cg_indicator.png'
         # while not check_image_presence(cg_indicator_img):
         #     setlog("Waiting for CG window to open...", 'info')
         #     time.sleep(0.5)
@@ -356,7 +357,7 @@ def cg_mode_loop(gem_cooldown=False, is_2_camps=False, collect_cart=True):
                     setlog("Cart not found, exiting script...", 'error')
                     do_click(280, 119) # just click the cart
                     do_click(226, 131) # click it again
-                # cg_indicator_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\cg_indicator.png'
+                # cg_indicator_img = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\cg_indicator.png'
                 # while not check_image_presence(cg_indicator_img):
                 #     setlog("Waiting for CG window to open...", 'info')
                 #     time.sleep(0.5)
@@ -400,11 +401,11 @@ def cg_mode_loop(gem_cooldown=False, is_2_camps=False, collect_cart=True):
                 # else:
                 #     setlog("Cart does not have elixir yet", "info")
 
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import pygame
 def play_sound():
-    from os import environ
-    environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-    import pygame
-    sound_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\sound\tokyo_drift.mp3'
+    sound_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\sound\tokyo_drift.mp3'
     pygame.mixer.init()
     pygame.mixer.music.load(sound_path)
     pygame.mixer.music.play()
@@ -416,24 +417,25 @@ def play_sound():
     #     pygame.time.Clock().tick(10)  # Adjust tick rate as needed
     pygame.mixer.quit()
 
-def cg_mode_loop_2(assets_path, is_2_camps=False):
+def cg_manual_mode(assets_path, is_2_camps=False):
 
-    challenge_completed_img = assets_path + '\\bb_assets\\challenge_completed2.png'
+    challenge_completed_img = assets_path + '\\bb_assets\\challenge_completed.png'
+    # challenge_completed_img2 = assets_path + '\\bb_assets\\challenge_completed2.png'
     bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
 
     btn_collect_elixir_cart = assets_path + '\\bb_assets\\collect_elixir_cart.png'
     cart_full_img = assets_path + '\\bb_assets\\elixir_cart_full.png'
     cart2_img = assets_path + '\\bb_assets\\elixir_cart2.png'
 
-    # is_challenge_complete = False
+    is_challenge_complete = False
     while 1:
-        # if is_challenge_complete:
-        #     is_challenge_complete = False # reset the flag
-        #     setlog("--- CHALLENGE COMPLETED ---", "success")
-        #     setlog("PLEASE PICK A NEW CHALLENGE", "info")
-        #     break
+        if is_challenge_complete:
+            is_challenge_complete = False # reset the flag
+            setlog("--- CHALLENGE COMPLETED ---", "success")
+            setlog("PLEASE PICK A NEW CHALLENGE", "info")
+            break
         #* Check if cg chellenge has been completed
-        while not find_image_within_window(challenge_completed_img, confidence=0.7):
+        while not find_image_within_window(challenge_completed_img, confidence=0.7): #and not find_image_within_window(challenge_completed_img2, confidence=0.7):
             time.sleep(2)
             setlog("Challenge not completed yet", "info")
             setlog("Continuing to attack", "info")
@@ -442,88 +444,90 @@ def cg_mode_loop_2(assets_path, is_2_camps=False):
             time.sleep(1)
             #* This loop is for when the battle is finish, we look for atk button to know if we are back on builder base
             setlog("Waiting for builder base attack button to appear", "info")
-            for i in range(20): # 0.3 x 20 = 6 seconds wait time
+            for i in range(30): # 0.3 x 20 = 6 seconds wait time
                 time.sleep(0.3)
                 if find_image_within_window(bb_atk_btn_img):
                     setlog("We are back at builder base!", "success")
-                    do_click(867, 262)
-                    do_click(867, 262)
+                    # do_click(867, 262)
+                    # do_click(867, 262)
                     break
-            #     if (challenge_completed_location := check_image_presence(challenge_completed_img, confidence=0.7)):
-            #         click_random_within_image(challenge_completed_location)
-            #         is_challenge_complete = True
-            #         play_sound()
-            #         break
+            for i in range(30): # 0.2 x 30 = 6 seconds wait time
+                time.sleep(0.2)
+                if (challenge_completed_location := check_image_presence(challenge_completed_img, confidence=0.7)): # or (challenge_completed_location2 := check_image_presence(challenge_completed_img2, confidence=0.7)):
+                    if click_random_within_image(challenge_completed_location): # or click_random_within_image(challenge_completed_location2):
+                        is_challenge_complete = True
+                        # play_sound()
+                    break
 
-            # if is_challenge_complete:
-            #     # is_challenge_complete = False # reset the flag
-            #     break
-            
-        else:
-            #* if challenge completed then click the "challenge completed" button
-            setlog("Challenge completed", "success")
-            click_random_within_image(check_image_presence(challenge_completed_img, confidence=0.7))
-            time.sleep(5)
-            purge_challenge(gem_cooldown=True)
-            time.sleep(4)
-            #* Try to pick a new challenge
-            if pick_challenge():
-                do_click(891, 241) # click away
-                do_click(891, 241) # click away
+            if is_challenge_complete:
+                # is_challenge_complete = False # reset the flag
+                break
 
-                #* Check cart for elixir then collect it
-                scroll_to_zoom((716, 117), 10)
-                click_drag(854, 271, 700, 429)
-                setlog("Checking cart for elixir...", "info")
-                time.sleep(3)
-                if click_random_within_image(check_image_presence(cart_full_img, confidence=0.7)) or click_random_within_image(check_image_presence(cart2_img, confidence=0.7)):
-                    while not find_image_within_window(btn_collect_elixir_cart, confidence=0.7):
-                        time.sleep(0.2)
-                    if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
-                        setlog("Collected elixir cart", "success")
-                        time.sleep(1)
-                        do_click(867, 262) # click away
-                        do_click(867, 262)
-                    else:
-                        setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-                else:
-                    setlog("Cart does not have elixir yet", "info")
+        # else:
+        #     #* if challenge completed then click the "challenge completed" button
+        #     setlog("Challenge completed", "success")
+        #     click_random_within_image(check_image_presence(challenge_completed_img, confidence=0.7))
+        #     time.sleep(5)
+        #     purge_challenge(gem_cooldown=True)
+        #     time.sleep(4)
+        #     #* Try to pick a new challenge
+        #     if pick_challenge():
+        #         do_click(891, 241) # click away
+        #         do_click(891, 241) # click away
 
-                continue #* if pick_challenge is successful then continue to the next iteration
-            else:
-                purge_challenge()
-                time.sleep(3)
-                pick_challenge()
-                do_click(891, 241) # click away
-                do_click(891, 241) # click away
+        #         #* Check cart for elixir then collect it
+        #         scroll_to_zoom((716, 117), 10)
+        #         click_drag(854, 271, 700, 429)
+        #         setlog("Checking cart for elixir...", "info")
+        #         time.sleep(3)
+        #         if click_random_within_image(check_image_presence(cart_full_img, confidence=0.7)) or click_random_within_image(check_image_presence(cart2_img, confidence=0.7)):
+        #             while not find_image_within_window(btn_collect_elixir_cart, confidence=0.7):
+        #                 time.sleep(0.2)
+        #             if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
+        #                 setlog("Collected elixir cart", "success")
+        #                 time.sleep(1)
+        #                 do_click(867, 262) # click away
+        #                 do_click(867, 262)
+        #             else:
+        #                 setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
+        #         else:
+        #             setlog("Cart does not have elixir yet", "info")
 
-                #* Check cart for elixir then collect it
-                scroll_to_zoom((716, 117), 10)
-                click_drag(854, 271, 700, 429)
-                setlog("Checking cart for elixir...", "info")
-                time.sleep(3)
-                if click_random_within_image(check_image_presence(cart_full_img, confidence=0.7)) or click_random_within_image(check_image_presence(cart2_img, confidence=0.7)):
-                    while not find_image_within_window(btn_collect_elixir_cart, confidence=0.7):
-                        time.sleep(0.2)
-                    if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
-                        setlog("Collected elixir cart", "success")
-                        time.sleep(1)
-                        do_click(867, 262) # click away
-                        do_click(867, 262)
-                    else:
-                        setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
-                else:
-                    setlog("Cart does not have elixir yet", "info")
+        #         continue #* if pick_challenge is successful then continue to the next iteration
+        #     else:
+        #         purge_challenge()
+        #         time.sleep(3)
+        #         pick_challenge()
+        #         do_click(891, 241) # click away
+        #         do_click(891, 241) # click away
 
-def cg_mode_loop_3(assets_path, is_2_camps=False):
+        #         #* Check cart for elixir then collect it
+        #         scroll_to_zoom((716, 117), 10)
+        #         click_drag(854, 271, 700, 429)
+        #         setlog("Checking cart for elixir...", "info")
+        #         time.sleep(3)
+        #         if click_random_within_image(check_image_presence(cart_full_img, confidence=0.7)) or click_random_within_image(check_image_presence(cart2_img, confidence=0.7)):
+        #             while not find_image_within_window(btn_collect_elixir_cart, confidence=0.7):
+        #                 time.sleep(0.2)
+        #             if click_random_within_image(check_image_presence(btn_collect_elixir_cart, confidence=0.7)):
+        #                 setlog("Collected elixir cart", "success")
+        #                 time.sleep(1)
+        #                 do_click(867, 262) # click away
+        #                 do_click(867, 262)
+        #             else:
+        #                 setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
+        #         else:
+        #             setlog("Cart does not have elixir yet", "info")
+
+def cg_mode_loop_2(assets_path, is_2_camps=False):
 
     global cg_points_full
-    print(cg_points_full)
+    # print(cg_points_full)
     if cg_points_full:
         setlog("cg_points_full is True", "info")
         return
 
-    challenge_completed_img = assets_path + '\\bb_assets\\challenge_completed2.png'
+    challenge_completed_img = assets_path + '\\bb_assets\\challenge_completed.png'
     bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
 
     btn_collect_elixir_cart = assets_path + '\\bb_assets\\collect_elixir_cart.png'
@@ -532,7 +536,7 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
 
     # is_challenge_complete = False
     while 1:
-        
+
         #* Check if cg chellenge has been completed
         while not find_image_within_window(challenge_completed_img, confidence=0.7):
             time.sleep(2)
@@ -547,19 +551,13 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
                 time.sleep(0.3)
                 if find_image_within_window(bb_atk_btn_img):
                     setlog("We are back at builder base!", "success")
-                    do_click(867, 262)
-                    do_click(867, 262)
+                    # star_bonus_img = assets_path + '\\bb_assets\\star_bonus.png'
+                    # if check_image_presence(star_bonus_img, confidence=0.7):
+                    #     setlog("Star bonus collected", "success")
+                    #     do_click(447, 415) # click okay button
+                    # do_click(867, 262)
+                    # do_click(867, 262)
                     break
-            #     if (challenge_completed_location := check_image_presence(challenge_completed_img, confidence=0.7)):
-            #         click_random_within_image(challenge_completed_location)
-            #         is_challenge_complete = True
-            #         play_sound()
-            #         break
-
-            # if is_challenge_complete:
-            #     # is_challenge_complete = False # reset the flag
-            #     break
-            
         else:
             #* if challenge completed then click the "challenge completed" button
             setlog("Challenge completed", "success")
@@ -567,7 +565,7 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
             time.sleep(5)
             purge_challenge(gem_cooldown=True)
             time.sleep(4)
-            #* Try to pick a new challenge
+            #* Try to pick           a new challenge
             if pick_challenge():
                 do_click(891, 241) # click away
                 do_click(891, 241) # click away
@@ -615,3 +613,16 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
                         setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
                 else:
                     setlog("Cart does not have elixir yet", "info")
+
+def star_bonus(assets_path):
+    star_bonus_img = assets_path + '\\bb_assets\\star_bonus.png'
+    if check_image_presence(star_bonus_img, confidence=0.7):
+        setlog("Star bonus collected", "success")
+        do_click(447, 415) # click okay button
+        # return True
+    else:
+        setlog("Star bonus not found", "info")
+        # return False
+
+if __name__ == "__main__":
+    cg_mode_loop_2(assets_path)

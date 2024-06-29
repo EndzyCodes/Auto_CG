@@ -26,9 +26,9 @@ def get_cg_points(): # not done yet
     )
 
     ss = pyautogui.screenshot(region=screenshot_region)
-    ss.save(r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\test1.png')
+    ss.save(r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\test1.png')
 
-    image_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodes\Auto_CG\assets\test1.png'
+    image_path = r'C:\Users\fastl\OneDrive\Documents\GitHub\EndzyCodesRepositories\Auto_CG\assets\test1.png'
     cg_points = extract_digit_from_image(image_path)
 
     if cg_points is None:
