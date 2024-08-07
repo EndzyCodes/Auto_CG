@@ -1,7 +1,7 @@
 import pygetwindow as gw
 import pyautogui
 import time
-import win32gui
+# import win32gui
 import random
 import logging
 import colorlog

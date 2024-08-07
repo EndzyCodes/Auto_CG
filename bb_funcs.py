@@ -26,7 +26,7 @@ def BB_is_army_btn_visible(click=False):
     img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'
 
     count = 0
-    while 1: 
+    while 1:
         if not check_image_presence(img, confidence=0.8):
             time.sleep(0.3)
             count += 1
@@ -82,14 +82,14 @@ def deploy_troops(sec_vill_battle=False, is_2_camps=False):
         time.sleep(3) # wait a bit before dropping minions
         setlog("Dropping minions", "info")
 
-        if is_2_camps:
-            setlog("Clicking minion from 2nd camp", "info")
-            do_click(640, 490) # click minion on 2nd camp if the account has a 2nd camp 
-        else:
+        # if is_2_camps:
+        #     setlog("Clicking minion from 2nd camp", "info")
+        #     do_click(640, 490) # click minion on 2nd camp if the account has a 2nd camp
+        # else:
             # click all possible  minions icon
-            do_click(417, 507)
-            do_click(480, 506)
-            do_click(532, 513)
+        do_click(417, 507)
+        do_click(480, 506)
+        do_click(532, 513)
         #* minions drop points
         # randomize minion drop order
         minions = [(515, 349), (591, 314), (630, 279), (678, 243), (740, 200)]
@@ -419,9 +419,12 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
                 setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
         else:
             setlog("Cart does not have elixir yet", "info")
-        
+
         if time.time() - start_time >= 180 * 60:  # 3 hours in seconds
             keyboard.press_and_release('esc')
             time.sleep(1)
             do_click(534, 349)
             break
+
+if __name__ == '__main__':
+    bb_attack_loop()

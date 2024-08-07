@@ -3,7 +3,8 @@ from Functions import *
 from mv_funcs import is_army_btn_visible, main_village_attack_loop, EdragLoons_strat
 from bb_funcs import bb_attack_time_limit, bb_attack_loop, attack_BB, bb_return_home, go_to_bb, BB_is_army_btn_visible
 from cg_funcs import purge_challenge, switch_acc_purge, pick_challenge, cg_mode_loop_2, assets_path, cg_mode_loop_3, cg_points_full
-from PyQt6.QtWidgets import QApplication
+# from PyQt6.QtWidgets import QApplication
+import pyautogui
 
 """pixel match the storage bar if full or not"""
 
@@ -38,7 +39,7 @@ def get_cg_points(): # not done yet
 
 def cg_loop():
 
-    import keyboard
+    # import keyboard
     count = 1
     start_time = time.time()
     while True:
@@ -65,9 +66,11 @@ def cg_loop():
 
 if __name__ == "__main__":
 
-    cg_mode_loop_2(assets_path, is_2_camps=True)
-
-
+    # cg_mode_loop_2(assets_path, is_2_camps=True)
 
     # pick_challenge()
     # cg_loop()
+
+    img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\anniv_cake.png'
+    for i in pyautogui.locateAllOnScreen(img):
+        print(i)

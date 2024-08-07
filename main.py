@@ -106,11 +106,42 @@ def donate_loop():
 
         train_loons()
 
+def find_multiple_img(img):
+    window_rect = get_window_rect(window_title)
+    locations = []
+    try:
+        for loc in pyautogui.locateOnWindow(img, confidence=0.8, title='Clash of Clans'):
+            print(f"Found at: {loc}")
+            # pyautogui.alert(text=loc, title='WARNING', button='OK')
+            locations.append(loc)
+            if len(locations) > 10:
+                break
+
+        if locations:
+            for loc in locations:
+                window_rect = get_window_rect(window_title)
+                pyautogui.moveTo(loc.left, loc.top)
+                time.sleep(1)
+        else:
+            print("Not Found")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 if __name__ == "__main__":
 
-    # main_village_attack_loop()
-    bb_attack_loop(is_2_camps=True)
-    # attack_BB(True)
+    # bb_attack_loop(is_2_camps=True)
+
+    wall_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\wall_11.png'
+    unique_locations = set()
+    for i in range(10):
+        location = pyautogui.locateOnWindow(wall_img, confidence=0.8, title='Clash of Clans')
+        if location and (location.left, location.top) not in unique_locations:  # Check coordinates
+            unique_locations.add((location.left, location.top))  # Save only coordinates
+            pyautogui.click(location)
+    unique_locations = set()
+
+    if not unique_locations:
+        print("Image not found")
 
     # app = QApplication([])
     # ex = ClashOfClansBotGUI()
@@ -118,5 +149,3 @@ if __name__ == "__main__":
     # app.exec() # start the application
 
     # EdragLoons_strat()
-
-
