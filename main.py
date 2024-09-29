@@ -131,17 +131,19 @@ if __name__ == "__main__":
 
     # bb_attack_loop(is_2_camps=True)
 
-    wall_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\wall_11.png'
-    unique_locations = set()
-    for i in range(10):
-        location = pyautogui.locateOnWindow(wall_img, confidence=0.8, title='Clash of Clans')
-        if location and (location.left, location.top) not in unique_locations:  # Check coordinates
-            unique_locations.add((location.left, location.top))  # Save only coordinates
-            pyautogui.click(location)
-    unique_locations = set()
+    # wall_img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\test\wall_11.png'
+    # unique_locations = set()
+    # for i in range(10):
+    #     location = pyautogui.locateOnWindow(wall_img, confidence=0.8, title='Clash of Clans')
+    #     if location and (location.left, location.top) not in unique_locations:  # Check coordinates
+    #         unique_locations.add((location.left, location.top))  # Save only coordinates
+    #         pyautogui.click(location)
+    # unique_locations = set()
 
-    if not unique_locations:
-        print("Image not found")
+    # if not unique_locations:
+    #     print("Image not found")
+
+    do_click(41, 420, "hello") # click army tab
 
     # app = QApplication([])
     # ex = ClashOfClansBotGUI()

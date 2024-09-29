@@ -269,7 +269,7 @@ def attack_BB(is_2_camps=False):
     global assets_path
 
     bb_atk_btn_img = assets_path + '\\bb_assets\\bb_atk_btn.png'
-    if find_image_within_window(bb_atk_btn_img):
+    if find_image_within_window(bb_atk_btn_img, confidence=0.7):
         if click_random_within_image(check_image_presence(bb_atk_btn_img, confidence=0.8)):
             setlog("Clicked attack button", "success")
             time.sleep(1.5)
@@ -427,4 +427,5 @@ def bb_attack_loop(isSwitchAcc=False, is_2_camps=False):
             break
 
 if __name__ == '__main__':
-    bb_attack_loop()
+    bb_attack_loop() # for attacking in bb endless (no clan games)
+    # bb_attack_time_limit() # for attacking in bb with time limit (no clan games)

@@ -4,6 +4,8 @@ from Functions import (
     check_image_presence,
     find_image_within_window,
     find_image,
+    find_image_in_directory,
+    find_multiple_images_in_directory,
     switch_acc,
 
     do_click,
@@ -114,7 +116,7 @@ def purge_challenge(gem_cooldown=False, purge_once=False):
         # do_click(867, 262) # click away to close clan games window
         # setlog("click away", "info")
         return False
-    
+
 cg_points_full = False
 
 def pick_challenge(debug=False):
@@ -458,7 +460,7 @@ def cg_mode_loop_2(assets_path, is_2_camps=False):
             # if is_challenge_complete:
             #     # is_challenge_complete = False # reset the flag
             #     break
-            
+
         else:
             #* if challenge completed then click the "challenge completed" button
             setlog("Challenge completed", "success")
@@ -532,7 +534,7 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
 
     # is_challenge_complete = False
     while 1:
-        
+
         #* Check if cg chellenge has been completed
         while not find_image_within_window(challenge_completed_img, confidence=0.7):
             time.sleep(2)
@@ -559,13 +561,13 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
             # if is_challenge_complete:
             #     # is_challenge_complete = False # reset the flag
             #     break
-            
+
         else:
             #* if challenge completed then click the "challenge completed" button
             setlog("Challenge completed", "success")
             click_random_within_image(check_image_presence(challenge_completed_img, confidence=0.7))
             time.sleep(5)
-            purge_challenge(gem_cooldown=True)
+            purge_challenge()
             time.sleep(4)
             #* Try to pick a new challenge
             if pick_challenge():
@@ -615,3 +617,15 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
                         setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
                 else:
                     setlog("Cart does not have elixir yet", "info")
+
+if __name__ == '__main__':
+    cg_mode_loop_3(assets_path, is_2_camps=False)
+
+    # directory_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_armycamp'
+    # matched_image, final_confidence, locations = find_multiple_images_in_directory(directory_path)
+
+    # if matched_image:
+    #     setlog(f"The matched image is: {matched_image} (Confidence: {final_confidence:.2f})", "info")
+    #     setlog(f"Total matches found: {len(locations)}", "info")
+    # else:
+    #     setlog("No images were matched", "error")

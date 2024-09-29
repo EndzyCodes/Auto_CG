@@ -194,7 +194,3 @@ def collect_loop(skip_scc_num=0):
 if __name__ == "__main__":
 
     collect_loop(skip_scc_num=1)
-
-
-
-

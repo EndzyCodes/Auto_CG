@@ -9,6 +9,7 @@ import keyboard
 import pytesseract
 from PIL import Image
 from datetime import datetime
+import os
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Mark\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
@@ -108,7 +109,7 @@ def click_close(assets_path):
         print("Close button not found.")
 
 def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = True, debug=False, click_hold=False):
-    # setlog(debug_txt, "info")
+
     window_rect = get_window_rect(window_title)
     # print(window_rect)
     # print(window_rect[0], window_rect[1])
@@ -137,49 +138,16 @@ def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_du
 
     if click_hold:
         pyautogui.moveTo(absolute_x, absolute_y, duration=move_duration)
+        setlog(debug_txt, "info")
         pyautogui.mouseDown()
         time.sleep(1.5)
         pyautogui.mouseUp()
     else:
         pyautogui.click(absolute_x, absolute_y, duration=move_duration)
+        if debug_txt:
+            print(debug_txt)
 
     return True
-    # try:
-    #     if not random_click:
-    #         absolute_x = window_rect[0] + relative_x
-    #         absolute_y = window_rect[1] + relative_y
-    #         # print(relative_x, relative_y)
-
-    #         pyautogui.click(absolute_x, absolute_y, duration=move_duration)  # Move gradually to the target
-    #         # if debug:
-    #         # time.sleep(delay_before_click)
-    #         # pyautogui.mouseDown()
-    #         # time.sleep(click_duration)
-    #         # pyautogui.mouseUp()
-    #         return True
-    #         # if debug:
-    #         #     print(f"Clicked at ({relative_x}, {relative_y})" + " Random click:", random_click)
-
-    #     else:
-    #         offset_x = relative_x + random.randint(-3,6)
-    #         offset_y = relative_y + random.randint(-3,6)
-    #         absolute_x = window_rect[0] + offset_x
-    #         absolute_y = window_rect[1] + offset_y
-
-    #         pyautogui.moveTo(absolute_x, absolute_y, duration=move_duration)  # Move gradually to the target
-    #         time.sleep(delay_before_click)
-    #         pyautogui.mouseDown()
-    #         time.sleep(click_duration)
-    #         pyautogui.mouseUp()
-    #         if debug:
-    #             print(f"Original Coords: ({relative_x}, {relative_y})")
-    #             print(f"Clicked at ({offset_x}, {offset_y})" + " Random click:", random_click)
-    #         return True
-    #     # return False
-
-    # except KeyboardInterrupt:
-    #     print("\nScript stopped.")
-    #     return False
 
 def scroll_to_zoom(move_mouse_to=(0,0), scroll_count=1, zoom_out=True):
     # use case: scroll_to_zoom((716, 117), 10, zoom_out=False) # zoom in 10 times, remove zoom_out=False to zoom out
@@ -615,6 +583,102 @@ def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False
         if debug: setlog(f"Image not found", "error")
         return False
 
+def find_image_in_directory(directory_path, initial_confidence=0.8, min_confidence=0.5):
+    #* Usage
+    # directory_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\attack_btns'
+    # matched_image, final_confidence = find_image_in_directory(directory_path)
+
+    # if matched_image:
+    #     setlog(f"The matched image is: {matched_image} (Confidence: {final_confidence:.2f})", "info")
+    # else:
+    #     setlog("No images were matched", "error")
+    # Get all image files in the directory
+    # ------------------------------------------------------------------
+
+    image_files = [f for f in os.listdir(directory_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
+
+    window_rect = get_window_rect(window_title)
+    confidence = initial_confidence
+
+    while confidence >= min_confidence:
+        for image_file in image_files:
+            image_path = os.path.join(directory_path, image_file)
+
+            try:
+                # Attempt to locate the image on screen
+                location = pyautogui.locateOnScreen(image_path, confidence=confidence, region=window_rect)
+
+                if location:
+                    # Calculate center of the found image
+                    center_x = location.left + location.width // 2
+                    center_y = location.top + location.height // 2
+
+                    # Move mouse to the center of the found image
+                    pyautogui.moveTo(center_x, center_y, duration=0.1)
+
+                    # Print the name of the matched image and the confidence level
+                    setlog(f"Found and moved to: {image_file} (Confidence: {confidence:.2f})", "success")
+
+                    return image_file, confidence  # Return the name of the matched image and confidence
+
+            except pyautogui.ImageNotFoundException:
+                continue  # Continue to the next image if this one wasn't found
+
+        # If no match found, decrease confidence and try again
+        confidence -= 0.1
+        setlog(f"No match found. Decreasing confidence to {confidence:.2f}", "warning")
+
+    setlog("No matching images found, even at lowest confidence", "error")
+    return None, None
+
+def find_multiple_images_in_directory(directory_path, initial_confidence=0.8, min_confidence=0.5):
+    # Usage
+    # directory_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\attack_btns'
+    # matched_image, final_confidence, locations = find_multiple_images_in_directory(directory_path)
+
+    # if matched_image:
+    #     setlog(f"The matched image is: {matched_image} (Confidence: {final_confidence:.2f})", "info")
+    #     setlog(f"Total matches found: {len(locations)}", "info")
+    # else:
+    #     setlog("No images were matched", "error")
+    # ------------------------------------------------------------------
+    image_files = [f for f in os.listdir(directory_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    window_rect = get_window_rect(window_title)
+    confidence = initial_confidence
+
+    while confidence >= min_confidence:
+        for image_file in image_files:
+            image_path = os.path.join(directory_path, image_file)
+            try:
+                # First, try to find a single match
+                location = pyautogui.locateOnScreen(image_path, confidence=confidence, region=window_rect)
+                if location:
+                    setlog(f"Found a match for {image_file}. Now searching for multiple instances.", "info")
+                    # If a match is found, search for all instances
+                    all_locations = list(pyautogui.locateAllOnScreen(image_path, confidence=confidence, region=window_rect))
+
+                    if all_locations:
+                        setlog(f"Found {len(all_locations)} matches for {image_file}", "success")
+                        for idx, loc in enumerate(all_locations, 1):
+                            center_x = loc.left + loc.width // 2
+                            center_y = loc.top + loc.height // 2
+                            pyautogui.moveTo(center_x, center_y, duration=0.5)
+                            setlog(f"Moved to match {idx} at ({center_x}, {center_y})", "info")
+                            time.sleep(0.5)  # Short pause between movements
+
+                        return image_file, confidence, all_locations
+
+            except pyautogui.ImageNotFoundException:
+                continue
+
+        confidence -= 0.1
+        setlog(f"No match found. Decreasing confidence to {confidence:.2f}", "warning")
+
+    setlog("No matching images found, even at lowest confidence", "error")
+    return None, None, None
+
+
+
 # backup - alternative for locating image
 
 # x, y = pyautogui.locateCenterOnScreen(sb_img, confidence=0.8, region=window_rect)
@@ -943,4 +1007,3 @@ def setlog(string, log_level):
 
 
 setup_logging()
-
