@@ -1,16 +1,16 @@
-from logging_utils import setlog
-from click_utils import do_click
 import pyautogui
 import time
-from window_utils import (
+from .window_utils import (
     get_window_rect,
     get_window_handle,
     window_title
 )
-from image_detection import (
+from .image_detection import (
     check_image_presence,
     click_random_within_image
 )
+from .click_utils import do_click
+from .logging_utils import setlog
 
 def scroll_acc_switch(move_mouse_to=(0,0), scroll_count=1, scroll_down=False, scroll_up=False):
     # use case: scroll_to_zoom((716, 117), 10, zoom_out=False) # zoom in 10 times, remove zoom_out=False to zoom out

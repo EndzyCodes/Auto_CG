@@ -12,7 +12,8 @@ from ...Functions.click_utils import (
     scroll_to_zoom
 )
 from ...Functions.logging_utils import setlog
-from config import assets_path
+from ...config import assets_path
+
 def BB_is_army_btn_visible(click=False):
 
     img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'

@@ -4,7 +4,8 @@ from .collect_res_utils import (
     collect_gem_box,
     collect_clan_capital_gold,
     collect_resources,
-    is_army_btn_visible
+    is_army_btn_visible,
+    boost_clock_tower,
 )
 from ...Functions.click_utils import scroll_to_zoom
 from ...Features.builder_base.bb_utils import go_to_bb
@@ -34,5 +35,8 @@ def run_auto_collect(skip_acc_num=0):
             boost_clock_tower(assets_path)
             go_to_bb(True)  # go back to main village
 
+def test_collect_resources():
+    boost_clock_tower(assets_path)
+
 if __name__ == "__main__":
-    run_auto_collect(skip_acc_num=1)
+    test_collect_resources()

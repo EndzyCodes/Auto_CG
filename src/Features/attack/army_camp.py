@@ -1,14 +1,13 @@
 import pyautogui, time
-from Functions.logging_utils import setlog
-from Functions.click_utils import do_click
-from Functions.image_detection import (
-    check_image_presence
-)
-from Functions.window_utils import get_window_rect
-from Functions.ocr_utils import extract_digit_from_image
-from config import window_title, assets_path
+from ...Functions.logging_utils import setlog
+from ...Functions.click_utils import do_click
+
+from ...Functions.window_utils import get_window_rect
+from ...Functions.ocr_utils import extract_digit_from_image
+from ...config import window_title, assets_path
 
 def is_army_btn_visible(click=False):
+    from ...Functions.image_detection import check_image_presence, click_random_within_image
     global assets_path
 
     img = assets_path + '\\army_btn.png'
@@ -33,6 +32,7 @@ def is_army_btn_visible(click=False):
     return True
 
 def isCampFull(assets_path):
+    from ...Functions.image_detection import check_image_presence
     full_camp_img = assets_path + '\\mv_assets\\full_camp.png'
     full_camp2_img = assets_path + '\\mv_assets\\full_camp2.png'
     if check_image_presence(full_camp_img, confidence=0.7, region=(134, 127, 19, 23)) or check_image_presence(full_camp2_img, confidence=0.8):
@@ -43,6 +43,7 @@ def isCampFull(assets_path):
         return False
 
 def check_troops_training(assets_path):
+    from ...Functions.image_detection import check_image_presence
     # Image of the "Training" text that appears when troops are being trained
     training_indicator_img = assets_path + '\\mv_assets\\training_indicator.png'
 

@@ -3,8 +3,8 @@ import pyautogui
 import time
 import os
 import random
-from logging_utils import setlog
-from window_utils import get_window_rect
+from ..Functions.logging_utils import setlog
+from ..Functions.window_utils import get_window_rect
 from ..config import window_title, assets_path
 
 # window_rect=()

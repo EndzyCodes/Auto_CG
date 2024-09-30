@@ -1,9 +1,9 @@
-from logging_utils import setlog
-from window_utils import get_window_rect
 import pyautogui
 from PIL import Image
 import pytesseract
-from config import window_title
+from ..config import window_title
+from .logging_utils import setlog
+from .window_utils import get_window_rect
 
 def extract_digit_from_image(image_path):
     try:

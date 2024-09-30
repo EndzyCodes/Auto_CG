@@ -1,9 +1,9 @@
-from logging_utils import setlog
 import pygetwindow as gw
 import pyautogui
 import time
-from config import window_title
-from ..Features.attack.army_camp import is_army_btn_visible
+from ..config import window_title
+# from ..Features.attack.army_camp import is_army_btn_visible
+from .logging_utils import setlog
 
 window_rect = ()
 
@@ -196,6 +196,6 @@ def launch_coc(assets_path):
     setlog("Set window size of Clash of Clans window", 'info')
     set_window_size(window_name='coc')
 
-    is_army_btn_visible()
+    # is_army_btn_visible()
 
     return True

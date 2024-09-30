@@ -1,19 +1,9 @@
-from logging_utils import setlog
-from window_utils import get_window_rect
 import pyautogui
 import time
 import random
 import keyboard
-from image_detection import (
-    check_image_presence,
-    click_random_within_image
-)
-from window_utils import (
-    get_window_rect,
-    get_window_handle,
-    get_coc_window,
-    window_title
-)
+
+from .logging_utils import setlog
 
 def random_do_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1, hold_duration_ms=0, debug = False):
     # random_do_click(1792, 290, (20,100), (20,89), 1, random.randint(100,200), debug=True)
@@ -40,6 +30,7 @@ def random_do_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1
         pyautogui.mouseUp()
 
 def click_close(assets_path):
+    from .image_detection import check_image_presence, click_random_within_image
     close_btn_img_path = assets_path + '\\test\\close_btn.png'
     close_btn_present = check_image_presence(close_btn_img_path, confidence=0.8)
     if close_btn_present:
@@ -48,7 +39,7 @@ def click_close(assets_path):
         print("Close button not found.")
 
 def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_duration=0.104, delay_before_click=0.112, random_click = True, debug=False, click_hold=False):
-
+    from .window_utils import get_window_rect, window_title
     window_rect = get_window_rect(window_title)
     # print(window_rect)
     # print(window_rect[0], window_rect[1])
@@ -90,6 +81,7 @@ def do_click(relative_x, relative_y, debug_txt="", click_duration=0.075, move_du
 
 def scroll_to_zoom(move_mouse_to=(0,0), scroll_count=1, zoom_out=True):
     # use case: scroll_to_zoom((716, 117), 10, zoom_out=False) # zoom in 10 times, remove zoom_out=False to zoom out
+    from .window_utils import get_window_rect, window_title
     window_rect = get_window_rect(window_title)
 
     offset_x = move_mouse_to[0] + random.randint(-3,5)
@@ -115,6 +107,7 @@ def scroll_to_zoom(move_mouse_to=(0,0), scroll_count=1, zoom_out=True):
 
 def scroll(move_mouse_to=(0,0), scroll_count=1, scroll_down=True):
     # use case: scroll_to_zoom((716, 117), 10, zoom_out=False) # zoom in 10 times, remove zoom_out=False to zoom out
+    from .window_utils import get_window_rect, window_title
     window_rect = get_window_rect(window_title)
 
     absolute_x_moveTo = window_rect[0] + move_mouse_to[0]
@@ -135,6 +128,7 @@ def scroll(move_mouse_to=(0,0), scroll_count=1, scroll_down=True):
 
 def click_drag(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
     # use case: click_drag(716, 117, 419, 376)
+    from .window_utils import get_window_rect, window_title
     window_rect = get_window_rect(window_title)
 
     absolute_x = window_rect[0] + x
@@ -152,6 +146,7 @@ def click_drag(x, y, x_moveTo, y_moveTo, duration=0.175, debug=False):
     pyautogui.mouseUp()
 
 def move_to(x,y):
+    from .window_utils import get_window_rect, window_title
     window_rect = get_window_rect(window_title)
     absolute_x = window_rect[0] + x
     absolute_y = window_rect[1] + y

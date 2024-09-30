@@ -7,6 +7,8 @@ from ...Functions.image_detection import (
 from ...Functions.click_utils import do_click
 from ...Functions.logging_utils import setlog
 from ...config import assets_path
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
 def is_army_btn_visible(click=False):
     global assets_path

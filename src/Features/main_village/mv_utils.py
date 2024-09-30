@@ -1,3 +1,5 @@
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import time, random, pyautogui, keyboard, pygame
 from ...Functions.image_detection import (
     find_image_within_window,
