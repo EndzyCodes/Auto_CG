@@ -6,3 +6,8 @@ __pycache__/GUI.cpython-312.pyc
 .idea/misc.xml
 .idea/vcs.xml
 .idea/modules.xml
+.tox/
+.nox/
+.venv/
+.vscode/
+.idea/

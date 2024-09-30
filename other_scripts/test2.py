@@ -1,8 +1,8 @@
-from GUI import ClashOfClansBotGUI
-from Functions import *
+from backups.GUI.GUI import ClashOfClansBotGUI
+from backups.Functions2 import *
 from mv_funcs import is_army_btn_visible, main_village_attack_loop, EdragLoons_strat
-from bb_funcs import bb_attack_time_limit, bb_attack_loop, attack_BB, bb_return_home, go_to_bb, BB_is_army_btn_visible
-from cg_funcs import purge_challenge, switch_acc_purge, pick_challenge, cg_mode_loop_2, assets_path, cg_mode_loop_3, cg_points_full
+from src.features.builder_base.bb_utils import bb_attack_time_limit, bb_attack_loop, attack_BB, bb_return_home, go_to_bb, BB_is_army_btn_visible
+from src.features.clan_games.cg_main import purge_challenge, switch_acc_purge, pick_challenge, cg_mode_loop_2, assets_path, cg_mode_loop_3, cg_points_full
 # from PyQt6.QtWidgets import QApplication
 import pyautogui
 

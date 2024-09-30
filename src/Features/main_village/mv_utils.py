@@ -1,58 +1,27 @@
-
-from Functions import (
-    window_title,
-    get_window_rect,
-    get_coc_window,
-    switch_acc,
-
-    click_random_within_image,
-    check_image_presence,
-    extract_digit_from_image,
+import time, random, pyautogui, keyboard, pygame
+from ...Functions.image_detection import (
     find_image_within_window,
-    find_image,
-
+    check_image_presence,
+    click_random_within_image,
+    find_image
+)
+from ...Functions.window_utils import (
+    get_coc_window,
+    get_window_rect,
+    window_title
+)
+from ...Functions.click_utils import (
     do_click,
     click_drag,
-    scroll_to_zoom,
-
-    setlog
+    scroll_to_zoom
 )
-from cg_funcs import purge_challenge, pick_challenge
-
-from os import environ
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-# from bb_funcs import bb_attack_loop
-
-import time
-import random
-import pyautogui
-import keyboard
-import pygame
-
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
-
-def is_army_btn_visible(assets_path, click=False):
-
-    img = assets_path + '\\army_btn.png'
-
-    setlog("Waiting for army tab to appear", "info")
-    while  not check_image_presence(img, confidence=0.8):
-        time.sleep(0.3)
-
-    setlog("Army tab found", "success")
-    do_click(867, 262)
-    do_click(867, 262)
-    do_click(867, 262)
-    if click:
-        if click_random_within_image(check_image_presence(img, confidence=0.8)):
-            time.sleep(1)
-            setlog("Clicked on army tab", "success")
-            return True
-        else:
-            setlog("No army tab", "info")
-            return False
-
-    return True
+from ...Features.clan_games.cg_utils import purge_challenge
+from ...Features.collect_resources.collect_res_main import collect_resources
+from ...Features.attack.army_camp import is_army_btn_visible, isCampFull
+from ...Functions.ocr_utils import extract_digit_from_image
+from ...Functions.acc_switching_utils import switch_acc
+from ...Functions.logging_utils import setlog
+from ...config import assets_path
 
 def check_daily_reward(assets_path):
 
@@ -70,38 +39,6 @@ def check_daily_reward(assets_path):
     else:
         setlog("No daily reward", "info")
         return False
-
-def collect_resources(assets_path):
-
-    gold_img = assets_path + '\\gold.png'
-    elixir_img = assets_path + '\\elixir.png'
-    dark_elixir_img = assets_path + '\\mv_funcs\\dark_elixir.png'
-
-    # Create a list of resource images
-    resource_images = [gold_img, elixir_img, dark_elixir_img]
-
-    # Randomize the order of resource collection
-    random.shuffle(resource_images)
-
-    collected_resources = False
-
-    for resource_img in resource_images:
-        resource_location = check_image_presence(resource_img, confidence=0.8)
-        if find_image(resource_img):
-            try:
-                click_random_within_image(resource_location)
-            except pyautogui.ImageNotFoundException:
-                setlog(f"Image: {resource_img} not found", "info")
-            resource_name = resource_img.split('\\')[-1].split('.')[0].capitalize()
-            setlog(f"Collected {resource_name}", "info")
-            collected_resources = True
-
-    if collected_resources:
-        setlog("Resources collected", "info")
-    else:
-        setlog("No resources collected", "info")
-
-    return collected_resources
 
 def main2(skip_acc_num=0): # for purging loop
     # when calling main function, put the acc number that you are currently playing coc manually, see the coc emulator switch acc to know what acc number to skip
@@ -150,26 +87,6 @@ def main2(skip_acc_num=0): # for purging loop
         time.sleep(3) # wait for clan games to open/load
         purge_challenge()
         time.sleep(1)
-
-def is_army_full(assets_path):
-
-    troop_count_img = assets_path + '\\test\\troop_count.png'
-
-    #region = (1263, 697, 118, 30)
-    troop_count = extract_digit_from_image(troop_count_img)
-
-    if troop_count is not None:  # Check if troop_count is not None
-        if troop_count > 100:
-            setlog("Troop count is full!", "warning")
-            setlog(f'Troop count: {troop_count}', "warning")
-            return True
-        else:
-            setlog("Troop count is not full", "info")
-            setlog(f'Troop count: {troop_count}', "info")
-            return False
-    else:
-        setlog("Failed to extract troop count from image", "error")
-        return False  # Return False or handle the error case appropriately
 
 def get_resources_value(resource_target='', target_val=400000):
     global assets_path

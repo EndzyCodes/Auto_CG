@@ -1,26 +1,18 @@
-
-from Functions import (
-    get_coc_window,
-
-    click_random_within_image,
-    check_image_presence,
-    find_image_within_window,
-
-    do_click,
-    click_drag,
-    scroll_to_zoom,
-
-    setlog,
-    switch_acc
-)
-# from mv_funcs import is_army_btn_visible
 import time
 import random
-# import pyautogui
 import keyboard
-
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
-
+from ...Functions.image_detection import (
+    find_image_within_window,
+    click_random_within_image,
+    check_image_presence
+)
+from ...Functions.click_utils import (
+    do_click,
+    click_drag,
+    scroll_to_zoom
+)
+from ...Functions.logging_utils import setlog
+from config import assets_path
 def BB_is_army_btn_visible(click=False):
 
     img = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\army_btn.png'

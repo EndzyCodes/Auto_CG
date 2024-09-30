@@ -1,6 +1,6 @@
 
 
-from Functions import *
+from backups.Functions2 import *
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget
 
 enable_attack = False
@@ -109,9 +109,9 @@ def random_click(x, y, rand_x_range=(5, 15), rand_y_range=(5, 15), clicks = 1, h
 def click_close():
     close_btn_img_path = r'C:\Users\Mark\Desktop\coc\Images\close_btn.png'
     close_btn_present = check_image_presence(close_btn_img_path, confidence=0.8)
-    if close_btn_present: 
+    if close_btn_present:
         click_random_within_image(close_btn_present)
-    else: 
+    else:
         print("Close button not found.")
 
 
@@ -129,7 +129,7 @@ def is_army_btn_visible():
     img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\army_btn.png'
 
     count = 0
-    while 1: 
+    while 1:
         if not check_image_presence(img, confidence=0.8):
             time.sleep(0.3)
             count += 1
@@ -159,10 +159,10 @@ def collect_resources():
     gold_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\gold.png'
     elixir_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\elixir.png'
     dark_elixir_img = r'C:\Users\Mark\Desktop\AutoAttackBB\assets\dark_elixir.png'
-    
+
     # Create a list of resource images
     resource_images = [gold_img, elixir_img, dark_elixir_img]
-    
+
     # Randomize the order of resource collection
     random.shuffle(resource_images)
 
@@ -306,7 +306,7 @@ def deploy_troops(sec_vill_battle=False):
         click(231, 505) # click balloon icon
 
         # ballons drop points
-        click(521, 375) 
+        click(521, 375)
         # click(579, 333)
         click(630, 279)
         # click(619, 303)
@@ -330,15 +330,15 @@ def deploy_troops(sec_vill_battle=False):
 
 def boost_troop_heroes():
     click(39, 432) # click army tab
-    
+
     click(473, 302) # click hero boost button
     click(473, 352) # click to confirm boost
-    
+
     time.sleep(1)
-    
+
     click(596, 308) # click troop boost button
     click(596, 358) # click to confirm boost
-    
+
     click(902, 284) # click away
 
 def return_home():
@@ -475,7 +475,7 @@ def go_to_bb(go_back_main=False):
             else:
                 setlog("Failed to click builder base", "error")
                 return False
-    
+
     else:
         click_drag(470, 316, 725, 82)
         time.sleep(1)
@@ -496,7 +496,7 @@ def cg_loop():
 
     time.sleep(1)
     open_cg_window()
-    
+
     if pick_challenge():
         pass
     else:
@@ -594,4 +594,3 @@ if __name__ == "__main__":
     ex = ClashOfClansBotGUI()
     ex.show() # show the GUI
     app.exec() # start the application
-

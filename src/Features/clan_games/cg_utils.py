@@ -1,48 +1,24 @@
+import time
 
-from Functions import (
+from ...Functions.image_detection import (
     click_random_within_image,
     check_image_presence,
     find_image_within_window,
     find_image,
     find_image_in_directory,
-    find_multiple_images_in_directory,
-    switch_acc,
-
-    do_click,
-    click_drag,
-    scroll_to_zoom,
-
-    setlog
+    find_multiple_images_in_directory
 )
-from bb_funcs import attack_BB, go_to_bb
-# from mv_funcs import is_army_btn_visible
-import time
 
-assets_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets'
-
-def is_army_btn_visible(click=False):
-    global assets_path
-
-    img = assets_path + '\\army_btn.png'
-
-    setlog("Waiting for army tab to appear", "info")
-    while  not check_image_presence(img, confidence=0.8):
-        time.sleep(0.3)
-
-    setlog("Army tab found", "success")
-    do_click(867, 262)
-    do_click(867, 262)
-    do_click(867, 262)
-    if click:
-        if click_random_within_image(check_image_presence(img, confidence=0.8)):
-            time.sleep(1)
-            setlog("Clicked on army tab", "success")
-            return True
-        else:
-            setlog("No army tab", "info")
-            return False
-
-    return True
+from ...Functions.click_utils import (
+    do_click,
+    scroll_to_zoom,
+    click_drag
+)
+from ...Features.attack.army_camp import is_army_btn_visible
+from ...Functions.logging_utils import setlog
+from ...Functions.acc_switching_utils import switch_acc
+from ...Features.builder_base.bb_utils import attack_BB, go_to_bb
+from ...config import assets_path
 
 def purge_challenge(gem_cooldown=False, purge_once=False):
     global assets_path
@@ -617,15 +593,3 @@ def cg_mode_loop_3(assets_path, is_2_camps=False):
                         setlog("Failed to collect elixir cart, something wrong with collect_elixir_cart", "error")
                 else:
                     setlog("Cart does not have elixir yet", "info")
-
-if __name__ == '__main__':
-    cg_mode_loop_3(assets_path, is_2_camps=False)
-
-    # directory_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\bb_armycamp'
-    # matched_image, final_confidence, locations = find_multiple_images_in_directory(directory_path)
-
-    # if matched_image:
-    #     setlog(f"The matched image is: {matched_image} (Confidence: {final_confidence:.2f})", "info")
-    #     setlog(f"Total matches found: {len(locations)}", "info")
-    # else:
-    #     setlog("No images were matched", "error")

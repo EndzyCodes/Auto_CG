@@ -1,6 +1,6 @@
 import json
 # from Functions import *
-from Functions import bb_attack_loop  # Import your specific functions
+from backups.Functions2 import bb_attack_loop  # Import your specific functions
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox, QPushButton, QGroupBox, QTabWidget
 
 attack_only_no_cg = False
@@ -147,4 +147,3 @@ class ClashOfClansBotGUI(QWidget):
         clan_games_mode = clan_games_mode
 
         main(enable_gem_cooldown, clan_games_mode, attack_only_no_cg)
-
