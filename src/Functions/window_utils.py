@@ -199,3 +199,61 @@ def launch_coc(assets_path):
     # is_army_btn_visible()
 
     return True
+
+def print_coc_window_size():
+    try:
+        # Find the Clash of Clans window
+        coc_window = gw.getWindowsWithTitle(window_title)[0]
+
+        # Get the window size
+        width = coc_window.width
+        height = coc_window.height
+
+        # Print the size
+        setlog(f"Clash of Clans window size:", "info")
+        setlog(f"Width: {width} pixels", "info")
+        setlog(f"Height: {height} pixels", "info")
+
+        return width, height
+    except IndexError:
+        setlog(f"Window with title '{window_title}' not found.", "error")
+        return None
+    except Exception as e:
+        setlog(f"An error occurred: {str(e)}", "error")
+        return None
+def set_coc_window_size(width=1351, height=789):
+    # set_coc_window_size(1173, 689)
+    try:
+        # Find the Clash of Clans window
+        coc_window = gw.getWindowsWithTitle(window_title)[0]
+
+        # Get the current position
+        current_left = coc_window.left
+        current_top = coc_window.top
+
+        # Set the new size
+        coc_window.resizeTo(width, height)
+
+        # Move the window to ensure it's in the same position after resizing
+        coc_window.moveTo(current_left, current_top)
+
+        # Verify the new size
+        new_width = coc_window.width
+        new_height = coc_window.height
+
+        if new_width == width and new_height == height:
+            setlog(f"Clash of Clans window resized successfully", "success")
+            setlog(f"New width: {new_width} pixels", "info")
+            setlog(f"New height: {new_height} pixels", "info")
+        else:
+            setlog(f"Resize operation completed, but final size is different", "warning")
+            setlog(f"Actual width: {new_width} pixels", "info")
+            setlog(f"Actual height: {new_height} pixels", "info")
+
+        return new_width, new_height
+    except IndexError:
+        setlog(f"Window with title '{window_title}' not found.", "error")
+        return None
+    except Exception as e:
+        setlog(f"An error occurred while resizing: {str(e)}", "error")
+        return None

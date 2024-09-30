@@ -2,6 +2,7 @@ import time, random
 from ...Functions.image_detection import (
     check_image_presence,
     click_random_within_image,
+    find_image_in_directory,
     find_image
 )
 from ...Functions.click_utils import do_click
@@ -35,26 +36,44 @@ def is_army_btn_visible(click=False):
     return True
 
 def boost_clock_tower(assets_path):
-    clock_tower_img = assets_path + '\\bb_assets\\clock_tower.png'
-    boost_btn_img = assets_path + '\\bb_assets\\boost_btn.png'
+    directory_path = assets_path + '\\bb_assets\\clock_tower'
 
-    if (clock_tower_location := check_image_presence(clock_tower_img, confidence=0.8)):
-        click_random_within_image(clock_tower_location)
-        time.sleep(1)
-        if (boost_btn_location := check_image_presence(boost_btn_img, confidence=0.8)):
-            click_random_within_image(boost_btn_location)
-            setlog("Boosted clock tower", "success")
-            do_click(905, 283)  # click away
-            do_click(905, 283)  # click away
-            return True
-        else:
-            setlog("Boost button not found", "warning")
-            do_click(905, 283)  # click away
-            do_click(905, 283)  # click away
-            return False
+    clock_tower_found = find_image_in_directory("find clock tower", directory_path, confidence_range=(0.8, 0.6))
+    free_boost_button_found = find_image_in_directory("find free boost button", directory_path, confidence_range=(0.8, 0.6))
+    boost_button_found = find_image_in_directory("find boost button", directory_path, confidence_range=(0.8, 0.6))
+
+    if clock_tower_found:
+        setlog("Clock tower found", "success")
     else:
         setlog("Clock tower not found", "warning")
-        return False
+
+    if free_boost_button_found:
+        setlog("Found free boost button", "success")
+    else:
+        setlog("Boost button not found", "warning")
+
+    if boost_button_found:
+        setlog("Boosted clock tower", "success")
+    else:
+        setlog("Boost button not found", "warning")
+
+    # if (clock_tower_location := check_image_presence(clock_tower_img, confidence=0.8)):
+    #     click_random_within_image(clock_tower_location)
+    #     time.sleep(1)
+    #     if (boost_btn_location := check_image_presence(boost_btn_img, confidence=0.8)):
+    #         click_random_within_image(boost_btn_location)
+    #         setlog("Boosted clock tower", "success")
+    #         do_click(905, 283)  # click away
+    #         do_click(905, 283)  # click away
+    #         return True
+    #     else:
+    #         setlog("Boost button not found", "warning")
+    #         do_click(905, 283)  # click away
+    #         do_click(905, 283)  # click away
+    #         return False
+    # else:
+    #     setlog("Clock tower not found", "warning")
+    #     return False
 
 def bb_collect_resource(assets_path):
     bb_gold = assets_path + '\\bb_assets\\bb_gold.png'

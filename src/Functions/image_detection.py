@@ -3,6 +3,9 @@ import pyautogui
 import time
 import os
 import random
+import cv2
+import numpy as np
+from PIL import Image, ImageDraw
 from ..Functions.logging_utils import setlog
 from ..Functions.window_utils import get_window_rect
 from ..config import window_title, assets_path
@@ -264,10 +267,10 @@ def find_image_within_window(image_path, confidence=0.8, timeout=10, debug=False
         if debug: setlog(f"Image not found", "error")
         return False
 
-def find_image_in_directory(directory_path, initial_confidence=0.8, min_confidence=0.5):
+def find_image_in_directory(description, directory_path, confidence_range=(0.8, 0.6), debug=False):
     #* Usage
     # directory_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\attack_btns'
-    # matched_image, final_confidence = find_image_in_directory(directory_path)
+    # matched_image, final_confidence = find_image_in_directory("find clock tower", directory_path, confidence_range=(0.8, 0.6))
 
     # if matched_image:
     #     setlog(f"The matched image is: {matched_image} (Confidence: {final_confidence:.2f})", "info")
@@ -279,7 +282,10 @@ def find_image_in_directory(directory_path, initial_confidence=0.8, min_confiden
     image_files = [f for f in os.listdir(directory_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
     window_rect = get_window_rect(window_title)
+    initial_confidence, min_confidence = confidence_range
+
     confidence = initial_confidence
+    setlog(description, "info")
 
     while confidence >= min_confidence:
         for image_file in image_files:
@@ -295,10 +301,12 @@ def find_image_in_directory(directory_path, initial_confidence=0.8, min_confiden
                     center_y = location.top + location.height // 2
 
                     # Move mouse to the center of the found image
-                    pyautogui.moveTo(center_x, center_y, duration=0.1)
+                    pyautogui.moveTo(center_x, center_y, duration=random.uniform(0.1, 0.2))
+                    time.sleep(random.uniform(0.1, 0.2))
+                    pyautogui.click()
 
                     # Print the name of the matched image and the confidence level
-                    setlog(f"Found and moved to: {image_file} (Confidence: {confidence:.2f})", "success")
+                    if debug: setlog(f"Found and moved to: {image_file} (Confidence: {confidence:.2f})", "success")
 
                     return image_file, confidence  # Return the name of the matched image and confidence
 
@@ -307,12 +315,12 @@ def find_image_in_directory(directory_path, initial_confidence=0.8, min_confiden
 
         # If no match found, decrease confidence and try again
         confidence -= 0.1
-        setlog(f"No match found. Decreasing confidence to {confidence:.2f}", "warning")
+        if debug: setlog(f"No match found. Decreasing confidence to {confidence:.2f}", "warning")
 
-    setlog("No matching images found, even at lowest confidence", "error")
+    if debug: setlog(f"No matching images found for '{description}', even at lowest confidence", "error")
     return None, None
 
-def find_multiple_images_in_directory(directory_path, initial_confidence=0.8, min_confidence=0.5):
+def find_multiple_images_in_directory(description, directory_path, confidence_range=(0.8, 0.6), debug=False):
     # Usage
     # directory_path = r'C:\Users\Mark\Documents\GitHub\EndzyCodes\Auto_CG\assets\bb_assets\attack_btns'
     # matched_image, final_confidence, locations = find_multiple_images_in_directory(directory_path)
@@ -325,7 +333,10 @@ def find_multiple_images_in_directory(directory_path, initial_confidence=0.8, mi
     # ------------------------------------------------------------------
     image_files = [f for f in os.listdir(directory_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
     window_rect = get_window_rect(window_title)
+    initial_confidence, min_confidence = confidence_range
     confidence = initial_confidence
+
+    setlog(description, "info")
 
     while confidence >= min_confidence:
         for image_file in image_files:
@@ -344,7 +355,7 @@ def find_multiple_images_in_directory(directory_path, initial_confidence=0.8, mi
                             center_x = loc.left + loc.width // 2
                             center_y = loc.top + loc.height // 2
                             pyautogui.moveTo(center_x, center_y, duration=0.5)
-                            setlog(f"Moved to match {idx} at ({center_x}, {center_y})", "info")
+                            if debug: setlog(f"Moved to match {idx} at ({center_x}, {center_y})", "info")
                             time.sleep(0.5)  # Short pause between movements
 
                         return image_file, confidence, all_locations
@@ -353,7 +364,155 @@ def find_multiple_images_in_directory(directory_path, initial_confidence=0.8, mi
                 continue
 
         confidence -= 0.1
-        setlog(f"No match found. Decreasing confidence to {confidence:.2f}", "warning")
+        if debug: setlog(f"No match found. Decreasing confidence to {confidence:.2f}", "warning")
 
-    setlog("No matching images found, even at lowest confidence", "error")
+    if debug: setlog("No matching images found, even at lowest confidence", "error")
     return None, None, None
+
+def find_and_highlight_all_images(description, directory_path, confidence_range=(0.8, 0.6), output_path=None, debug=False):
+    """
+    Searches for and highlights all instances of images from a directory within the Clash of Clans game window.
+
+    This function iterates through all image files in the specified directory, attempting to locate them
+    within the game window. It then draws rectangles around all found instances and saves the result as a new image.
+
+    Args:
+        description (str): A brief description of the search operation for logging purposes.
+        directory_path (str): The path to the directory containing the image files to search for.
+        confidence_range (tuple): A tuple of (initial_confidence, min_confidence) for image matching.
+                                  Default is (0.8, 0.6).
+        output_path (str, optional): The path where output images will be saved. If None, uses directory_path.
+        debug (bool): If True, additional debug information will be logged. Default is False.
+
+    Returns:
+        tuple: A tuple containing two elements:
+               - all_results (list): A list of dictionaries, each containing information about a matched image:
+                 {
+                     'image_file': str,  # The filename of the matched image
+                     'confidence': float,  # The confidence level of the match
+                     'locations': list,  # List of all locations where the image was found
+                     'output_path': str  # Path to the output image with highlighted matches
+                 }
+               - best_result (dict): The dictionary from all_results with the highest number of matches.
+               If no matches are found, returns (None, None).
+
+    The function performs the following steps:
+    1. Captures a screenshot of the Clash of Clans game window.
+    2. Iterates through all image files in the specified directory.
+    3. Attempts to locate each image within the screenshot, starting at the initial confidence level.
+    4. If matches are found, draws rectangles around them and saves the result.
+    5. If no matches are found, reduces the confidence level and tries again until reaching min_confidence.
+    6. Returns all results and the best result (image with most matches).
+
+    Note:
+        - The function uses OpenCV for image processing and PyAutoGUI for screen capture and image location.
+        - The confidence level determines how closely the image must match to be considered a positive result.
+        - Output images are named numerically (1.png, 2.png, etc.) to avoid overwriting existing files.
+
+    Example usage:
+        directory_path = r'C:\path\to\image\directory'
+        output_path = r'C:\path\to\output\directory'
+        all_results, best_result = find_and_highlight_all_images(
+            "find all objects",
+            directory_path,
+            confidence_range=(0.8, 0.6),
+            output_path=output_path,
+            debug=True
+        )
+        if best_result:
+            print(f"Best match: {best_result['image_file']} with {len(best_result['locations'])} instances")
+        else:
+            print("No matches found")
+    """
+    image_files = [f for f in os.listdir(directory_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    window_rect = get_window_rect(window_title)
+    initial_confidence, min_confidence = confidence_range
+    confidence = initial_confidence
+
+    if output_path is None:
+        output_path = directory_path
+
+    setlog(description, "info")
+
+    # Take a screenshot of the Clash of Clans window
+    screenshot = pyautogui.screenshot(region=window_rect)
+    screenshot_np = np.array(screenshot)
+    screenshot_cv = cv2.cvtColor(screenshot_np, cv2.COLOR_RGB2BGR)
+
+    all_results = []
+    output_counter = 1
+
+    while confidence >= min_confidence:
+        for image_file in image_files:
+            image_path = os.path.join(directory_path, image_file)
+            try:
+                all_locations = list(pyautogui.locateAllOnScreen(image_path, confidence=confidence))
+
+                if all_locations:
+                    setlog(f"Found {len(all_locations)} matches for {image_file}", "success")
+
+                    screenshot_draw = screenshot_cv.copy()
+
+                    for idx, loc in enumerate(all_locations, 1):
+                        rel_left = loc.left - window_rect[0]
+                        rel_top = loc.top - window_rect[1]
+
+                        cv2.rectangle(screenshot_draw,
+                                      (rel_left, rel_top),
+                                      (rel_left + loc.width, rel_top + loc.height),
+                                      (0, 255, 0), 2)
+
+                        if debug:
+                            setlog(f"Match {idx} for {image_file} at ({rel_left}, {rel_top})", "info")
+
+                    # Generate a unique output file name
+                    while True:
+                        output_file_path = os.path.join(output_path, f"{output_counter}.png")
+
+                        if not os.path.exists(output_file_path):
+                            break
+                        output_counter += 1
+
+                    cv2.imwrite(output_file_path, screenshot_draw)
+
+                    all_results.append({
+                        'image_file': image_file,
+                        'confidence': confidence,
+                        'locations': all_locations,
+                        'output_path': output_file_path
+                    })
+
+                    output_counter += 1
+
+            except pyautogui.ImageNotFoundException:
+                if debug:
+                    setlog(f"Image not found: {image_file} (Confidence: {confidence:.2f})", "warning")
+                continue
+            except Exception as e:
+                setlog(f"Error processing {image_file}: {str(e)}", "error")
+                continue
+
+        if all_results:
+            break  # If we found any matches, stop decreasing confidence
+
+        confidence -= 0.1
+        if debug: setlog(f"No match found. Decreasing confidence to {confidence:.2f}", "warning")
+
+    if all_results:
+        # Sort results by number of matches (descending)
+        all_results.sort(key=lambda x: len(x['locations']), reverse=True)
+        best_result = all_results[0]
+
+        setlog(f"Best matching image: {best_result['image_file']}", "success")
+        setlog(f"Number of matches: {len(best_result['locations'])}", "info")
+        setlog(f"Confidence: {best_result['confidence']:.2f}", "info")
+        setlog(f"Output image: {best_result['output_path']}", "info")
+
+        # Print all results
+        for result in all_results:
+            setlog(f"Image: {result['image_file']}, Matches: {len(result['locations'])}, Confidence: {result['confidence']:.2f}", "info")
+
+        return all_results, best_result
+    else:
+        if debug: setlog("No matching images found, even at lowest confidence", "error")
+        return None, None
